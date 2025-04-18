@@ -1,42 +1,53 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page language="java" contentType="text/html;charset=UTF-8" %>
 <%@ page import="jakarta.servlet.http.HttpSession" %>
+<!DOCTYPE html>
 <html>
-<head><title>Login</title>
-<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body class="bg-blue-300">
-<div class="h-2/10">
-<p class="text-4xl text-green mx-auto text-center">MBC HOSIPTAL</p>
-<img src="images/hospital.png" width="30" class="mx-auto" />
-</div>
-<div class="flex items-center justify-center h-6/10">
+<body class="bg-blue-200 min-h-screen flex flex-col">
+    <header class="text-center text-xl text-white py-4 bg-blue-600">
+        <h1>MBC Hospital</h1>
+    </header>
 
-<h2>Login</h2>
-<form method="post" action="login">
-	<table>
-    <tr><td>Username:</td><td>
-    <input type="text" name="username" class="m-2 h-8 border-b-1 rounded-md" required>
-    </td></tr>
-   	<tr><td>Password:</td><td>
-   	<input type="password" name="password" class="m-2 h-8 border-b-1 rounded-md" required>
-   	</td></tr>
-    <tr><td colspan="2">
-    <input type="submit" value="Login" class="bg-green-400 px-3 rounded-md">
-    </td></tr>
-    </table>
-</form>
-</div>
-<div class="border-red-400 mx-auto h-1/10">
-<% if (request.getParameter("error") != null) { %>
-    <p style="color:red;">Login failed. Try again.</p>
-<% } %>
-</div>
-<div class="h-1/10">
-<footer class="bg-red-100">
-Project by Team 1 &copy; 2025
-</footer>
-</div>
+    <main class="flex-grow flex justify-center items-center">
+        <div class="bg-white w-fit h-fit m-10 p-10 border-1 rounded-s-2xl shadow-lg">
+            <h2 class="text-center text-blue-600 text-xl py-4">Login</h2>
+            <form method="post" action="login">
+                <table class="w-full">
+                    <tr>
+                        <td class="text-blue-600 py-2">Username:</td>
+                        <td>
+                            <input type="text" name="username" class="rounded-md p-2 border border-blue-300 w-full" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-blue-600 py-2">Password:</td>
+                        <td>
+                            <input type="password" name="password" class="rounded-md p-2 border border-blue-300 w-full" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="text-center py-4">
+                            <input type="submit" value="Login" class="bg-blue-500 text-white rounded-xl px-4 py-2 hover:bg-blue-600 transition">
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            <% if (request.getParameter("error") != null) { %>
+                <p class="text-red-500 text-center mt-4">Login failed. Try again.</p>
+            <% } %>
+            <div class="text-center mt-4">
+                <a href="registration.jsp" class="text-blue-500 hover:underline">New Register here</a>
+            </div>
+        </div>
+    </main>
 
+    <footer class="text-center text-white py-4 bg-gray-800">
+        <p>Team 1 &copy; 2025</p>
+    </footer>
 </body>
 </html>

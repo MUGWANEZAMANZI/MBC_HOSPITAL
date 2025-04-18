@@ -19,3 +19,4 @@ Thumbs.db
 
 # Web app output
 webapp/WEB-INF/classes/
+/bin/
