@@ -1,5 +1,35 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.*, com.mbc_hospital.model.Patient" %>
+<%@ page import="jakarta.servlet.http.HttpSession" %>
+<%
+    //HttpSession session = request.getSession(false);
+    if (session == null || session.getAttribute("username") == null) {
+        response.sendRedirect("login.jsp");
+        return;
+    }
+    
+    
+    
+    String userType = (String) session.getAttribute("usertype");
+    if (userType == null) {
+        response.sendRedirect("login.jsp");
+        return;
+    }
+    
+      // Redirect based on user type
+
+    String[] roles = {"doctor", "nurse", "patient"}; 
+    if (userType.toLowerCase().equals(roles[0])) {
+        response.sendRedirect("doctor.jsp");
+        return;
+    } else if (userType.toLowerCase().equals(roles[1])) {
+        response.sendRedirect("nurse.jsp");
+        return;
+    } else if (userType.toLowerCase().equals(roles[2])) {
+        response.sendRedirect("patient.jsp");
+        return;
+    }
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,6 +39,7 @@
 </head>
 <body>
 <div class="container mt-5">
+
     <h2>Patients Registered by Nurses</h2>
     <table class="table table-striped table-bordered">
         <thead>
@@ -22,6 +53,7 @@
         </tr>
         </thead>
         <tbody>
+         
         <%
             List<Patient> patients = (List<Patient>) request.getAttribute("patients");
             if (patients != null) {
@@ -42,7 +74,6 @@
         %>
         <tr>
             <td colspan="6" class="text-center text-danger">No patients found or failed to load data.</td>
-            <td><%= patients %></td>
  
         </tr>
         <% } %>

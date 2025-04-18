@@ -13,6 +13,8 @@ import jakarta.servlet.annotation.WebServlet;
 public class PatientController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ArrayList<Patient> patients = new ArrayList<>();
+        System.out.println("🚀 PatientController: doGet triggered");
+
 
         try {
             
@@ -37,7 +39,7 @@ public class PatientController extends HttpServlet {
            String nurseFullName = rs.getString("NurseFirstName") + " " + rs.getString("NurseLastName");
            request.setAttribute("nurseFullName_" + patient.getPatientID(), nurseFullName);
 //           patient.setRegisteredByName(nurseFullName);
-           patient.setRegisteredByName("wilson");
+           patient.setRegisteredByName(nurseFullName);
 
            patients.add(patient);
        }
@@ -52,6 +54,8 @@ public class PatientController extends HttpServlet {
 
         request.setAttribute("patients", patients);
         System.out.println("Total patients fetched: " + patients.size());
+        System.out.println("Servlet is triggered!");
+        System.out.println("Number of patients fetched: " + patients.size());
         RequestDispatcher dispatcher = request.getRequestDispatcher("Patients.jsp");
         dispatcher.forward(request, response);
     }
