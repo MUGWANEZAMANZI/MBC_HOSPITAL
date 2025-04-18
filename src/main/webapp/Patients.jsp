@@ -42,7 +42,10 @@
 <header class="bg-blue-600 text-white py-4 shadow-md">
         <div class="container mx-auto flex justify-between items-center">
             <h1 class="text-2xl font-bold">Admin Dashboard</h1>
-            <p>Welcome, <span class="font-semibold"><%= session.getAttribute("username") %></span></p>
+            <div class="flex">            
+                <a class="block text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2 me-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700" href="dashboard.jsp">Home</a>
+                <p class="text-sm px-5 py-2 me-2">Welcome, <span class="font-semibold"><%= session.getAttribute("username") %></span></p>
+            </div>
         </div>
     </header>
 <div class="container mt-5">   
