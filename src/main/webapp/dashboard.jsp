@@ -49,19 +49,19 @@
 
     <main class="container mx-auto flex-grow mt-8">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <a href="<%= request.getContextPath() %>/register_doctor.jsp" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
+            <a href="register_doctor.jsp" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
                 <h2 class="text-xl font-semibold text-blue-600">Register New Doctors</h2>
                 <p class="text-gray-600 mt-2">Create doctor accounts with detailed information.</p>
             </a>
-            <a href="<%= request.getContextPath() %>/RegisteredDoctorsServlet" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
+            <a href="view_doctors.jsp" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
                 <h2 class="text-xl font-semibold text-blue-600">View All Registered Doctors</h2>
                 <p class="text-gray-600 mt-2">See a list of all registered doctors.</p>
             </a>
-            <a href="<%= request.getContextPath() %>/RegisteredNursesServlet" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
+            <a href="view_nurses.jsp" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
                 <h2 class="text-xl font-semibold text-blue-600">View All Registered Nurses</h2>
                 <p class="text-gray-600 mt-2">View nurses and their contact information.</p>
             </a>
-            <a href="track_cases_nurses.jsp" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
+            <a href="patients" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
                 <h2 class="text-xl font-semibold text-blue-600">Track Cases Registered by Nurses</h2>
                 <p class="text-gray-600 mt-2">Monitor patient cases registered by nurses.</p>
             </a>
@@ -69,11 +69,11 @@
                 <h2 class="text-xl font-semibold text-blue-600">Track Cases Handled by Doctors</h2>
                 <p class="text-gray-600 mt-2">View statistics of cases handled by doctors.</p>
             </a>
-            <a href="<%= request.getContextPath() %>/DiagnosisViewServlet" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
+            <a href="monitor_diagnosis.jsp" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
                 <h2 class="text-xl font-semibold text-blue-600">Monitor Diagnosis Status</h2>
                 <p class="text-gray-600 mt-2">Track diagnosis trends and statuses.</p>
             </a>
-            <a href="<%= request.getContextPath() %>/ManageUsersServlet" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
+            <a href="manage_users.jsp" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
                 <h2 class="text-xl font-semibold text-blue-600">Manage Users Table</h2>
                 <p class="text-gray-600 mt-2">View and manage user details securely.</p>
             </a>
