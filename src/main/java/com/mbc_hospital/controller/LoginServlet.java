@@ -37,11 +37,13 @@ public class LoginServlet extends HttpServlet {
                     if (rs.next()) {
                     	//Retrieving user type
                     	String usertype = rs.getString("usertype");
+                    	int id = rs.getInt("UserID");
                         // Successful login
                     	
                         HttpSession session = request.getSession();
                         session.setAttribute("username", username);
                         session.setAttribute("usertype",usertype);
+                        session.setAttribute("id", id);
                         response.sendRedirect("dashboard.jsp");
                     } else {
                         // Login failed
