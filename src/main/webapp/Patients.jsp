@@ -35,12 +35,18 @@
 <head>
     <title>Registered Patients</title>
     <meta charset="UTF-8">
+        <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
-<body>
-<div class="container mt-5">
-
-    <h2>Patients Registered by Nurses</h2>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+<header class="bg-blue-600 text-white py-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">Admin Dashboard</h1>
+            <p>Welcome, <span class="font-semibold"><%= session.getAttribute("username") %></span></p>
+        </div>
+    </header>
+<div class="container mt-5">   
+    <h2 class="text-2xl font-bold my-4">Patients Registered by Nurses</h2>
     <table class="table table-striped table-bordered">
         <thead>
         <tr>
