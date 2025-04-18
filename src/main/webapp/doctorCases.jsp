@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.*, com.mbc_hospital.model.Patient" %>
+<%@ page import="com.mbc_hospital.model.DoctorCase" %>
+<%@ page import="java.util.List" %>
 <%@ page import="jakarta.servlet.http.HttpSession" %>
 <%
     //HttpSession session = request.getSession(false);
@@ -30,16 +31,21 @@
         return;
     }
 %>
+
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Registered Patients</title>
-    <meta charset="UTF-8">
+    <title>Doctor Cases</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 10px; border: 1px solid #ddd; }
+        th { background-color: #f2f2f2; }
+    </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col">
-<header class="bg-blue-600 text-white py-4 shadow-md">
+<body>
+
+    <header class="bg-blue-600 text-white py-4 shadow-md">
         <div class="container mx-auto flex justify-between items-center">
             <h1 class="text-2xl font-bold">Admin Dashboard</h1>
             <div class="flex">            
@@ -48,64 +54,49 @@
             </div>
         </div>
     </header>
-<div class="container mt-5">   
-    <h2 class="text-2xl font-bold my-4">Patients Registered by Nurses</h2>
-   <%
-    List<Patient> patients = (List<Patient>) request.getAttribute("patients");
-      if (patients != null) {
-   %>      
-   <a href="#" class="block max-w-sm p-6 bg-gray-800 my-4 border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
-
-      <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Total patients</h5>
-      <p class="font-normal text-gray-700 dark:text-gray-400"><%= patients.size() %></p>
-  </a>
-      
-   <%
-      } else {
-   %>
-       No patients found.
-   <%
-      }
+    <div class="container m-10">
+    <h2 class="text-2lx font-bold">Cases Handled by Doctors</h2>
+    <%
+        @SuppressWarnings("unchecked")
+        List<DoctorCase> cases = (List<DoctorCase>) request.getAttribute("cases");
     %>
-
     <table class="table table-striped table-bordered">
         <thead>
-        <tr>
-            <th>ID</th>
-            <th>Full Name</th>
-            <th>Telephone</th>
-            <th>Email</th>
-            <th>Address</th>
-            <th>Registered By (Nurse ID)</th>
-        </tr>
+            <tr>
+                <th>Doctor ID</th>
+                <th>Name</th>
+                <th>Hospital</th>
+                <th>Diagnosis ID</th>
+                <th>Status</th>
+                <th>Result</th>
+            </tr>
         </thead>
         <tbody>
-         
-        <%
-   
-            if (patients != null) {
-                for (Patient p : patients) {
-        %>
+           <%
+    if (cases != null && !cases.isEmpty()) {
+        for (DoctorCase dc : cases) {
+%>
         <tr>
-            <td><%= p.getPatientID() %></td>
-            <td><%= p.getFirstName() + " " + p.getLastName() %></td>
-            <td><%= p.getTelephone() %></td>
-            <td><%= p.getEmail() %></td>
-            <td><%= p.getAddress() %></td>
-            <td><%= p.getRegisteredByName() %></td>
-            
+            <td><%= dc.getDoctorID() %></td>
+            <td><%= dc.getFirstName() %> <%= dc.getLastName() %></td>
+            <td><%= dc.getHospitalName() %></td>
+            <td><%= dc.getDiagnosisID() %></td>
+            <td><%= dc.getDiagnoStatus() %></td>
+            <td><%= dc.getResult() %></td>
         </tr>
-        <%
-                }
-            } else {
-        %>
+<%
+        }
+    } else {
+%>
         <tr>
-            <td colspan="6" class="text-center text-danger">No patients found or failed to load data.</td>
- 
+            <td colspan="6" style="text-align: center;">No cases available</td>
         </tr>
-        <% } %>
+<%
+    }
+%>
+
         </tbody>
     </table>
-</div>
+    </div>
 </body>
 </html>

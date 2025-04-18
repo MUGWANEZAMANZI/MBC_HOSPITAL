@@ -54,7 +54,7 @@
             <tbody>
                 <%
                     java.util.List<com.mbc_hospital.model.Diagnosis> diagnosisList =
-                        (java.util.List<com.mbc_hospital.model.Diagnosis>) request.getAttribute("diagnosisList");
+                    (java.util.List<com.mbc_hospital.model.Diagnosis>) request.getAttribute("diagnosisList");
                     if (diagnosisList != null && !diagnosisList.isEmpty()) {
                         for (com.mbc_hospital.model.Diagnosis d : diagnosisList) {
                             String status = d.getStatus();

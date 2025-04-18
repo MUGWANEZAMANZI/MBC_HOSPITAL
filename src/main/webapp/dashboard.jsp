@@ -65,7 +65,7 @@
                 <h2 class="text-xl font-semibold text-blue-600">Track Cases Registered by Nurses</h2>
                 <p class="text-gray-600 mt-2">Monitor patient cases registered by nurses.</p>
             </a>
-            <a href="track_cases_doctors.jsp" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
+            <a href="doctor-cases" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
                 <h2 class="text-xl font-semibold text-blue-600">Track Cases Handled by Doctors</h2>
                 <p class="text-gray-600 mt-2">View statistics of cases handled by doctors.</p>
             </a>
