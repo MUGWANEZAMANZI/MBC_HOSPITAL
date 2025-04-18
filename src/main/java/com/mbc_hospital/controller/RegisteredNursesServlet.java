@@ -24,9 +24,11 @@ public class RegisteredNursesServlet extends HttpServlet {
         List<Nurse> nurseList = new ArrayList<>();
 
         try (Connection connection = DBConnection.getConnection()) {
-            String sql = "SELECT * FROM nurse";
+            String sql = "SELECT * FROM nurses";
             PreparedStatement statement = connection.prepareStatement(sql);
             ResultSet resultSet = statement.executeQuery();
+            
+            System.out.println(resultSet);
 
             while (resultSet.next()) {
                 Nurse nurse = new Nurse();
