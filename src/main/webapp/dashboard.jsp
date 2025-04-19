@@ -73,7 +73,7 @@
                 <h2 class="text-xl font-semibold text-blue-600">Monitor Diagnosis Status</h2>
                 <p class="text-gray-600 mt-2">Track diagnosis trends and statuses.</p>
             </a>
-            <a href="manage_users.jsp" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
+            <a href="users-directory" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
                 <h2 class="text-xl font-semibold text-blue-600">Manage Users Table</h2>
                 <p class="text-gray-600 mt-2">View and manage user details securely.</p>
             </a>
