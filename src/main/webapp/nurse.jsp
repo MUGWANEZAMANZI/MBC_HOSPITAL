@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,36 +21,41 @@
 
     <!-- Main Content -->
     <div class="container mx-auto mt-8">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Registered Patients -->
             <div class="bg-white shadow-md rounded-lg p-6">
                 <h2 class="text-xl font-bold text-blue-600 mb-4">Registered Patients</h2>
-                <ul class="space-y-2">
-                    <li class="p-4 bg-gray-100 rounded shadow">Patient 1</li>
-                    <li class="p-4 bg-gray-100 rounded shadow">Patient 2</li>
-                    <li class="p-4 bg-gray-100 rounded shadow">Patient 3</li>
+                <ul id="registeredPatients">
+                    <%-- Dynamic content will be populated here --%>
                 </ul>
             </div>
 
             <!-- Referrable Cases -->
             <div class="bg-white shadow-md rounded-lg p-6">
-                <h2 class="text-xl font-bold text-green-600 mb-4">Referrable Cases</h2>
-                <ul class="space-y-2">
-                    <li class="p-4 bg-gray-100 rounded shadow">Case 1</li>
-                    <li class="p-4 bg-gray-100 rounded shadow">Case 2</li>
+                <h2 class="text-xl font-bold text-blue-600 mb-4">Referrable Cases</h2>
+                <ul id="referrableCases">
+                    <%-- Dynamic content will be populated here --%>
                 </ul>
             </div>
 
             <!-- Non-Referrable Cases -->
             <div class="bg-white shadow-md rounded-lg p-6">
-                <h2 class="text-xl font-bold text-red-600 mb-4">Non-Referrable Cases</h2>
-                <ul class="space-y-2">
-                    <li class="p-4 bg-gray-100 rounded shadow">Case A</li>
-                    <li class="p-4 bg-gray-100 rounded shadow">Case B</li>
+                <h2 class="text-xl font-bold text-blue-600 mb-4">Non-Referrable Cases</h2>
+                <ul id="nonReferrableCases">
+                    <%-- Dynamic content will be populated here --%>
                 </ul>
             </div>
 
+            <!-- Patient Results -->
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <h2 class="text-xl font-bold text-blue-600 mb-4">Patient Results</h2>
+                <ul id="patientResults">
+                    <%-- Dynamic content will be populated here --%>
+                </ul>
+            </div>
+            <div>
+            <a href="<%= request.getContextPath() %>/PatientController">Register patient</a>
+            </div>
         </div>
     </div>
 
@@ -62,4 +66,3 @@
 
 </body>
 </html>
-    
