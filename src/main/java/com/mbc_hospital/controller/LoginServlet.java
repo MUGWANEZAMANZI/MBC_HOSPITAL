@@ -45,6 +45,10 @@ public class LoginServlet extends HttpServlet {
                         session.setAttribute("usertype",usertype);
                         session.setAttribute("id", id);
                         response.sendRedirect("dashboard.jsp");
+//                        
+                
+                        
+                        
                     } else {
                         // Login failed
                         response.sendRedirect("login.jsp?error=invalid");
