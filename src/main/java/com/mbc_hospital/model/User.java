@@ -8,12 +8,32 @@ public class User {
 
     public User() {}
 
+    private String userType; // Admin, Nurse, Patient, Doctor
+    
+    public User() {
+    }
+
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+    // Constructor with all fields
+    public User(int userID, String username, String password, String userType) {
+        this.userID = userID;
+        this.username = username;
+        this.password = password;
+        this.userType = userType;
+    }
+
+    // Constructor without userID (for insert operations)
     public User(String username, String password, String userType) {
         this.username = username;
         this.password = password;
         this.userType = userType;
     }
 
+    // Getters and Setters
     public int getUserID() {
         return userID;
     }
@@ -44,5 +64,15 @@ public class User {
 
     public void setUserType(String userType) {
         this.userType = userType;
+    }
+
+    // Optional: To String method for easy debugging
+    @Override
+    public String toString() {
+        return "User{" +
+                "userID=" + userID +
+                ", username='" + username + '\'' +
+                ", userType='" + userType + '\'' +
+                '}';
     }
 }

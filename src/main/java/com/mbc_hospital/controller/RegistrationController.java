@@ -26,7 +26,7 @@ public class RegistrationController extends HttpServlet {
 		//Verify form data
 		if(username.length() > 2 && password.length() > 2) {
 			try ( Connection conn = DBConnection.getConnection()){
-				String sql = "INSERT INTO users(username,password) VALUES(?,?)";
+				String sql = "INSERT INTO Users(username,password) VALUES(?,?)";
 				
 				try (PreparedStatement st = conn.prepareStatement(sql)){
 					st.setString(1,username);
