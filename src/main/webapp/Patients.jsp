@@ -54,11 +54,12 @@
      
    %>      
     <h2 class="text-2xl font-bold my-4">Patients Registered by Nurses</h2>
-    <a href="#" class="block max-w-sm p-6 bg-gray-800 my-4 border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+    <a href="#" class="block max-w-sm p-6 bg-white my-4 border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
 
-      <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Total patients</h5>
-      <p class="font-normal text-gray-700 dark:text-gray-400"><%= (patients != null) ? patients.size() : 0 %></p>
+      <h5 class="text-xl font-semibold text-blue-600">Total patients</h5>
+      <p class="font-normal text-red-500"><%= (patients != null) ? patients.size() : 0 %></p>
   </a>
+  
    <%
       if (patients != null) {
    %>      
