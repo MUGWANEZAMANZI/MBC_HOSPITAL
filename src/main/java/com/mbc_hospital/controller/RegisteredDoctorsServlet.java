@@ -16,7 +16,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet("/RegisteredDoctorsServlet")
+@WebServlet("/all-doctors")
 public class RegisteredDoctorsServlet extends HttpServlet {
 
     @Override
@@ -30,14 +30,14 @@ public class RegisteredDoctorsServlet extends HttpServlet {
 
             while (resultSet.next()) {
                 Doctor doctor = new Doctor();
-                doctor.setDoctorId(resultSet.getString("DoctorID"));
+                doctor.setDoctorId(resultSet.getInt("DoctorID"));
                 doctor.setFirstName(resultSet.getString("FirstName"));
                 doctor.setLastName(resultSet.getString("LastName"));
                 doctor.setTelephone(resultSet.getString("Telephone"));
                 doctor.setEmail(resultSet.getString("Email"));
                 doctor.setAddress(resultSet.getString("Address"));
                 doctor.setHospitalName(resultSet.getString("HospitalName"));
-                doctor.setRegisteredBy(resultSet.getInt("RegisteredBy"));
+                doctor.setRegisteredBy(resultSet.getString("RegisteredBy"));
                 doctorsList.add(doctor);
             }
         } catch (Exception e) {

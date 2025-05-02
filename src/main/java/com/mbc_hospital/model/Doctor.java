@@ -1,21 +1,32 @@
 package com.mbc_hospital.model;
 
 public class Doctor {
-    private String doctorId;
+    private int doctorId;
     private String firstName;
     private String lastName;
     private String telephone;
     private String email;
     private String address;
     private String hospitalName;
-    private Integer registeredBy;
+    private String registeredBy;
+    private String status;
+
+    // Existing getters and setters...
+
+    public String getStatus() { 
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     // Getters and Setters
-    public String getDoctorId() {
+    public int getDoctorId() {
         return doctorId;
     }
 
-    public void setDoctorId(String doctorId) {
+    public void setDoctorId(int doctorId) {
         this.doctorId = doctorId;
     }
 
@@ -67,11 +78,11 @@ public class Doctor {
         this.hospitalName = hospitalName;
     }
 
-    public Integer getRegisteredBy() {
+    public String getRegisteredBy() {
         return registeredBy;
     }
 
-    public void setRegisteredBy(Integer registeredBy) {
+    public void setRegisteredBy(String registeredBy) {
         this.registeredBy = registeredBy;
     }
 }

@@ -16,7 +16,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet("/RegisteredNursesServlet")
+@WebServlet("/all-nurses")
 public class RegisteredNursesServlet extends HttpServlet {
 
     @Override
@@ -24,7 +24,7 @@ public class RegisteredNursesServlet extends HttpServlet {
         List<Nurse> nurseList = new ArrayList<>();
 
         try (Connection connection = DBConnection.getConnection()) {
-            String sql = "SELECT * FROM nurses";
+            String sql = "SELECT * FROM Nurses";
             PreparedStatement statement = connection.prepareStatement(sql);
             ResultSet resultSet = statement.executeQuery();
             
@@ -39,7 +39,8 @@ public class RegisteredNursesServlet extends HttpServlet {
                 nurse.setEmail(resultSet.getString("Email"));
                 nurse.setAddress(resultSet.getString("Address"));
                 nurse.setHealthCenter(resultSet.getString("HealthCenter"));
-                nurse.setRegisteredBy(resultSet.getInt("RegisteredBy"));
+                nurse.setRegisteredBy(resultSet.getString("RegisteredBy"));
+                nurse.setStatus(resultSet.getString("Status"));
 
                 nurseList.add(nurse);
             }

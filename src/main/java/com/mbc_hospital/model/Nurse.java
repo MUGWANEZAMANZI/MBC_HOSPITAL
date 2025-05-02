@@ -8,12 +8,21 @@ public class Nurse {
     private String email;
     private String address;
     private String healthCenter;
-    private Integer registeredBy;
+    private String registeredBy;
+    private String status;
 
     // Getters and Setters
     public Integer getNurseId() {
         return nurseId;
     }
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
 
     public void setNurseId(Integer nurseId) {
         this.nurseId = nurseId;
@@ -67,11 +76,11 @@ public class Nurse {
         this.healthCenter = healthCenter;
     }
 
-    public Integer getRegisteredBy() {
+    public String getRegisteredBy() {
         return registeredBy;
     }
 
-    public void setRegisteredBy(Integer registeredBy) {
+    public void setRegisteredBy(String registeredBy) {
         this.registeredBy = registeredBy;
     }
 }
