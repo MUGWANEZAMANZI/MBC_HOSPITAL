@@ -2,7 +2,6 @@
 <%@ page import="java.util.*, com.mbc_hospital.model.User" %>
 <%@ page import="jakarta.servlet.http.HttpSession" %>
 <%
-    //HttpSession session = request.getSession(false);
     if (session == null || session.getAttribute("username") == null) {
         response.sendRedirect("login.jsp");
         return;
@@ -14,19 +13,19 @@
         return;
     }
 
-    // Redirect based on user type
-    String[] roles = {"doctor", "nurse", "patient"}; 
-    if (userType.toLowerCase().equals(roles[0])) {
+    if ("doctor".equalsIgnoreCase(userType)) {
         response.sendRedirect("doctor.jsp");
         return;
-    } else if (userType.toLowerCase().equals(roles[1])) {
+    } else if ("nurse".equalsIgnoreCase(userType)) {
         response.sendRedirect("nurse.jsp");
         return;
-    } else if (userType.toLowerCase().equals(roles[2])) {
+    } else if ("patient".equalsIgnoreCase(userType)) {
         response.sendRedirect("patient.jsp");
         return;
     }
+
 %>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -114,9 +113,7 @@
         </svg>
     </div>
 
-    <!-- Header -->
-    <header class="relative z-10 text-white shadow-lg">
-        
+    <!-- Header -->      
     
     <header class="bg-blue-700 text-white py-4 px-6 shadow-lg">
         <div class="container mx-auto flex justify-between items-center">
@@ -141,35 +138,59 @@
     
     
     
-    <!-- JavaScript -->
-    <script>
-        // Simple search functionality (client-side filtering)
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchInput = document.getElementById('search');
-            if (searchInput) {
-                searchInput.addEventListener('input', function(e) {
-                    const searchTerm = e.target.value.toLowerCase();
-                    const rows = document.querySelectorAll('tbody tr');
-                    
-                    rows.forEach(row => {
-                        const username = row.children[1].textContent.toLowerCase();
-                        const userType = row.children[2].textContent.toLowerCase();
-                        
-                        if (username.includes(searchTerm) || userType.includes(searchTerm)) {
-                            row.style.display = '';
-                        } else {
-                            row.style.display = 'none';
-                        }
-                    });
-                });
+<script>
+    function updateStatus(userId, isCurrentlyVerified) {
+    	console.log(userId,isCurrentlyVerified)
+        const action = isCurrentlyVerified ? "reject" : "verify";
+    	console.log("Sending userId:", userId, "Action:", action);
+
+        fetch("update-verification", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: `userId=\${encodeURIComponent(userId)}&action=\${encodeURIComponent(action)}`
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                alert("Status updated.");
+                location.reload(); // Reload page to reflect change
+            } else {
+                alert("Failed to update: " + (data.message || data.error));
             }
+        })
+        .catch(err => {
+            alert("Error updating status.");
+            console.error(err);
         });
-    </script>
+    }
+
+    // Search logic inside DOMContentLoaded (this is fine)
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('search');
+        if (searchInput) {
+            searchInput.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                const rows = document.querySelectorAll('tbody tr');
+
+                rows.forEach(row => {
+                    const username = row.children[1].textContent.toLowerCase();
+                    const userType = row.children[2].textContent.toLowerCase();
+
+                    if (username.includes(searchTerm) || userType.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        }
+    });
+</script>
+
 </body>
 </html>
-        </div>
-    </header>
-
     <!-- Main Content -->
     <div class="container mx-auto p-6 relative z-10">
         <!-- Page Title -->
@@ -337,6 +358,22 @@
                                     </svg>
                                 </div>
                             </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <div class="flex items-center space-x-1">
+                                    <span>access-status</span>
+                                    <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
+                                    </svg>
+                                </div>
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <div class="flex items-center space-x-1">
+                                    <span>access request</span>
+                                    <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
+                                    </svg>
+                                </div>
+                            </th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
@@ -360,6 +397,26 @@
                                     <%= user.getUserType() %>
                                 </span>
                             </td>
+                          <td>
+                             <button 
+                                  onclick="updateStatus(<%= user.getUserID() %>, <%= user.isVerified() %>)"
+                                  class="cursor-pointer px-3 py-1 rounded-md text-sm font-medium 
+                                  <%= user.isVerified() ? "bg-green-100 text-green-800 hover:bg-green-200" : "bg-yellow-100 text-yellow-800 hover:bg-yellow-200" %>">
+                                  <%= user.isVerified() ? "Verified" : "Pending" %>
+                              </button>
+                          </td>
+
+                           <td>
+                           <!-- Assuming user.getUserID() is the user ID and user.isVerified() is the current verification status -->
+                          <button
+                            onclick="updateStatus(<%= user.getUserID() %>, <%= user.isVerified() %>)"
+                            class="<%= user.isVerified() ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600" %> text-white px-4 py-2 rounded transition duration-150"
+                            >
+                             <%= user.isVerified() ? "Reject" : "Grant" %>
+                           </button>
+
+                           
+                           </td>
                             
                         </tr>
                         <% 
@@ -420,4 +477,6 @@
                                 </svg>
                             </a>
                         </nav>
-                    </div>
+                        </div>
+                     </div>
+                    

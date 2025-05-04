@@ -23,6 +23,7 @@ public class UserDAO {
              user.setUsername(rs.getString("Username"));
              user.setPassword(rs.getString("Password"));
              user.setUserType(rs.getString("UserType"));
+             user.setVerified(rs.getBoolean("is_verified"));
              users.add(user);
          }
      }

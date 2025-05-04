@@ -22,23 +22,36 @@ public class RegistrationController extends HttpServlet {
 		//Get form data
 		String username = request.getParameter("uname");
 		String password = request.getParameter("pass");
+		String userType= request.getParameter("userType");
+		
+		System.out.println("User Type: " + userType);
+		System.out.println("Username: " + username);
+		System.out.println("Password: " + password);
+		System.out.println("UserType: " + userType);
+
+
 		
 		//Verify form data
 		if(username.length() > 2 && password.length() > 2) {
 			try ( Connection conn = DBConnection.getConnection()){
-				String sql = "INSERT INTO Users(username,password) VALUES(?,?)";
+				String sql = "INSERT INTO Users(username,password, userType, is_verified) VALUES(?,?,?,false)";
+				
+				System.out.println("Username: " + username);
+				System.out.println("Password: " + password);
+				System.out.println("UserType: " + userType);
+
 				
 				try (PreparedStatement st = conn.prepareStatement(sql)){
 					st.setString(1,username);
 					st.setString(2, password);
+					st.setString(3, userType);
+
+
 					
 					int rows = st.executeUpdate();
 					
 						if(rows > 0) {
-							HttpSession session = request.getSession();
-							session.setAttribute("username", username);
-							session.setAttribute("usertype", "admin");
-							response.sendRedirect("dashboard.jsp");
+							response.sendRedirect("pending.jsp");
 							
 						}else {
 							System.out.println("Registration failed");		

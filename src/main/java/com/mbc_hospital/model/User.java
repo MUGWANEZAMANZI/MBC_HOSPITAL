@@ -5,11 +5,20 @@ public class User {
     private String username;
     private String password;
     private String userType; // Admin, Nurse, Patient, Doctor
+    private boolean is_verified  ;
     
     public User() {
     }
 
+    
+    public boolean isVerified() {
+        return is_verified;
+    }
 
+    public void setVerified(boolean is_verified) {
+        this.is_verified = is_verified;
+    }
+    
     public User(String username, String password) {
         this.username = username;
         this.password = password;

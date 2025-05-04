@@ -21,10 +21,6 @@
         <h1 class="text-2xl font-bold text-blue-600 mb-6">Register New Nurse</h1>
         <form action="RegisterNurse" method="post">
             <div class="mb-4">
-                <label for="doctorId" class="block text-gray-700 font-semibold">Nurse ID</label>
-                <input type="text" id="doctorId" name="nurseId" class="w-full p-2 border rounded" required>
-            </div>
-            <div class="mb-4">
                 <label for="firstName" class="block text-gray-700 font-semibold">First Name</label>
                 <input type="text" id="firstName" name="firstName" class="w-full p-2 border rounded" required>
             </div>

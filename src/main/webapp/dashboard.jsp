@@ -115,15 +115,15 @@
                 </a>
                 <a href="users-directory" class="sidebar-link flex items-center space-x-3 text-white/90 hover:text-white p-3 rounded-lg mb-2">
                     <i class="fas fa-users w-6"></i>
-                    <span>Users Management</span>
+                    <span>User directory</span>
                 </a>
                 <a href="monitor_diagnosis.jsp" class="sidebar-link flex items-center space-x-3 text-white/90 hover:text-white p-3 rounded-lg mb-2">
                     <i class="fas fa-chart-line w-6"></i>
                     <span>Analytics</span>
                 </a>
-                <a href="audit_logs.jsp" class="sidebar-link flex items-center space-x-3 text-white/90 hover:text-white p-3 rounded-lg mb-2">
-                    <i class="fas fa-clipboard-list w-6"></i>
-                    <span>Audit Logs</span>
+                <a href="new-doctor.jsp" class="sidebar-link flex items-center space-x-3 text-white/90 hover:text-white p-3 rounded-lg mb-2">
+                    <i class="fas fa-user-plus w-6"></i>
+                    <span>new-doctor</span>
                 </a>
                 <a href="settings.jsp" class="sidebar-link flex items-center space-x-3 text-white/90 hover:text-white p-3 rounded-lg mb-2">
                     <i class="fas fa-cog w-6"></i>

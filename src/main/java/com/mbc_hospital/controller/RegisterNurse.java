@@ -22,26 +22,32 @@ public class RegisterNurse extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String nurseId = request.getParameter("nurseId");
         String firstname = request.getParameter("firstName");
         String lastname = request.getParameter("lastName");
         String telephone = request.getParameter("telephone");
         String email = request.getParameter("email");
         String address = request.getParameter("address");
         String hospitalName = request.getParameter("hospitalName");
+        
+        System.out.println("Firstname: " + firstname);
+        System.out.println("Lastname: " + lastname);
+        System.out.println("Telephone: " + telephone);
+        System.out.println("Email: " + email);
+        System.out.println("Address: " + address);
+        System.out.println("Hospital: " + hospitalName);
 
 
         try (Connection conn = DBConnection.getConnection()) {
 
-            String sql = "INSERT INTO nurses (NurseID, FirstName, LastName, Telephone, Email, Address, HealthCenter, RegisteredBy) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, nurseId);
-            ps.setString(2, firstname);
-            ps.setString(3, lastname);
-            ps.setString(4, telephone);
-            ps.setString(5, email);
-            ps.setString(6, address);
-            ps.setString(7, hospitalName);
+        	String sql = "INSERT INTO Nurses (FirstName, LastName, Telephone, Email, Address, HealthCenter, RegisteredBy) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        	PreparedStatement ps = conn.prepareStatement(sql);
+        	ps.setString(1, firstname);
+        	ps.setString(2, lastname);
+        	ps.setString(3, telephone); // Correct index
+        	ps.setString(4, email);
+        	ps.setString(5, address);
+        	ps.setString(6, hospitalName);
+        	ps.setString(7, "admin");
 
             int rowsInserted = ps.executeUpdate();
 
@@ -63,8 +69,8 @@ public class RegisterNurse extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             response.getWriter().println("<script type='text/javascript'>");
-            response.getWriter().println("alert('Error occurred during registration.');");
-            response.getWriter().println("location='register_nurse.jsp';");
+            response.getWriter().println("alert('Error occurred during registration.' + e);");
+//            response.getWriter().println("location='register_nurse.jsp';");
             response.getWriter().println("</script>");
         }
     }

@@ -20,6 +20,7 @@ public class LoginServlet extends HttpServlet {
         // Get credentials from request
         String username = request.getParameter("username");
         String password = request.getParameter("password");
+        
 
         // Validate input (simple example)
         if (username == null || password == null || username.isEmpty() || password.isEmpty()) {
@@ -34,21 +35,28 @@ public class LoginServlet extends HttpServlet {
                 stmt.setString(2, password);
 
                 try (ResultSet rs = stmt.executeQuery()) {
-                    if (rs.next()) {
-                    	//Retrieving user type
-                    	String usertype = rs.getString("usertype");
-                    	int id = rs.getInt("UserID");
-                        // Successful login
-                    	
-                        HttpSession session = request.getSession();
-                        session.setAttribute("username", username);
-                        session.setAttribute("usertype",usertype);
-                        session.setAttribute("id", id);
-                        response.sendRedirect("dashboard.jsp");
-                    } else {
-                        // Login failed
-                        response.sendRedirect("login.jsp?error=invalid");
-                    }
+                	if (rs.next()) {
+                	    // Retrieving user type
+                	    String usertype = rs.getString("usertype");
+                	    int id = rs.getInt("UserID");
+                	    boolean is_verified = rs.getBoolean("is_verified");
+
+                	    if (is_verified || usertype == "Admin") {
+                	        // Successful login
+                	        HttpSession session = request.getSession();
+                	        session.setAttribute("username", username);
+                	        session.setAttribute("usertype", usertype);
+                	        session.setAttribute("id", id);
+                	        response.sendRedirect("dashboard.jsp");
+                	    } else {
+                	        // Account is not yet verified
+                	        response.sendRedirect("pending.jsp");
+                	    }
+                	} else {
+                	    // Login failed
+                	    response.sendRedirect("login.jsp?error=invalid");
+                	}
+
                 }
             }
         } catch (SQLException e) {
