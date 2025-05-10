@@ -28,7 +28,7 @@
     }
     
     // Get patients data
-    List<Patient> patients = (List<Patient>) request.getAttribute("patients");
+    List<Patient> patients = (List<Patient>) request.getAttribute("patients") ;
     int patientCount = (patients != null) ? patients.size() : 0;
 %>
 <!DOCTYPE html>
@@ -205,8 +205,7 @@
             notification.className = 'fixed bottom-4 right-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded shadow-lg z-50 transition transform duration-300 opacity-0 translate-y-2';
             notification.innerHTML = `<div class="flex items-center"><i class="fas fa-check-circle mr-2"></i>${message}</div>`;
             
-            document.body.appendChild(notification);
-            
+            document.body.appendChild(notification);            
             // Show notification with animation
             setTimeout(() => {
                 notification.className = notification.className.replace('opacity-0 translate-y-2', 'opacity-100 translate-y-0');

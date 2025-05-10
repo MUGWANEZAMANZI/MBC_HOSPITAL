@@ -1,4 +1,4 @@
-package com.mbc_hospital.controller;
+ package com.mbc_hospital.controller;
 
 import com.mbc_hospital.dao.NurseDAO;
 import com.mbc_hospital.model.Nurse;

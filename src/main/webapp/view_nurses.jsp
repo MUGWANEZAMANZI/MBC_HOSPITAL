@@ -1,5 +1,4 @@
-<%@ page import="java.net.*, java.io.*" %>
-<%@ page import="java.util.*" %>
+<%@ page import="java.util.*, java.net.*, java.io.*, com.mbc_hospital.model.User" %>
 <%
 //Optional: Ensure only logged-in users can access
 if (session.getAttribute("id") == null) {
@@ -14,9 +13,9 @@ int userID = (Integer) session.getAttribute("id");
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doctor Details</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <title>Nurse Details</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -45,7 +44,7 @@ int userID = (Integer) session.getAttribute("id");
             display: inline-block;
             width: 24px;
             height: 24px;
-            background-color: #3498db;
+            background-color: #9b59b6;  /* Purple for nurses */
             margin-right: 10px;
             border-radius: 50%;
         }
@@ -53,7 +52,7 @@ int userID = (Integer) session.getAttribute("id");
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            background-color: #2ecc71;
+            background-color: #9b59b6;  /* Purple for nurses */
             color: white;
             border-radius: 50%;
             width: 24px;
@@ -61,12 +60,12 @@ int userID = (Integer) session.getAttribute("id");
             font-size: 14px;
             margin-right: 8px;
         }
-        .doctors-table {
+        .nurses-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
-        .doctors-table th {
+        .nurses-table th {
             background-color: #f8f9fa;
             padding: 12px 15px;
             text-align: left;
@@ -74,11 +73,11 @@ int userID = (Integer) session.getAttribute("id");
             color: #2c3e50;
             border-bottom: 2px solid #ddd;
         }
-        .doctors-table td {
+        .nurses-table td {
             padding: 12px 15px;
             border-bottom: 1px solid #eee;
         }
-        .doctors-table tr:hover {
+        .nurses-table tr:hover {
             background-color: #f8f9fa;
         }
         .verified-cell {
@@ -130,55 +129,43 @@ int userID = (Integer) session.getAttribute("id");
     <div class="container-man">
         <h2>
             <span class="verified-badge"></span>
-            Verified Doctors
+            Verified Nurses
         </h2>
         
         <%
-        boolean hasData = false;
+        List<User> nurseList = new ArrayList<>();
         try {
-            URL url = new URL("http://localhost:8080/MBC_HOSPITAL/doctor-list-data");
+            URL url = new URL("http://localhost:8080/MBC_HOSPITAL/nurse-list-raw");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setConnectTimeout(5000);
             connection.setReadTimeout(5000);
             
             int responseCode = connection.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                String line;
-                List<String[]> doctorData = new ArrayList<>();
+                ObjectInputStream in = new ObjectInputStream(connection.getInputStream());
+                nurseList = (List<User>) in.readObject();
+                in.close();
                 
-                while ((line = reader.readLine()) != null) {
-                    if (line.startsWith("ERROR")) continue; // skip error message
-                    String[] parts = line.split("\\|");
-                    if (parts.length == 5) {
-                        doctorData.add(parts);
-                        hasData = true;
-                    }
-                }
-                reader.close();
-                
-                if (hasData) {
+                if (nurseList != null && !nurseList.isEmpty()) {
         %>
-                    <table class="doctors-table">
+                    <table class="nurses-table">
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Doctor Name</th>
-                                <th>Specialty</th>
-                                <th>Registration Date</th>
+                                <th>Nurse Name</th>
+                                <th>Role</th>
                                 <th>Verification Status</th>
                             </tr>
                         </thead>
                         <tbody>
                         <% 
-                            for (String[] doctor : doctorData) {
-                                boolean isVerified = "true".equalsIgnoreCase(doctor[4]) || "yes".equalsIgnoreCase(doctor[4]) || "1".equals(doctor[4]);
+                            for (User nurse : nurseList) {
+                                boolean isVerified = nurse.isVerified();
                         %>
                             <tr>
-                                <td><%= doctor[0] %></td>
-                                <td><%= doctor[1] %></td>
-                                <td><%= doctor[2] %></td>
-                                <td><%= doctor[3] %></td>
+                                <td><%= nurse.getUserID() %></td>
+                                <td><%= nurse.getUsername() %></td>
+                                <td><%= nurse.getUserType() %></td>
                                 <td class="verified-cell <%= isVerified ? "verified-true" : "verified-false" %>">
                                     <%= isVerified ? "Verified" : "Pending" %>
                                 </td>
@@ -190,8 +177,8 @@ int userID = (Integer) session.getAttribute("id");
                 } else {
         %>
                     <div class="empty-state">
-                        <h3>No verified doctors found</h3>
-                        <p>There are currently no verified doctors in the system.</p>
+                        <h3>No verified nurses found</h3>
+                        <p>There are currently no verified nurses in the system.</p>
                     </div>
         <%
                 }
@@ -201,7 +188,7 @@ int userID = (Integer) session.getAttribute("id");
         } catch (Exception e) {
         %>
             <div class="error-container">
-                <strong>Unable to load doctor data:</strong> <%= e.getMessage() %>
+                <strong>Unable to load nurse data:</strong> <%= e.getMessage() %>
                 <p>Please check the server connection and try again later.</p>
             </div>
         <%

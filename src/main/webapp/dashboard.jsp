@@ -1,5 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page import="jakarta.servlet.http.HttpSession" %>
+<%@ page import="java.util.*" %>
+
+
 <%
     //HttpSession session = request.getSession(false);
     if (session == null || session.getAttribute("username") == null) {
@@ -30,6 +33,12 @@
     }
 %>
 
+<%
+    List<String> doctorList = (List<String>) session.getAttribute("doctorList");
+    List<String> nurseList = (List<String>) session.getAttribute("nurseList");
+    Integer doctorCount_ = (Integer) session.getAttribute("doctorCount");
+    Integer nurseCount_ = (Integer) session.getAttribute("nurseCount");
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -117,18 +126,12 @@
                     <i class="fas fa-users w-6"></i>
                     <span>User directory</span>
                 </a>
-                <a href="monitor_diagnosis.jsp" class="sidebar-link flex items-center space-x-3 text-white/90 hover:text-white p-3 rounded-lg mb-2">
-                    <i class="fas fa-chart-line w-6"></i>
-                    <span>Analytics</span>
-                </a>
+               
                 <a href="new-doctor.jsp" class="sidebar-link flex items-center space-x-3 text-white/90 hover:text-white p-3 rounded-lg mb-2">
                     <i class="fas fa-user-plus w-6"></i>
                     <span>new-doctor</span>
                 </a>
-                <a href="settings.jsp" class="sidebar-link flex items-center space-x-3 text-white/90 hover:text-white p-3 rounded-lg mb-2">
-                    <i class="fas fa-cog w-6"></i>
-                    <span>Settings</span>
-                </a>
+               
                 <a href="logout.jsp" class="sidebar-link flex items-center space-x-3 text-white/90 hover:text-white p-3 rounded-lg mt-8 bg-red-500/20 hover:bg-red-500/30">
                     <i class="fas fa-sign-out-alt w-6"></i>
                     <span>Logout</span>
@@ -153,17 +156,6 @@
             </div>
             
             <div class="flex items-center space-x-4">
-                <div class="relative">
-                    <input type="text" placeholder="Search..." class="rounded-full pl-10 pr-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 w-40 md:w-64">
-                    <i class="fas fa-search absolute left-3 top-2.5 text-gray-400"></i>
-                </div>
-                
-                <div class="relative">
-                    <button class="relative p-2 text-gray-500 hover:text-gray-700">
-                        <i class="fas fa-bell"></i>
-                        <span class="absolute top-0 right-0 h-5 w-5 flex items-center justify-center rounded-full bg-red-500 text-white text-xs">3</span>
-                    </button>
-                </div>
                 
                 <div class="relative">
                     <button class="flex items-center space-x-2">
@@ -193,7 +185,7 @@
                            String count = in.readLine();
                            in.close();
                            %>
-                          <h3 class="text-2xl font-bold"><%= count %></h3>
+                          <h3 class="text-2xl font-bold"><%= (count != null) ? count : 0 %></h3>
                         <p class="text-xs text-green-500 flex items-center mt-1">
                             <i class="fas fa-arrow-up mr-1"></i> 8% from last month
                         </p>
@@ -201,11 +193,13 @@
                 </div>
                 
                 <%
+                
                    java.net.URL url2 = new java.net.URL("http://localhost:8080/MBC_HOSPITAL/patient-count");
                    java.io.BufferedReader in1 = new java.io.BufferedReader(new java.io.InputStreamReader(url2.openStream()));
                    String patientCount = in1.readLine();
                    in1.close();
-                 %>
+                   
+                 %> 
                 
                 
                 <div class="bg-white rounded-lg shadow-md p-6 flex items-center space-x-4 animate-fade-in" style="animation-delay: 0.2s">
@@ -257,6 +251,7 @@
             </div>
             
             <!-- Charts Row -->
+            <% /*
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                 <div class="bg-white rounded-lg shadow-md p-6 animate-fade-in" style="animation-delay: 0.5s">
                     <div class="flex justify-between items-center mb-4">
@@ -279,26 +274,11 @@
                     <canvas id="deptChart" height="250"></canvas>
                 </div>
             </div>
+            */%>
             
             <!-- Main Dashboard Cards -->
             <h2 class="text-xl font-bold text-gray-800 mb-6 mt-10 animate-fade-in" style="animation-delay: 0.7s">Administrative Functions</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Card 1 -->
-                <a href="new-doctor.jsp" class="dashboard-card card-1 bg-white rounded-lg shadow-md hover:shadow-lg transition p-6 animate-fade-in" style="animation-delay: 0.8s">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="card-icon p-3 rounded-full bg-blue-100 text-blue-600">
-                            <i class="fas fa-user-md text-xl"></i>
-                        </div>
-                        <span class="text-xs font-medium bg-blue-100 text-blue-600 px-3 py-1 rounded-full">Staff</span>
-                    </div>
-                    <h2 class="text-xl font-semibold text-gray-800">Register New Doctors</h2>
-                    <p class="text-gray-600 mt-2">Create doctor accounts with detailed professional information.</p>
-                    <div class="mt-4 flex items-center text-blue-600">
-                        <span class="text-sm">Access Module</span>
-                        <i class="fas fa-arrow-right ml-2"></i>
-                    </div>
-                </a>
-                
+            <div class="grid grid-cols-1 mt-10 md:grid-cols-2 lg:grid-cols-3 gap-6">                
                 <!-- Card 2 -->
                 <a href="doctors-dir" class="dashboard-card card-2 bg-white rounded-lg shadow-md hover:shadow-lg transition p-6 animate-fade-in" style="animation-delay: 0.9s">
                     <div class="flex items-center justify-between mb-4">
@@ -316,7 +296,7 @@
                 </a>
                 
                 <!-- Card 3 -->                
-                <a href="all-nurses" class="dashboard-card card-3 bg-white rounded-lg shadow-md hover:shadow-lg transition p-6 animate-fade-in" style="animation-delay: 1.0s">
+                <a href="view_nurses.jsp" class="dashboard-card card-3 bg-white rounded-lg shadow-md hover:shadow-lg transition p-6 animate-fade-in" style="animation-delay: 1.0s">
                     <div class="flex items-center justify-between mb-4">
                         <div class="card-icon p-3 rounded-full bg-purple-100 text-purple-600">
                             <i class="fas fa-user-nurse text-xl"></i>
@@ -348,7 +328,7 @@
                 </a>
                 
                 <!-- Card 5 -->
-                <a href="doctor-cases" class="dashboard-card card-5 bg-white rounded-lg shadow-md hover:shadow-lg transition p-6 animate-fade-in" style="animation-delay: 1.2s">
+                <a href="patients-by-doc" class="dashboard-card card-5 bg-white rounded-lg shadow-md hover:shadow-lg transition p-6 animate-fade-in" style="animation-delay: 1.2s">
                     <div class="flex items-center justify-between mb-4">
                         <div class="card-icon p-3 rounded-full bg-red-100 text-red-600">
                             <i class="fas fa-stethoscope text-xl"></i>
@@ -358,22 +338,6 @@
                     <h2 class="text-xl font-semibold text-gray-800">Track Cases Handled by Doctors</h2>
                     <p class="text-gray-600 mt-2">View statistics and details of cases handled by medical doctors.</p>
                     <div class="mt-4 flex items-center text-red-600">
-                        <span class="text-sm">Access Module</span>
-                        <i class="fas fa-arrow-right ml-2"></i>
-                    </div>
-                </a>
-                
-                <!-- Card 6 -->
-                <a href="monitor_diagnosis.jsp" class="dashboard-card card-6 bg-white rounded-lg shadow-md hover:shadow-lg transition p-6 animate-fade-in" style="animation-delay: 1.3s">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="card-icon p-3 rounded-full bg-pink-100 text-pink-600">
-                            <i class="fas fa-heartbeat text-xl"></i>
-                        </div>
-                        <span class="text-xs font-medium bg-pink-100 text-pink-600 px-3 py-1 rounded-full">Analytics</span>
-                    </div>
-                    <h2 class="text-xl font-semibold text-gray-800">Monitor Diagnosis Status</h2>
-                    <p class="text-gray-600 mt-2">Track diagnosis trends, treatment progress, and outcome statistics.</p>
-                    <div class="mt-4 flex items-center text-pink-600">
                         <span class="text-sm">Access Module</span>
                         <i class="fas fa-arrow-right ml-2"></i>
                     </div>

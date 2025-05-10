@@ -1,4 +1,5 @@
 package com.mbc_hospital.controller;
+
 import com.mbc_hospital.model.DBConnection;
 import com.mbc_hospital.model.Patient;
 
@@ -13,36 +14,41 @@ import jakarta.servlet.annotation.WebServlet;
 public class PatientController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ArrayList<Patient> patients = new ArrayList<>();
-        System.out.println("🚀 PatientController: doGet triggered");
+        System.out.println("🚀 PatientController: doGet triggered...");
+        System.out.print("patients "+ patients);
 
+
+       
 
         try {
-            
             Connection conn = DBConnection.getConnection();
 
-            String sql = "SELECT p.PatientID, p.FirstName AS PatientFirstName, p.LastName AS PatientLastName, p.Telephone, p.Email, p.Address, p.PImageLink, p.RegisteredBy, n.FirstName AS NurseFirstName, n.LastName AS NurseLastName FROM Patients p JOIN Nurses n ON p.RegisteredBy = n.NurseID";
-       PreparedStatement stmt = conn.prepareStatement(sql);
-       ResultSet rs = stmt.executeQuery();
+            String sql = "SELECT p.PatientID, p.FirstName AS PatientFirstName, p.LastName AS PatientLastName, " +
+                         "p.Telephone, p.Email, p.Address, p.PImageLink, p.RegisteredBy, " +
+                         "u.Username AS RegisteredByUsername " +
+                         "FROM Patients p " +
+                         "JOIN Users u ON p.RegisteredBy = u.UserID " +
+                         "WHERE u.UserType = 'Nurse'";
 
-       while (rs.next()) {
-           Patient patient = new Patient();
-           patient.setPatientID(rs.getInt("PatientID"));
-           patient.setFirstName(rs.getString("PatientFirstName"));
-           patient.setLastName(rs.getString("PatientLastName"));
-           patient.setTelephone(rs.getString("Telephone"));
-           patient.setEmail(rs.getString("Email"));
-           patient.setAddress(rs.getString("Address"));
-           patient.setPImageLink(rs.getString("PImageLink"));
-           patient.setRegisteredBy(rs.getInt("RegisteredBy"));
-           
-           // You can create extra fields like `registeredByName` if needed:
-           String nurseFullName = rs.getString("NurseFirstName") + " " + rs.getString("NurseLastName");
-           request.setAttribute("nurseFullName_" + patient.getPatientID(), nurseFullName);
-//           patient.setRegisteredByName(nurseFullName);
-           patient.setRegisteredByName(nurseFullName);
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
 
-           patients.add(patient);
-       }
+            while (rs.next()) {
+                Patient patient = new Patient();
+                patient.setPatientID(rs.getInt("PatientID"));
+                patient.setFirstName(rs.getString("PatientFirstName"));
+                patient.setLastName(rs.getString("PatientLastName"));
+                patient.setTelephone(rs.getString("Telephone"));
+                patient.setEmail(rs.getString("Email"));
+                patient.setAddress(rs.getString("Address"));
+                patient.setPImageLink(rs.getString("PImageLink"));
+                patient.setRegisteredBy(rs.getInt("RegisteredBy"));
+
+                String username = rs.getString("RegisteredByUsername");
+                patient.setRegisteredByName(username);
+
+                patients.add(patient);
+            }
 
             rs.close();
             stmt.close();
@@ -51,11 +57,8 @@ public class PatientController extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        System.out.print("patients "+ patients);
         request.setAttribute("patients", patients);
-        System.out.println("Total patients fetched: " + patients.size());
-        System.out.println("Servlet is triggered!");
-        System.out.println("Number of patients fetched: " + patients.size());
         RequestDispatcher dispatcher = request.getRequestDispatcher("Patients.jsp");
         dispatcher.forward(request, response);
     }

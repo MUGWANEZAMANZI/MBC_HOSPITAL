@@ -18,6 +18,9 @@ public class Patient {
     private String address;
     private String pImageLink;
     private int registeredBy;
+    private int diagnosisId;
+    private String diagnoStatus;
+    private String result;
 
     // Getters and Setters
     public int getPatientID() { return patientID; }
@@ -43,4 +46,28 @@ public class Patient {
 
     public int getRegisteredBy() { return registeredBy; }
     public void setRegisteredBy(int registeredBy) { this.registeredBy = registeredBy; }
+    
+    public int getDiagnosisId() {
+        return diagnosisId;
+    }
+
+    public void setDiagnosisId(int diagnosisId) {
+        this.diagnosisId = diagnosisId;
+    }
+
+    public String getDiagnoStatus() {
+        return diagnoStatus;
+    }
+
+    public void setDiagnoStatus(String diagnoStatus) {
+        this.diagnoStatus = diagnoStatus;
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
+    }
 }

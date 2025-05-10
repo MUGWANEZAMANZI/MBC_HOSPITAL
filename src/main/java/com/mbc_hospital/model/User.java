@@ -1,16 +1,19 @@
 package com.mbc_hospital.model;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
+    private static final long serialVersionUID = 1L; // optional but recommended
+
     private int userID;
     private String username;
     private String password;
     private String userType; // Admin, Nurse, Patient, Doctor
-    private boolean is_verified  ;
-    
+    private boolean is_verified;
+
     public User() {
     }
 
-    
     public boolean isVerified() {
         return is_verified;
     }
@@ -18,12 +21,12 @@ public class User {
     public void setVerified(boolean is_verified) {
         this.is_verified = is_verified;
     }
-    
+
     public User(String username, String password) {
         this.username = username;
         this.password = password;
     }
-    // Constructor with all fields
+
     public User(int userID, String username, String password, String userType) {
         this.userID = userID;
         this.username = username;
@@ -31,14 +34,12 @@ public class User {
         this.userType = userType;
     }
 
-    // Constructor without userID (for insert operations)
     public User(String username, String password, String userType) {
         this.username = username;
         this.password = password;
         this.userType = userType;
     }
 
-    // Getters and Setters
     public int getUserID() {
         return userID;
     }
@@ -71,7 +72,6 @@ public class User {
         this.userType = userType;
     }
 
-    // Optional: To String method for easy debugging
     @Override
     public String toString() {
         return "User{" +

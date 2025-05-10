@@ -11,28 +11,22 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 @WebServlet("/doctor-count")
 public class DoctorCountServlet extends HttpServlet {
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int count = 0;
-
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try (Connection conn = DBConnection.getConnection()) {
-            String sql = "SELECT COUNT(*) FROM Doctors";
+            String sql = "SELECT COUNT(*) FROM Users WHERE UserType = 'Doctor'";
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
-
             if (rs.next()) {
-                count = rs.getInt(1);
+                response.getWriter().print(rs.getInt(1));
+            } else {
+                response.getWriter().print("0");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            response.getWriter().print("0");
         }
-
-        response.setContentType("text/plain");
-        PrintWriter out = response.getWriter();
-        out.print(count);
-        out.flush();
     }
 }

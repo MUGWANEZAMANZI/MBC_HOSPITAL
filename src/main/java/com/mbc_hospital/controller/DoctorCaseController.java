@@ -1,53 +1,64 @@
 package com.mbc_hospital.controller;
 
+import com.mbc_hospital.model.DBConnection;
+import com.mbc_hospital.model.Patient;
+
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
-
-import com.mbc_hospital.model.DBConnection;
-import com.mbc_hospital.model.DoctorCase;
-
 import jakarta.servlet.*;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.WebServlet;
 
-@WebServlet("/doctor-cases")
+@WebServlet("/patients-by-doc")
 public class DoctorCaseController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ArrayList<DoctorCase> caseList = new ArrayList<>();
+        ArrayList<Patient> patients = new ArrayList<>();
+        System.out.println("🚀 PatientController: doGet triggered...");
+        System.out.print("patients "+ patients);
+
+
+       
 
         try {
-            Class.forName("com.mysql.jdbc.Driver");
             Connection conn = DBConnection.getConnection();
 
-            String sql = "SELECT d.DoctorID, d.FirstName, d.LastName, d.HospitalName, diag.DiagnosisID, diag.DiagnoStatus, diag.Result " +
-                         "FROM Doctors d " +
-                         "JOIN Diagnosis diag ON d.DoctorID = diag.DoctorID";
+            String sql = "SELECT p.PatientID, p.FirstName AS PatientFirstName, p.LastName AS PatientLastName, " +
+                         "p.Telephone, p.Email, p.Address, p.PImageLink, p.RegisteredBy, " +
+                         "u.Username AS RegisteredByUsername " +
+                         "FROM Patients p " +
+                         "JOIN Users u ON p.RegisteredBy = u.UserID " +
+                         "WHERE u.UserType = 'Doctor'";
 
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                DoctorCase dc = new DoctorCase();
-                dc.setDoctorID(rs.getInt("DoctorID"));
-                dc.setFirstName(rs.getString("FirstName"));
-                dc.setLastName(rs.getString("LastName"));
-                dc.setHospitalName(rs.getString("HospitalName"));
-                dc.setDiagnosisID(rs.getInt("DiagnosisID"));
-                dc.setDiagnoStatus(rs.getString("DiagnoStatus"));
-                dc.setResult(rs.getString("Result"));
+                Patient patient = new Patient();
+                patient.setPatientID(rs.getInt("PatientID"));
+                patient.setFirstName(rs.getString("PatientFirstName"));
+                patient.setLastName(rs.getString("PatientLastName"));
+                patient.setTelephone(rs.getString("Telephone"));
+                patient.setEmail(rs.getString("Email"));
+                patient.setAddress(rs.getString("Address"));
+                patient.setPImageLink(rs.getString("PImageLink"));
+                patient.setRegisteredBy(rs.getInt("RegisteredBy"));
 
-                caseList.add(dc);
+                String username = rs.getString("RegisteredByUsername");
+                patient.setRegisteredByName(username);
+
+                patients.add(patient);
             }
 
             rs.close();
-            ps.close();
+            stmt.close();
             conn.close();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        request.setAttribute("cases", caseList);
+        System.out.print("patients "+ patients);
+        request.setAttribute("patients-doc", patients);
         RequestDispatcher dispatcher = request.getRequestDispatcher("doctorCases.jsp");
         dispatcher.forward(request, response);
     }

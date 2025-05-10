@@ -52,10 +52,8 @@
                         <label for="userType" class="block text-sm font-medium text-gray-700 mb-1">I am a:</label>
                         <select id="userType" name="userType" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 form-input bg-gray-50">
                             <option value="">Select User Type</option>
-                            <option value="Doctor">Admin</option>
                             <option value="Doctor">Doctor</option>
                             <option value="Nurse">Nurse</option>
-                            <option value="Patient">Patient</option>
                         </select>
                     </div>
                     
@@ -94,7 +92,7 @@
                     </div>
                     
                     <div class="text-center text-gray-500 text-sm">
-                        Already have an account? <a href="#" class="text-blue-600 hover:underline">Sign in</a>
+                        Already have an account? <a href="login.jsp" class="text-blue-600 hover:underline">Sign in</a>
                     </div>
                 </form>
             </div>
