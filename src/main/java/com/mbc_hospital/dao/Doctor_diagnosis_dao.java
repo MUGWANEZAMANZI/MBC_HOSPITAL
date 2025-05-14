@@ -6,7 +6,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PatientDiagnosisDAO {
+public class Doctor_diagnosis_dao {
     public List<Patient> getAllPatientDiagnoses() throws SQLException {
         System.out.println("DAO method called..."); // Confirm call
         List<Patient> list = new ArrayList<>();
@@ -17,7 +17,9 @@ public class PatientDiagnosisDAO {
                 "d.Result " +
                 "FROM Patients p " +
                 "LEFT JOIN Users u ON p.RegisteredBy = u.UserID " +
-                "LEFT JOIN Diagnosis d ON p.PatientID = d.PatientID";
+                "LEFT JOIN Diagnosis d ON p.PatientID = d.PatientID " +
+                "WHERE d.DiagnoStatus = 'Referrable'";
+
 
         
         try (Connection conn = DBConnection.getConnection();
@@ -38,7 +40,7 @@ public class PatientDiagnosisDAO {
                 p.setAddress(rs.getString("Address"));
                 p.setImageLink(rs.getString("PImageLink"));
                 p.setRegisteredBy(rs.getInt("RegisteredBy"));
-                p.setRegisteredByName(rs.getString("registeredByName"));
+                p.setRegisteredByName(rs.getString("RegisteredByName"));
                 p.setDiagnosisID(rs.getInt("DiagnosisID"));
                 p.setDiagnosisStatus(rs.getString("DiagnoStatus"));
                 p.setDiagnosisResult(rs.getString("Result"));

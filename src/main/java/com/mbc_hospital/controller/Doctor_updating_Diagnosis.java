@@ -13,8 +13,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-@WebServlet("/submitDiagnosis")
-public class SubmitDiagnosisServlet extends HttpServlet {
+@WebServlet("/doctor-diag")
+public class Doctor_updating_Diagnosis extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -26,7 +26,7 @@ public class SubmitDiagnosisServlet extends HttpServlet {
         String result = request.getParameter("result");
         String nurseIDStr = request.getParameter("nurseID");
 
-        // Print debug statements
+     // Print debug statements
         System.out.println("Received parameters:");
         System.out.println("patientID: " + patientID);
         System.out.println("diagnoStatus: " + diagnoStatus);
@@ -42,17 +42,9 @@ public class SubmitDiagnosisServlet extends HttpServlet {
             e.printStackTrace();
         }
 
+
         // Assume doctor hasn't been assigned yet
         Integer doctorID = null;
-        
-        // Set result based on diagnosis status as per requirements
-        if ("Referrable".equals(diagnoStatus)) {
-            // If the diagnosis is referrable, the result should be "Pending" until a doctor reviews it
-            result = "Pending";
-        } else if ("Not Referable".equals(diagnoStatus)) {
-            // If the diagnosis is not referrable, the result should be "Negative"
-            result = "Negative";
-        }
 
         Connection conn = null;
         PreparedStatement stmt = null;

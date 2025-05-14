@@ -22,7 +22,7 @@
 
     String[] roles = {"doctor", "nurse", "patient"}; 
     if (userType.toLowerCase().equals(roles[0])) {
-        response.sendRedirect("doctor.jsp");
+        response.sendRedirect("reffered");
         return;
     } else if (userType.toLowerCase().equals(roles[1])) {
         response.sendRedirect("nurse.jsp");

@@ -2,7 +2,6 @@ package com.mbc_hospital.controller;
 
 import com.mbc_hospital.model.DBConnection;
 import com.mbc_hospital.model.Diagnosis;
-import com.mbc_hospital.model.DiagnosisPatientView;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -15,20 +14,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@WebServlet("/DiagnosisViewServlet")
-public class DiagnosisViewServlet extends HttpServlet {
+@WebServlet("/referred-diagnoses")
+public class ReferredDiagnosesServlet extends HttpServlet {
     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Diagnosis> diagnosisList = new ArrayList<>();
+        List<Diagnosis> referrableDiagnoses = new ArrayList<>();
         Map<Integer, String> patientNames = new HashMap<>();
+
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("username") == null || !session.getAttribute("usertype").equals("Doctor")) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
         
         try (Connection conn = DBConnection.getConnection()) {
-            // First, fetch all diagnoses
+            // Fetch only diagnoses with status 'Referrable'
             String sql = "SELECT d.*, " +
                          "p.FirstName, p.LastName " + 
                          "FROM Diagnosis d " +
-                         "LEFT JOIN Patients p ON d.PatientID = p.PatientID";
+                         "LEFT JOIN Patients p ON d.PatientID = p.PatientID " +
+                         "WHERE d.DiagnoStatus = 'Referrable'";
             
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
@@ -41,19 +47,19 @@ public class DiagnosisViewServlet extends HttpServlet {
                 String status = rs.getString("DiagnoStatus");
                 String result = rs.getString("Result");
                 
-                // New fields
+                // Additional fields
                 String medicationsPrescribed = rs.getString("MedicationsPrescribed");
                 Date followUpDate = rs.getDate("FollowUpDate");
                 Timestamp diagnosisDate = rs.getTimestamp("DiagnosisDate");
                 String nurseAssessment = rs.getString("NurseAssessment");
 
-                // Create a diagnosis object with all fields
+                // Create diagnosis object with all fields
                 Diagnosis diagnosis = new Diagnosis(
                     diagnosisId, patientId, nurseId, doctorId, status, result,
                     medicationsPrescribed, followUpDate, diagnosisDate, nurseAssessment
                 );
                 
-                diagnosisList.add(diagnosis);
+                referrableDiagnoses.add(diagnosis);
                 
                 // Store patient name
                 String firstName = rs.getString("FirstName");
@@ -67,10 +73,12 @@ public class DiagnosisViewServlet extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
+            request.setAttribute("error", "Failed to retrieve referred diagnoses: " + e.getMessage());
         }
 
-        request.setAttribute("diagnosisList", diagnosisList);
+        request.setAttribute("referrableDiagnoses", referrableDiagnoses);
         request.setAttribute("patientNames", patientNames);
-        request.getRequestDispatcher("diagnosis_view.jsp").forward(request, response);
+        request.setAttribute("currentPage", "pending");
+        request.getRequestDispatcher("referred_diagnoses.jsp").forward(request, response);
     }
-}
+} 

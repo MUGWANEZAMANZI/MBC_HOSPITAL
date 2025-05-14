@@ -31,6 +31,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <!-- Alpine.js for modal functionality -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="assets/js/diagnosis.js"></script>
     <style>
         [x-cloak] { display: none !important; }
     </style>
@@ -117,10 +118,13 @@
                             </td>
                             <td class="py-3 px-4">
                                 <button 
-                                    @click="showModal = true; selectedPatient = <%= p.getPatientID() %>" 
+                                    data-diagnose
+                                    data-patient-id="<%= p.getPatientID() %>"
+                                    data-patient-name="<%= p.getFirstName() %> <%= p.getLastName() %>"
+                                    data-target-modal="diagnosisModal"
                                     class="px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center text-sm"
                                 >
-                                    <i class="fas fa-edit mr-1"></i> Diagnose
+                                    <i class="fas fa-stethoscope mr-1"></i> Diagnose
                                 </button>
                             </td>
                         </tr>                        
@@ -140,17 +144,14 @@
     </div>
 
     <!-- Diagnosis Modal -->
-    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" 
-         x-show="showModal" 
+    <div id="diagnosisModal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden" 
          x-transition:enter="transition ease-out duration-300"
          x-transition:enter-start="opacity-0"
          x-transition:enter-end="opacity-100"
          x-transition:leave="transition ease-in duration-200"
          x-transition:leave-start="opacity-100"
-         x-transition:leave-end="opacity-0"
-         x-cloak>
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md mx-4 overflow-hidden" 
-             @click.away="showModal = false"
+         x-transition:leave-end="opacity-0">
+        <div class="modal-content bg-white rounded-xl shadow-2xl w-full max-w-md mx-4 overflow-hidden" 
              x-transition:enter="transition ease-out duration-300"
              x-transition:enter-start="opacity-0 transform scale-95"
              x-transition:enter-end="opacity-100 transform scale-100"
@@ -197,11 +198,11 @@
                     </div>
                     
                     <div class="flex justify-end space-x-3">
-                        <button type="button" @click="showModal = false" 
+                        <button type="button" onclick="closeDiagnosisModal('diagnosisModal')" 
                                 class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition duration-300">
                             Cancel
                         </button>
-                        <button type="button" @click="showModal = false" 
+                        <button type="button" id="diagnosisSubmitBtn" 
                                 class="px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition duration-300 shadow-md">
                             Submit Diagnosis
                         </button>
@@ -216,50 +217,19 @@
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         const form = document.getElementById('diagnosisForm');
-        const nurse_id=document.getElementById("nurse_id").value;
-        console.log("jjjjjj",nurse_id)
-        const submitBtn = form.querySelector('button[type="button"]:last-of-type');
+        const nurseId = document.getElementById("nurse_id").value;
+        const submitBtn = document.getElementById('diagnosisSubmitBtn');
         
-        submitBtn.addEventListener('click', async () => {
-            const patientID = document.getElementById('patientID').value;
-            const diagnoStatus = document.querySelector('input[name="diagnoStatus"]:checked').value; 
-            const result = document.getElementById('result').value;
+        submitBtn.addEventListener('click', () => {
+            const formData = new URLSearchParams({
+                patientID: document.getElementById('patientID').value,
+                diagnoStatus: document.querySelector('input[name="diagnoStatus"]:checked').value,
+                result: document.getElementById('result').value,
+                nurseID: nurseId
+            });
 
-            // Build URL-encoded form data
-            const formData = new URLSearchParams();
-            formData.append("patientID", patientID);
-            formData.append("diagnoStatus", diagnoStatus);
-            formData.append("result", result);
-
-            try {
-                const contextPath = '<%= request.getContextPath() %>'; // resolves to /MBC_HOSPITAL
-                const response = await fetch('submitDiagnosis', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: new URLSearchParams({
-                        patientID: patientID,
-                        diagnoStatus: diagnoStatus,
-                        result: result,
-                        nurseID: nurse_id
-                    }).toString()
-                });
-
-
-                if (response.ok) {
-                    const result = await response.text();
-                    window.location.href = "/MBC_HOSPITAL/patients-dir"
-                    alert('Diagnosis submitted successfully!');
-                    console.log(result);
-                } else {
-                    const error = await response.text();
-                    alert('Error: ' + error);
-                }
-            } catch (error) {
-                console.error('Submission failed:', error);
-                alert('An error occurred while submitting the diagnosis.');
-            }
+            submitDiagnosis(form, '/MBC_HOSPITAL/patients-dir');
+            closeDiagnosisModal('diagnosisModal');
         });
     });
 

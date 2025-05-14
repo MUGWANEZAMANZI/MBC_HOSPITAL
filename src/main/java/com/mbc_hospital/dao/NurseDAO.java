@@ -89,4 +89,17 @@ public class NurseDAO {
         }
         return deleted;
     }
+    public long getTotalNurses() {
+        long count = 0;
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT count(*) FROM Nurses")) { //  adjust
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                count = resultSet.getLong(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle exceptions
+        }
+        return count;
+    }
 }

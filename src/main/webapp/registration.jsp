@@ -1,136 +1,154 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="jakarta.servlet.http.HttpSession" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MBC - Registration</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <jsp:include page="/common/header.jsp">
+        <jsp:param name="title" value="Registration" />
+    </jsp:include>
     <style>
-        .bg-gradient {
-            background: linear-gradient(135deg, #3b82f6, #1e40af);
+        body {
+            background-color: #f9fafb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        .card-shadow {
-            box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.5);
+        
+        .register-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            width: 450px;
+            padding: 40px;
         }
-        .form-input:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .form-input, .form-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            background-color: #f3f4f6;
+            font-size: 16px;
+        }
+        
+        .form-input:focus, .form-select:focus {
             outline: none;
+            border-color: #3b82f6;
+            background-color: #fff;
+        }
+        
+        .form-checkbox {
+            border-radius: 4px;
+            width: 16px;
+            height: 16px;
+            accent-color: #3b82f6;
+        }
+        
+        .btn-primary {
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 12px 16px;
+            font-size: 16px;
+            width: 100%;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2563eb;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .login-link {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .login-link:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
-<body class="bg-blue-50 min-h-screen flex flex-col">
-    <header class="bg-gradient text-white py-6 shadow-lg">
-        <div class="container mx-auto px-4 flex items-center justify-between">
-            <div class="flex items-center">
-                <i class="fas fa-hospital-alt text-3xl mr-4"></i>
-                <h1 class="text-2xl font-bold">MBC Hospital</h1>
-            </div>
-            <% //<nav class="hidden md:block">
-                //<ul class="flex space-x-6">
-                    // <li><a href="#" class="hover:text-blue-200 transition">Home</a></li>
-                   // <li><a href="#" class="hover:text-blue-200 transition">Services</a></li>
-                   // <li><a href="#" class="hover:text-blue-200 transition">Contact</a></li>
-                //</ul>
-            //</nav>
-            %>
-        </div>
-    </header>
-
-    <main class="flex-grow flex justify-center items-center p-4">
-        <div class="flex flex-col md:flex-row bg-white rounded-2xl overflow-hidden my-10  max-w-4xl w-full">
-            <!-- Left side - Form -->
-            <div class="p-8 md:p-12 md:w-1/2">
-                <h1 class="text-2xl md:text-3xl font-bold text-blue-700 mb-6">Create Account</h1>
-                <p class="text-gray-600 mb-8">Join MBC Hospital's digital healthcare platform</p>
-                
-                <form method="post" action="registration" class="space-y-6">
-                    <div>
-                        <label for="userType" class="block text-sm font-medium text-gray-700 mb-1">I am a:</label>
-                        <select id="userType" name="userType" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 form-input bg-gray-50">
-                            <option value="">Select User Type</option>
-                            <option value="Doctor">Doctor</option>
-                            <option value="Nurse">Nurse</option>
-                        </select>
-                    </div>
-                    
-                    <div>
-                        <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-user text-gray-400"></i>
-                            </div>
-                            <input type="text" id="username" name="uname" class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 form-input" placeholder="Enter your username" required>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-lock text-gray-400"></i>
-                            </div>
-                            <input type="password" id="password" name="pass" class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 form-input" placeholder="Create a strong password" required>
-                        </div>
-                    </div>
-                    
-                    <div class="flex items-center">
-                        <input id="terms" name="terms" type="checkbox" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" required>
-                        <label for="terms" class="ml-2 block text-sm text-gray-700">
-                            I agree to the <a href="#" class="text-blue-600 hover:underline">Terms and Conditions</a>
-                        </label>
-                    </div>
-                    
-                    <div>
-                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 focus:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition flex items-center justify-center">
-                            <span>Register Now</span>
-                            <i class="fas fa-arrow-right ml-2"></i>
-                        </button>
-                    </div>
-                    
-                    <div class="text-center text-gray-500 text-sm">
-                        Already have an account? <a href="login.jsp" class="text-blue-600 hover:underline">Sign in</a>
-                    </div>
-                </form>
+<body>
+    <div class="register-card">
+        <h2 class="text-center" style="font-size: 24px; margin-bottom: 8px;">Create Account</h2>
+        <p style="text-align: center; color: #6b7280; margin-bottom: 24px; font-size: 14px;">Join MBC Hospital's digital healthcare platform</p>
+        
+        <form method="post" action="registration">
+            <div class="form-group">
+                <label for="userType" class="form-label">I am a:</label>
+                <div style="position: relative;">
+                    <i class="fas fa-user-md" style="position: absolute; left: 12px; top: 12px; color: #6b7280;"></i>
+                    <select id="userType" name="userType" class="form-select" style="padding-left: 36px;">
+                        <option value="">Select User Type</option>
+                        <option value="Doctor">Doctor</option>
+                        <option value="Nurse">Nurse</option>
+                        <option value="Patient">Patient</option>
+                    </select>
+                </div>
             </div>
             
-            <!-- Right side - Image -->
-            <div class="hidden md:block md:w-1/2 bg-blue-700 relative">
-                <div class="absolute inset-0 bg-gradient-to-br from-blue-600/70 to-blue-900/90 flex flex-col justify-center items-center text-white p-12">
-                    <img src="images/hospital.jpg" alt="Hospital" class="w-64 mb-8 rounded-lg shadow-lg">
-                    <h2 class="text-2xl font-bold mb-4">Healthcare Excellence</h2>
-                    <p class="text-center mb-6">Join our digital platform for seamless healthcare services and management.</p>
-                    <div class="flex space-x-3">
-                        <span class="h-2 w-2 rounded-full bg-white opacity-50"></span>
-                        <span class="h-2 w-6 rounded-full bg-white"></span>
-                        <span class="h-2 w-2 rounded-full bg-white opacity-50"></span>
-                    </div>
+            <div class="form-group">
+                <label for="username" class="form-label">Username</label>
+                <div style="position: relative;">
+                    <i class="fas fa-user" style="position: absolute; left: 12px; top: 12px; color: #6b7280;"></i>
+                    <input type="text" id="username" name="uname" class="form-input" style="padding-left: 36px;" placeholder="Enter your username" required>
                 </div>
             </div>
-        </div>
-    </main>
-
-    <footer class="bg-gray-800 mt-20 text-white py-8">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-4 md:mb-0">
-                    <h3 class="font-bold text-lg mb-2">MBC Hospital</h3>
-                    <p class="text-gray-400">Providing quality healthcare since 1995</p>
-                </div>
-                <div class="flex space-x-4">
-                    <a href="#" class="hover:text-blue-400 transition"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="hover:text-blue-400 transition"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="hover:text-blue-400 transition"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="hover:text-blue-400 transition"><i class="fab fa-linkedin-in"></i></a>
+            
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <div style="position: relative;">
+                    <i class="fas fa-lock" style="position: absolute; left: 12px; top: 12px; color: #6b7280;"></i>
+                    <input type="password" id="password" name="pass" class="form-input" style="padding-left: 36px;" placeholder="Create a strong password" required>
                 </div>
             </div>
-            <div class="border-t border-gray-700 mt-6 pt-6 text-center text-gray-400">
-                <p>Team 1 &copy; 2025 All rights reserved</p>
+            
+            <div style="display: flex; align-items: center; margin-bottom: 24px;">
+                <input id="terms" name="terms" type="checkbox" class="form-checkbox" required>
+                <label for="terms" style="margin-left: 8px; font-size: 14px; color: #4b5563;">
+                    I agree to the <a href="#" style="color: #3b82f6; text-decoration: none;">Terms and Conditions</a>
+                </label>
             </div>
-        </div>
-    </footer>
+            
+            <button type="submit" class="btn-primary">
+                Register Now
+                <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>
+            </button>
+            
+            <div style="margin-top: 24px; text-align: center;">
+                <p style="font-size: 14px; color: #6b7280;">
+                    Already have an account? 
+                    <a href="login.jsp" class="login-link">
+                        Sign in
+                    </a>
+                </p>
+            </div>
+        </form>
+    </div>
 </body>
 </html>

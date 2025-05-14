@@ -3,9 +3,13 @@ package com.mbc_hospital.model;
 import java.sql.Date;
 import java.sql.Timestamp;
 
-public class Diagnosis {
+/**
+ * Model class to represent diagnosis data joined with patient information
+ */
+public class DiagnosisPatientView {
     private int diagnosisId;
     private int patientId;
+    private String patientName;
     private int nurseId;
     private int doctorId;
     private String status;
@@ -14,22 +18,13 @@ public class Diagnosis {
     private Date followUpDate;
     private Timestamp diagnosisDate;
     private String nurseAssessment;
-
-    // Constructor for existing fields (backwards compatibility)
-    public Diagnosis(int diagnosisId, int patientId, int nurseId, int doctorId, String status, String result) {
+    
+    public DiagnosisPatientView(int diagnosisId, int patientId, String patientName, int nurseId, int doctorId, 
+                           String status, String result, String medicationsPrescribed, 
+                           Date followUpDate, Timestamp diagnosisDate, String nurseAssessment) {
         this.diagnosisId = diagnosisId;
         this.patientId = patientId;
-        this.nurseId = nurseId;
-        this.doctorId = doctorId;
-        this.status = status;
-        this.result = result;
-    }
-
-    // Full constructor with all fields
-    public Diagnosis(int diagnosisId, int patientId, int nurseId, int doctorId, String status, String result,
-                    String medicationsPrescribed, Date followUpDate, Timestamp diagnosisDate, String nurseAssessment) {
-        this.diagnosisId = diagnosisId;
-        this.patientId = patientId;
+        this.patientName = patientName;
         this.nurseId = nurseId;
         this.doctorId = doctorId;
         this.status = status;
@@ -46,6 +41,10 @@ public class Diagnosis {
 
     public int getPatientId() {
         return patientId;
+    }
+    
+    public String getPatientName() {
+        return patientName;
     }
 
     public int getNurseId() {
@@ -68,31 +67,15 @@ public class Diagnosis {
         return medicationsPrescribed;
     }
     
-    public void setMedicationsPrescribed(String medicationsPrescribed) {
-        this.medicationsPrescribed = medicationsPrescribed;
-    }
-    
     public Date getFollowUpDate() {
         return followUpDate;
-    }
-    
-    public void setFollowUpDate(Date followUpDate) {
-        this.followUpDate = followUpDate;
     }
     
     public Timestamp getDiagnosisDate() {
         return diagnosisDate;
     }
     
-    public void setDiagnosisDate(Timestamp diagnosisDate) {
-        this.diagnosisDate = diagnosisDate;
-    }
-    
     public String getNurseAssessment() {
         return nurseAssessment;
     }
-    
-    public void setNurseAssessment(String nurseAssessment) {
-        this.nurseAssessment = nurseAssessment;
-    }
-}
+} 

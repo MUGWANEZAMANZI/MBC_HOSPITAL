@@ -16,58 +16,132 @@ public class Patient {
     private String telephone;
     private String email;
     private String address;
-    private String pImageLink;
+    private String imageLink;
     private int registeredBy;
-    private int diagnosisId;
-    private String diagnoStatus;
-    private String result;
-
-    // Getters and Setters
-    public int getPatientID() { return patientID; }
-    public void setPatientID(int patientID) { this.patientID = patientID; }
-
-    public String getFirstName() { return firstName; }
-    public void setFirstName(String firstName) { this.firstName = firstName; }
-
-    public String getLastName() { return lastName; }
-    public void setLastName(String lastName) { this.lastName = lastName; }
-
-    public String getTelephone() { return telephone; }
-    public void setTelephone(String telephone) { this.telephone = telephone; }
-
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-
-    public String getAddress() { return address; }
-    public void setAddress(String address) { this.address = address; }
-
-    public String getPImageLink() { return pImageLink; }
-    public void setPImageLink(String pImageLink) { this.pImageLink = pImageLink; }
-
-    public int getRegisteredBy() { return registeredBy; }
-    public void setRegisteredBy(int registeredBy) { this.registeredBy = registeredBy; }
     
-    public int getDiagnosisId() {
-        return diagnosisId;
+    // Diagnosis-related fields
+    private int diagnosisID;
+    private String diagnosisStatus;
+    private String diagnosisResult;
+    private String medicationsPrescribed;
+    private String followUpDate;
+    private String nurseAssessment;
+
+    // Constructors, getters, and setters
+    public Patient() {
     }
 
-    public void setDiagnosisId(int diagnosisId) {
-        this.diagnosisId = diagnosisId;
+    // Getters and setters for basic patient information
+    public int getPatientID() {
+        return patientID;
     }
 
-    public String getDiagnoStatus() {
-        return diagnoStatus;
+    public void setPatientID(int patientID) {
+        this.patientID = patientID;
     }
 
-    public void setDiagnoStatus(String diagnoStatus) {
-        this.diagnoStatus = diagnoStatus;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public String getResult() {
-        return result;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public void setResult(String result) {
-        this.result = result;
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getImageLink() {
+        return imageLink;
+    }
+
+    public void setImageLink(String imageLink) {
+        this.imageLink = imageLink;
+    }
+
+    public int getRegisteredBy() {
+        return registeredBy;
+    }
+
+    public void setRegisteredBy(int registeredBy) {
+        this.registeredBy = registeredBy;
+    }
+
+    // Getters and setters for diagnosis-related fields
+    public int getDiagnosisID() {
+        return diagnosisID;
+    }
+
+    public void setDiagnosisID(int diagnosisID) {
+        this.diagnosisID = diagnosisID;
+    }
+
+    public String getDiagnosisStatus() {
+        return diagnosisStatus;
+    }
+
+    public void setDiagnosisStatus(String diagnosisStatus) {
+        this.diagnosisStatus = diagnosisStatus;
+    }
+
+    public String getDiagnosisResult() {
+        return diagnosisResult;
+    }
+
+    public void setDiagnosisResult(String diagnosisResult) {
+        this.diagnosisResult = diagnosisResult;
+    }
+
+    public String getMedicationsPrescribed() {
+        return medicationsPrescribed;
+    }
+
+    public void setMedicationsPrescribed(String medicationsPrescribed) {
+        this.medicationsPrescribed = medicationsPrescribed;
+    }
+
+    public String getFollowUpDate() {
+        return followUpDate;
+    }
+
+    public void setFollowUpDate(String followUpDate) {
+        this.followUpDate = followUpDate;
+    }
+
+    public String getNurseAssessment() {
+        return nurseAssessment;
+    }
+
+    public void setNurseAssessment(String nurseAssessment) {
+        this.nurseAssessment = nurseAssessment;
     }
 }
