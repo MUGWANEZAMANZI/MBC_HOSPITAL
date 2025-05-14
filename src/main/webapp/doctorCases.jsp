@@ -49,7 +49,7 @@
             </div>
             <div class="flex items-center space-x-3">
                 <a class="flex items-center px-4 py-2 bg-blue-800 hover:bg-blue-900 rounded-md transition" 
-                   href="dashboard.jsp">
+                   href="/reffered">
                     <i class="fas fa-home mr-2"></i>Home
                 </a>
                 <div class="flex items-center space-x-2">
@@ -138,7 +138,7 @@
                                     <div class="flex flex-col items-center justify-center">
                                         <i class="fas fa-folder-open text-gray-300 text-5xl mb-3"></i>
                                         <p>No patients found or failed to load data.</p>
-                                        <a href="dashboard.jsp" class="mt-3 text-blue-600 hover:text-blue-800">
+                                        <a href="/reffered" class="mt-3 text-blue-600 hover:text-blue-800">
                                             <i class="fas fa-arrow-left mr-1"></i> Return to Dashboard
                                         </a>
                                     </div>
@@ -150,7 +150,7 @@
             </div>
             
             <div class="mt-6 flex justify-between items-center">
-                <a href="dashboard.jsp" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition flex items-center">
+                <a href="/reffered" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition flex items-center">
                     <i class="fas fa-arrow-left mr-2"></i> Back to Dashboard
                 </a>
                 

@@ -264,6 +264,22 @@
                         <i class="fas fa-arrow-right ml-2"></i>
                     </div>
                 </a>
+                
+                <!-- Card 3 -->
+                <a href="nurse-view-diagnoses" class="dashboard-card card-3 bg-white rounded-lg shadow-md hover:shadow-lg transition p-6 animate-fade-in" style="animation-delay: 1s">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="card-icon p-3 rounded-full bg-indigo-100 text-indigo-600">
+                            <i class="fas fa-clipboard-check text-xl"></i>
+                        </div>
+                        <span class="text-xs font-medium bg-indigo-100 text-indigo-600 px-3 py-1 rounded-full">Results</span>
+                    </div>
+                    <h2 class="text-xl font-semibold text-gray-800">View Diagnosed Cases</h2>
+                    <p class="text-gray-600 mt-2">See diagnosis results from cases completed by doctors.</p>
+                    <div class="mt-4 flex items-center text-indigo-600">
+                        <span class="text-sm">Access Module</span>
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </div>
+                </a>
                 </div>
                  <!-- Footer -->
         <footer class="bg-white border-t border-gray-200 mt-6">
@@ -326,11 +342,18 @@
                         <i class="fas fa-users w-6"></i>
                         <span>Users Management</span>
                     </a>
+                    <a href="patients-dir" class="sidebar-link flex items-center space-x-3 text-white/90 hover:text-white p-3 rounded-lg mb-2">
+                        <i class="fas fa-stethoscope w-6"></i>
+                        <span>Make Diagnosis</span>
+                    </a>
+                    <a href="nurse-view-diagnoses" class="sidebar-link flex items-center space-x-3 text-white/90 hover:text-white p-3 rounded-lg mb-2">
+                        <i class="fas fa-clipboard-check w-6"></i>
+                        <span>View Diagnosed Cases</span>
+                    </a>
                     <a href="monitor_diagnosis.jsp" class="sidebar-link flex items-center space-x-3 text-white/90 hover:text-white p-3 rounded-lg mb-2">
                         <i class="fas fa-chart-line w-6"></i>
                         <span>Analytics</span>
                     </a>
-                    
                     <a href="settings.jsp" class="sidebar-link flex items-center space-x-3 text-white/90 hover:text-white p-3 rounded-lg mb-2">
                         <i class="fas fa-cog w-6"></i>
                         <span>Settings</span>
@@ -338,7 +361,10 @@
                     <a href="logout.jsp" class="sidebar-link flex items-center space-x-3 text-white/90 hover:text-white p-3 rounded-lg mt-8 bg-red-500/20 hover:bg-red-500/30">
                         <i class="fas fa-sign-out-alt w-6"></i>
                     </nav>
-                    </div>
-                    </div>
-                    
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
            

@@ -41,7 +41,7 @@ public class LoginServlet extends HttpServlet {
                 	    int id = rs.getInt("UserID");
                 	    boolean is_verified = rs.getBoolean("is_verified");
 
-                	    if (is_verified || usertype == "Admin") {
+                	    if (is_verified || "Admin".equals(usertype)) {
                 	        // Successful login
                 	        HttpSession session = request.getSession();
                 	        session.setAttribute("username", username);
@@ -50,6 +50,9 @@ public class LoginServlet extends HttpServlet {
                 	        response.sendRedirect("dashboard.jsp");
                 	    } else {
                 	        // Account is not yet verified
+                	        HttpSession session = request.getSession();
+                	        session.setAttribute("pending_username", username);
+                	        session.setAttribute("pending_usertype", usertype);
                 	        response.sendRedirect("pending.jsp");
                 	    }
                 	} else {

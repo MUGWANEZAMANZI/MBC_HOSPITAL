@@ -22,14 +22,14 @@ public class SubmitDiagnosisServlet extends HttpServlet {
 
         // Read form parameters
         String patientID = request.getParameter("patientID");
-        String diagnoStatus = request.getParameter("diagnoStatus");
+        String diagnosisStatus = request.getParameter("diagnosisStatus");
         String result = request.getParameter("result");
         String nurseIDStr = request.getParameter("nurseID");
 
         // Print debug statements
         System.out.println("Received parameters:");
         System.out.println("patientID: " + patientID);
-        System.out.println("diagnoStatus: " + diagnoStatus);
+        System.out.println("diagnosisStatus: " + diagnosisStatus);
         System.out.println("result: " + result);
         System.out.println("nurseID (raw): " + nurseIDStr);
         int nurseID = 0;
@@ -46,10 +46,10 @@ public class SubmitDiagnosisServlet extends HttpServlet {
         Integer doctorID = null;
         
         // Set result based on diagnosis status as per requirements
-        if ("Referrable".equals(diagnoStatus)) {
+        if ("Referrable".equals(diagnosisStatus)) {
             // If the diagnosis is referrable, the result should be "Pending" until a doctor reviews it
             result = "Pending";
-        } else if ("Not Referable".equals(diagnoStatus)) {
+        } else if ("Not Referable".equals(diagnosisStatus)) {
             // If the diagnosis is not referrable, the result should be "Negative"
             result = "Negative";
         }
@@ -69,7 +69,7 @@ public class SubmitDiagnosisServlet extends HttpServlet {
             } else {
                 stmt.setNull(3, java.sql.Types.INTEGER);
             }
-            stmt.setString(4, diagnoStatus);
+            stmt.setString(4, diagnosisStatus);
             stmt.setString(5, result);
 
             int rows = stmt.executeUpdate();

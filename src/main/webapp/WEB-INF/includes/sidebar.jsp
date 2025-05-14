@@ -33,7 +33,7 @@
         
         <nav class="mt-6 px-4">
             <!-- Common link for all users -->
-            <a href="dashboard.jsp" class="sidebar-link <%= "dashboard".equals(currentPage) ? "active" : "" %>">
+            <a href="/reffered" class="sidebar-link <%= "dashboard".equals(currentPage) ? "active" : "" %>">
                 <i class="fas fa-tachometer-alt w-6"></i>
                 <span>Dashboard</span>
             </a>
@@ -64,13 +64,13 @@
             
             <!-- Doctor specific links -->
             <% if ("Doctor".equalsIgnoreCase(userType)) { %>
-                <a href="create-nurse" class="sidebar-link <%= "registernurse".equals(currentPage) ? "active" : "" %>">
-                    <i class="fas fa-user-plus w-6"></i>
-                    <span>Register Nurse</span>
-                </a>
                 <a href="view_nurses.jsp" class="sidebar-link <%= "nurses".equals(currentPage) ? "active" : "" %>">
                     <i class="fas fa-user-nurse w-6"></i>
                     <span>Registered Nurses</span>
+                </a>
+                <a href="unverified_nurses.jsp" class="sidebar-link <%= "unverified_nurses".equals(currentPage) ? "active" : "" %>">
+                    <i class="fas fa-user-check w-6"></i>
+                    <span>Verify Nurses</span>
                 </a>
                 <a href="referred-diagnoses" class="sidebar-link <%= "pending".equals(currentPage) ? "active" : "" %>">
                     <i class="fas fa-clipboard-check w-6"></i>

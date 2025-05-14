@@ -116,8 +116,8 @@ int userID = (Integer) session.getAttribute("id");
                     <h1 class="text-3xl font-bold tracking-tight">MBC HOSPITAL</h1>
                 </div>
                 <div class="flex items-center space-x-6">
-                    <a class="flex items-center px-4 py-2 bg-blue-800 hover:bg-blue-600 rounded-lg transition duration-300 shadow-md" href="dashboard.jsp">
-                        <i class="fas fa-home mr-2"></i>Home
+                    <a href="/reffered" class="flex items-center px-4 py-2 bg-blue-800 hover:bg-blue-600 rounded-lg transition duration-300 shadow-md" href="/reffered">
+                        <i class="fas fa-arrow-left mr-2"></i> Back to Dashboard
                     </a>
                     <div class="flex items-center bg-blue-800/50 px-4 py-2 rounded-lg">
                         <i class="fas fa-user-circle text-xl mr-2 text-blue-200"></i>

@@ -29,9 +29,9 @@
                     <span class="text-xl font-bold"></span>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="dashboard.jsp" class="flex items-center space-x-2 px-4 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition duration-300">
-                        <i class="fas fa-th-large"></i>
-                        <span>Dashboard</span>
+                    <a href="/reffered" class="flex items-center space-x-2 px-4 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition duration-300">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Back to Dashboard</span>
                     </a>
                     <div class="w-10 h-10 rounded-full bg-white bg-opacity-20 flex items-center justify-center">
                         <i class="fas fa-user-md text-lg"></i>

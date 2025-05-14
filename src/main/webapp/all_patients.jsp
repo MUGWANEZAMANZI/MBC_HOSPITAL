@@ -31,7 +31,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <!-- Alpine.js for modal functionality -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="assets/js/diagnosis.js"></script>
     <style>
         [x-cloak] { display: none !important; }
     </style>
@@ -108,23 +107,20 @@
                             <td class="py-3 px-4"><%= p.getTelephone() %></td>
                             <td class="py-3 px-4">
                                 <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">
-                                    <%=p.getDiagnoStatus() %>
+                                    <%=p.getDiagnosisStatus() %>
                                 </span>
                             </td>
                             <td class="py-3 px-4">
                                 <span class="text-gray-500">
-                                 <%= p.getResult() %>
+                                 <%= p.getDiagnosisResult() %>
                                 </span>
                             </td>
                             <td class="py-3 px-4">
                                 <button 
-                                    data-diagnose
-                                    data-patient-id="<%= p.getPatientID() %>"
-                                    data-patient-name="<%= p.getFirstName() %> <%= p.getLastName() %>"
-                                    data-target-modal="diagnosisModal"
+                                    @click="showModal = true; selectedPatient = <%= p.getPatientID() %>" 
                                     class="px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center text-sm"
                                 >
-                                    <i class="fas fa-stethoscope mr-1"></i> Diagnose
+                                    <i class="fas fa-edit mr-1"></i> Diagnose
                                 </button>
                             </td>
                         </tr>                        
@@ -144,14 +140,17 @@
     </div>
 
     <!-- Diagnosis Modal -->
-    <div id="diagnosisModal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden" 
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" 
+         x-show="showModal" 
          x-transition:enter="transition ease-out duration-300"
          x-transition:enter-start="opacity-0"
          x-transition:enter-end="opacity-100"
          x-transition:leave="transition ease-in duration-200"
          x-transition:leave-start="opacity-100"
-         x-transition:leave-end="opacity-0">
-        <div class="modal-content bg-white rounded-xl shadow-2xl w-full max-w-md mx-4 overflow-hidden" 
+         x-transition:leave-end="opacity-0"
+         x-cloak>
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md mx-4 overflow-hidden" 
+             @click.away="showModal = false"
              x-transition:enter="transition ease-out duration-300"
              x-transition:enter-start="opacity-0 transform scale-95"
              x-transition:enter-end="opacity-100 transform scale-100"
@@ -181,11 +180,11 @@
                         <label class="block text-sm font-medium text-gray-700 mb-1">Diagnosis Status</label>
                         <div class="flex space-x-4">
                             <label class="inline-flex items-center">
-                                <input type="radio" name="diagnoStatus" id="diagnoStatus" value="Referrable" class="form-radio h-5 w-5 text-blue-600" x-model="diagnosisStatus">
+                                <input type="radio" name="diagnosisStatus" id="diagnosisStatus" value="Referrable" class="form-radio h-5 w-5 text-blue-600" x-model="diagnosisStatus">
                                 <span class="ml-2 text-gray-700">Referrable</span>
                             </label>
                             <label class="inline-flex items-center">
-                                <input type="radio" name="diagnoStatus" id="diagnoStatus" value="Not Referable" class="form-radio h-5 w-5 text-blue-600" x-model="diagnosisStatus">
+                                <input type="radio" name="diagnosisStatus" id="diagnosisStatus" value="Not Referable" class="form-radio h-5 w-5 text-blue-600" x-model="diagnosisStatus">
                                 <span class="ml-2 text-gray-700">Not Referable</span>
                             </label>
                         </div>
@@ -198,11 +197,11 @@
                     </div>
                     
                     <div class="flex justify-end space-x-3">
-                        <button type="button" onclick="closeDiagnosisModal('diagnosisModal')" 
+                        <button type="button" @click="showModal = false" 
                                 class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition duration-300">
                             Cancel
                         </button>
-                        <button type="button" id="diagnosisSubmitBtn" 
+                        <button type="button" @click="showModal = false" 
                                 class="px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition duration-300 shadow-md">
                             Submit Diagnosis
                         </button>
@@ -217,19 +216,50 @@
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         const form = document.getElementById('diagnosisForm');
-        const nurseId = document.getElementById("nurse_id").value;
-        const submitBtn = document.getElementById('diagnosisSubmitBtn');
+        const nurse_id=document.getElementById("nurse_id").value;
+        console.log("jjjjjj",nurse_id)
+        const submitBtn = form.querySelector('button[type="button"]:last-of-type');
         
-        submitBtn.addEventListener('click', () => {
-            const formData = new URLSearchParams({
-                patientID: document.getElementById('patientID').value,
-                diagnoStatus: document.querySelector('input[name="diagnoStatus"]:checked').value,
-                result: document.getElementById('result').value,
-                nurseID: nurseId
-            });
+        submitBtn.addEventListener('click', async () => {
+            const patientID = document.getElementById('patientID').value;
+            const diagnosisStatus = document.querySelector('input[name="diagnosisStatus"]:checked').value; 
+            const result = document.getElementById('result').value;
 
-            submitDiagnosis(form, '/MBC_HOSPITAL/patients-dir');
-            closeDiagnosisModal('diagnosisModal');
+            // Build URL-encoded form data
+            const formData = new URLSearchParams();
+            formData.append("patientID", patientID);
+            formData.append("diagnosisStatus", diagnosisStatus);
+            formData.append("result", result);
+
+            try {
+                const contextPath = '<%= request.getContextPath() %>'; // resolves to /MBC_HOSPITAL
+                const response = await fetch('submitDiagnosis', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        patientID: patientID,
+                        diagnosisStatus: diagnosisStatus,
+                        result: result,
+                        nurseID: nurse_id
+                    }).toString()
+                });
+
+
+                if (response.ok) {
+                    const result = await response.text();
+                    window.location.href = "/MBC_HOSPITAL/patients-dir"
+                    alert('Diagnosis submitted successfully!');
+                    console.log(result);
+                } else {
+                    const error = await response.text();
+                    alert('Error: ' + error);
+                }
+            } catch (error) {
+                console.error('Submission failed:', error);
+                alert('An error occurred while submitting the diagnosis.');
+            }
         });
     });
 

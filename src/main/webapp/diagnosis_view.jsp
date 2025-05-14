@@ -202,7 +202,7 @@
 <!-- Sidebar Navigation -->
 <aside class="sidebar">
     <div class="sidebar-header">
-        <a href="doctor.jsp" class="flex items-center">
+        <a href="/reffered" class="flex items-center">
             <i class="fas fa-hospital text-white text-3xl mr-3"></i>
             <h1 class="text-2xl font-bold">MBC Hospital</h1>
         </a>
@@ -227,13 +227,13 @@
 
     <nav class="space-y-1">
         <p class="text-xs uppercase text-blue-300/70 font-semibold px-3 py-2">Main Navigation</p>
-        <a href="doctor.jsp" class="sidebar-link">
+        <a href="reffered" class="sidebar-link">
             <i class="fas fa-tachometer-alt w-6"></i>
             <span>Dashboard</span>
         </a>
         
         <p class="text-xs uppercase text-blue-300/70 font-semibold px-3 py-2 mt-4">Staff Management</p>
-        <a href="register_nurse.jsp" class="sidebar-link">
+        <a href="register-nurse" class="sidebar-link">
             <i class="fas fa-user-nurse w-6"></i>
             <span>Register a Nurse</span>
         </a>
@@ -244,22 +244,22 @@
         </a>
         
         <p class="text-xs uppercase text-blue-300/70 font-semibold px-3 py-2 mt-4">Patient Care</p>
-        <a href="referred_diagnoses.jsp" class="sidebar-link">
+        <a href="reffered" class="sidebar-link">
             <i class="fas fa-clipboard-check w-6"></i>
             <span>Awaiting Diagnosis</span>
         </a>
         
-        <a href="confirmed_cases.jsp" class="sidebar-link">
+        <a href="confirmed-cases" class="sidebar-link">
             <i class="fas fa-check-circle w-6"></i>
             <span>Confirmed Cases</span>
         </a>
         
-        <a href="all_patients.jsp" class="sidebar-link">
+        <a href="all-patients" class="sidebar-link">
             <i class="fas fa-users w-6"></i>
             <span>All Patients</span>
         </a>
         
-        <a href="diagnosis_view.jsp" class="sidebar-link active">
+        <a href="DiagnosisViewServlet" class="sidebar-link active">
             <i class="fas fa-stethoscope w-6"></i>
             <span>Diagnosis Records</span>
         </a>
@@ -320,12 +320,8 @@
             </h1>
         </div>
         <div class="flex space-x-3">
-            <a href="referred_diagnoses.jsp" class="px-4 py-2 bg-gray-100 rounded-lg flex items-center text-gray-700 hover:bg-gray-200 transition shadow-sm">
+            <a href="reffered" class="px-4 py-2 bg-gray-100 rounded-lg flex items-center text-gray-700 hover:bg-gray-200 transition shadow-sm">
                 <i class="fas fa-clipboard-check mr-2"></i> Awaiting Diagnosis
-            </a>
-            <a href="doctor.jsp" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center">
-                <i class="fas fa-arrow-left mr-2"></i>
-                Back to Dashboard
             </a>
             <button onclick="printPage()" class="px-4 py-2 bg-blue-600 text-white rounded-lg flex items-center hover:bg-blue-700 transition shadow-sm">
                 <i class="fas fa-print mr-2"></i> Print Report
@@ -398,7 +394,7 @@
                 </div>
             </div>
             <div class="mt-4 pt-3 border-t border-gray-100">
-                <a href="referred_diagnoses.jsp" class="text-sm text-blue-600 hover:text-blue-700 flex items-center">
+                <a href="reffered" class="text-sm text-blue-600 hover:text-blue-700 flex items-center">
                     View Cases <i class="fas fa-arrow-right ml-1"></i>
                 </a>
             </div>
@@ -420,7 +416,7 @@
                 </div>
             </div>
             <div class="mt-4 pt-3 border-t border-gray-100">
-                <a href="confirmed_cases.jsp" class="text-sm text-blue-600 hover:text-blue-700 flex items-center">
+                <a href="confirmed-cases" class="text-sm text-blue-600 hover:text-blue-700 flex items-center">
                     View Details <i class="fas fa-arrow-right ml-1"></i>
                 </a>
             </div>
@@ -442,7 +438,7 @@
                 </div>
             </div>
             <div class="mt-4 pt-3 border-t border-gray-100">
-                <a href="all_patients.jsp" class="text-sm text-blue-600 hover:text-blue-700 flex items-center">
+                <a href="all-patients" class="text-sm text-blue-600 hover:text-blue-700 flex items-center">
                     View Details <i class="fas fa-arrow-right ml-1"></i>
                 </a>
             </div>
@@ -579,7 +575,7 @@
                                 <div class="flex flex-col items-center justify-center">
                                     <i class="fas fa-clipboard-list text-gray-300 text-5xl mb-3"></i>
                                     <p>No diagnosis records found</p>
-                                    <a href="dashboard.jsp" class="mt-3 text-primary-600 hover:text-primary-800 flex items-center">
+                                    <a href="/reffered" class="mt-3 text-primary-600 hover:text-primary-800 flex items-center">
                                         <i class="fas fa-arrow-left mr-1"></i> Return to Dashboard
                                     </a>
                                 </div>

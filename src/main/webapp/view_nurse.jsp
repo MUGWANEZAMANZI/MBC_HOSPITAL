@@ -29,7 +29,7 @@
                     <i class="fas fa-user-nurse text-blue-600 mr-2"></i>
                     Registered Nurses
                 </h1>
-                <a href="dashboard.jsp" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition flex items-center">
+                <a href="reffered" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition flex items-center">
                     <i class="fas fa-arrow-left mr-2"></i> Back to Dashboard
                 </a>
             </div>

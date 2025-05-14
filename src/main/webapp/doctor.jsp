@@ -413,36 +413,36 @@
 
         <nav class="space-y-1">
             <p class="text-xs uppercase text-blue-300/70 font-semibold px-3 py-2">Main Navigation</p>
-            <a href="doctor.jsp" class="sidebar-link active">
+            <a href="#" class="sidebar-link active">
                 <i class="fas fa-tachometer-alt w-6"></i>
                 <span>Dashboard</span>
             </a>
             
             <p class="text-xs uppercase text-blue-300/70 font-semibold px-3 py-2 mt-4">Staff Management</p>
-            <a href="register_nurse.jsp" class="sidebar-link">
-                <i class="fas fa-user-nurse w-6"></i>
-                <span>Register a Nurse</span>
-            </a>
             <a href="view_nurses.jsp" class="sidebar-link">
-                <i class="fas fa-clipboard-list w-6"></i>
+                <i class="fas fa-user-nurse w-6"></i>
                 <span>Registered Nurses</span>
+            </a>
+            <a href="unverified_nurses.jsp" class="sidebar-link">
+                <i class="fas fa-user-check w-6"></i>
+                <span>Verify Nurses</span>
             </a>
             
             <p class="text-xs uppercase text-blue-300/70 font-semibold px-3 py-2 mt-4">Patient Care</p>
-            <a href="referred_diagnoses.jsp" class="sidebar-link">
+            <a href="referred-diagnoses" class="sidebar-link">
                 <i class="fas fa-clipboard-check w-6"></i>
                 <span>Awaiting Diagnosis</span>
             </a>
-            <a href="confirmed_cases.jsp" class="sidebar-link">
+            <a href="confirmed-cases" class="sidebar-link">
                 <i class="fas fa-check-circle w-6"></i>
                 <span>Confirmed Cases</span>
             </a>
-            <a href="all_patients.jsp" class="sidebar-link">
+            <a href="all-patients" class="sidebar-link">
                 <i class="fas fa-hospital-user w-6"></i>
                 <span>All Patients</span>
             </a>
             
-            <a href="diagnosis_view.jsp" class="sidebar-link">
+            <a href="DiagnosisViewServlet" class="sidebar-link">
                 <i class="fas fa-stethoscope w-6"></i>
                 <span>Diagnosis Records</span>
             </a>
@@ -545,7 +545,7 @@
                         </div>
                     </div>
                     <div class="mt-4 pt-3 border-t border-gray-100">
-                        <a href="referred_diagnoses.jsp" class="text-sm text-blue-600 hover:text-blue-700 flex items-center">
+                        <a href="referred-diagnoses" class="text-sm text-blue-600 hover:text-blue-700 flex items-center">
                             View Cases <i class="fas fa-arrow-right ml-1"></i>
                         </a>
                     </div>
@@ -575,7 +575,7 @@
                         </div>
                     </div>
                     <div class="mt-4 pt-3 border-t border-gray-100">
-                        <a href="confirmed_cases.jsp" class="text-sm text-blue-600 hover:text-blue-700 flex items-center">
+                        <a href="confirmed-cases" class="text-sm text-blue-600 hover:text-blue-700 flex items-center">
                             View Details <i class="fas fa-arrow-right ml-1"></i>
                         </a>
                     </div>
@@ -597,68 +597,11 @@
                         </div>
                     </div>
                     <div class="mt-4 pt-3 border-t border-gray-100">
-                        <a href="all_patients.jsp" class="text-sm text-blue-600 hover:text-blue-700 flex items-center">
+                        <a href="all-patients" class="text-sm text-blue-600 hover:text-blue-700 flex items-center">
                             View Details <i class="fas fa-arrow-right ml-1"></i>
                         </a>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Doctor Navigation Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 mb-8">
-                <a href="referred_diagnoses.jsp" class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all transform hover:-translate-y-1 border border-gray-100">
-                    <div class="flex items-center mb-4">
-                        <div class="p-3 rounded-full bg-amber-100 text-amber-600 mr-4">
-                            <i class="fas fa-clipboard-check text-xl"></i>
-                        </div>
-                        <h3 class="text-lg font-semibold text-gray-800">Awaiting Diagnosis</h3>
-                    </div>
-                    <p class="text-gray-600 text-sm mb-4">Review cases that have been assessed by nurses and require your medical diagnosis.</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-amber-600 font-medium text-sm flex items-center">
-                            <i class="fas fa-clock mr-1"></i> Requires attention
-                        </span>
-                        <span class="text-blue-600">
-                            <i class="fas fa-arrow-right"></i>
-                        </span>
-                    </div>
-                </a>
-                
-                <a href="confirmed_cases.jsp" class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all transform hover:-translate-y-1 border border-gray-100">
-                    <div class="flex items-center mb-4">
-                        <div class="p-3 rounded-full bg-green-100 text-green-600 mr-4">
-                            <i class="fas fa-check-circle text-xl"></i>
-                        </div>
-                        <h3 class="text-lg font-semibold text-gray-800">Confirmed Cases</h3>
-                    </div>
-                    <p class="text-gray-600 text-sm mb-4">View all confirmed patient cases that have received your diagnosis and treatment plan.</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-green-600 font-medium text-sm flex items-center">
-                            <i class="fas fa-check mr-1"></i> Diagnosed patients
-                        </span>
-                        <span class="text-blue-600">
-                            <i class="fas fa-arrow-right"></i>
-                        </span>
-                    </div>
-                </a>
-                
-                <a href="all_patients.jsp" class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all transform hover:-translate-y-1 border border-gray-100">
-                    <div class="flex items-center mb-4">
-                        <div class="p-3 rounded-full bg-blue-100 text-blue-600 mr-4">
-                            <i class="fas fa-hospital-user text-xl"></i>
-                        </div>
-                        <h3 class="text-lg font-semibold text-gray-800">Patient Records</h3>
-                    </div>
-                    <p class="text-gray-600 text-sm mb-4">Access and search through all patient records and medical history.</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-blue-600 font-medium text-sm flex items-center">
-                            <i class="fas fa-search mr-1"></i> Search patients
-                        </span>
-                        <span class="text-blue-600">
-                            <i class="fas fa-arrow-right"></i>
-                        </span>
-                    </div>
-                </a>
             </div>
             
             <!-- Recent Transferred Cases Section -->
@@ -674,7 +617,7 @@
                                 <i class="fas fa-clipboard-list mr-2"></i>
                                 View All Cases
                             </button>
-                            <a href="diagnosis_view.jsp" class="btn btn-outline">
+                            <a href="DiagnosisViewServlet" class="btn btn-outline">
                                 <i class="fas fa-stethoscope mr-2"></i>
                                 Diagnosis Records
                             </a>
@@ -761,7 +704,7 @@
                                                 <i class="fas fa-folder-open text-gray-300 text-5xl mb-3"></i>
                                                 <p>No pending cases found at the moment.</p>
                                                 <p class="text-sm text-gray-400 mt-1">You're all caught up!</p>
-                                                <a href="dashboard.jsp" class="mt-3 text-primary-600 hover:text-primary-800 flex items-center">
+                                                <a href="/reffered" class="mt-3 text-primary-600 hover:text-primary-800 flex items-center">
                                                     <i class="fas fa-arrow-left mr-1"></i> Return to Dashboard
                                                 </a>
                                             </div>
@@ -788,19 +731,13 @@
                     <div class="bg-white rounded-xl shadow-sm p-6 col-span-1">
                         <h3 class="font-semibold text-gray-800 mb-4">Quick Actions</h3>
                         <div class="space-y-3">
-                            <a href="register_nurse.jsp" class="flex items-center p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition">
-                                <div class="w-8 h-8 rounded-full bg-blue-200 flex items-center justify-center text-blue-700 mr-3">
-                                    <i class="fas fa-user-plus"></i>
-                                </div>
-                                <span>Register New Nurse</span>
-                            </a>
-                            <a href="all_patients.jsp" class="flex items-center p-3 bg-green-50 rounded-lg hover:bg-green-100 transition">
+                            <a href="all-patients" class="flex items-center p-3 bg-green-50 rounded-lg hover:bg-green-100 transition">
                                 <div class="w-8 h-8 rounded-full bg-green-200 flex items-center justify-center text-green-700 mr-3">
                                     <i class="fas fa-search"></i>
                                 </div>
                                 <span>Find Patient Records</span>
                             </a>
-                            <a href="referred_diagnoses.jsp" class="flex items-center p-3 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition">
+                            <a href="referred-diagnoses" class="flex items-center p-3 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition">
                                 <div class="w-8 h-8 rounded-full bg-yellow-200 flex items-center justify-center text-yellow-700 mr-3">
                                     <i class="fas fa-tasks"></i>
                                 </div>
@@ -861,7 +798,7 @@
     <script>
         // Event listener for the "View Transferred Cases" button
         document.getElementById('openTransferredCasesBtn').addEventListener('click', function() {
-            window.location.href = 'referred_diagnoses.jsp';
+            window.location.href = 'referred-diagnoses';
         });
         
         // Setup form submission
@@ -870,7 +807,7 @@
             
             diagnosisForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-                submitDiagnosis(this, 'referred_diagnoses.jsp');
+                submitDiagnosis(this, 'referred-diagnoses');
             });
         });
         

@@ -265,36 +265,36 @@
 
         <nav class="space-y-1">
             <p class="text-xs uppercase text-blue-300/70 font-semibold px-3 py-2">Main Navigation</p>
-            <a href="doctor.jsp" class="sidebar-link">
+            <a href="reffered" class="sidebar-link">
                 <i class="fas fa-tachometer-alt w-6"></i>
                 <span>Dashboard</span>
             </a>
             
             <p class="text-xs uppercase text-blue-300/70 font-semibold px-3 py-2 mt-4">Staff Management</p>
-            <a href="register_nurse.jsp" class="sidebar-link">
-                <i class="fas fa-user-nurse w-6"></i>
-                <span>Register a Nurse</span>
-            </a>
             <a href="view_nurses.jsp" class="sidebar-link">
-                <i class="fas fa-clipboard-list w-6"></i>
+                <i class="fas fa-user-nurse w-6"></i>
                 <span>Registered Nurses</span>
+            </a>
+            <a href="unverified_nurses.jsp" class="sidebar-link">
+                <i class="fas fa-user-check w-6"></i>
+                <span>Verify Nurses</span>
             </a>
             
             <p class="text-xs uppercase text-blue-300/70 font-semibold px-3 py-2 mt-4">Patient Care</p>
-            <a href="referred_diagnoses.jsp" class="sidebar-link active">
+            <a href="referred-diagnoses" class="sidebar-link active">
                 <i class="fas fa-clipboard-check w-6"></i>
                 <span>Awaiting Diagnosis</span>
             </a>
-            <a href="confirmed_cases.jsp" class="sidebar-link">
+            <a href="confirmed-cases" class="sidebar-link">
                 <i class="fas fa-check-circle w-6"></i>
                 <span>Confirmed Cases</span>
             </a>
-            <a href="all_patients.jsp" class="sidebar-link">
+            <a href="all-patients" class="sidebar-link">
                 <i class="fas fa-hospital-user w-6"></i>
                 <span>All Patients</span>
             </a>
             
-            <a href="diagnosis_view.jsp" class="sidebar-link">
+            <a href="DiagnosisViewServlet" class="sidebar-link">
                 <i class="fas fa-stethoscope w-6"></i>
                 <span>Diagnosis Records</span>
             </a>
@@ -324,7 +324,7 @@
                     <input type="text" placeholder="Search patients..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-primary-500 w-64">
                     <i class="fas fa-search absolute left-3 top-2.5 text-gray-400"></i>
                 </div>
-                <a href="doctor.jsp" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center">
+                <a href="dashboard" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center">
                     <i class="fas fa-arrow-left mr-2"></i>
                     Back to Dashboard
                 </a>

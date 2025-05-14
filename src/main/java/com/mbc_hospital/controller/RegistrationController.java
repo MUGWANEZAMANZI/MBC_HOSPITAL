@@ -51,6 +51,10 @@ public class RegistrationController extends HttpServlet {
 					int rows = st.executeUpdate();
 					
 						if(rows > 0) {
+							// Store info in session before redirecting to pending page
+							HttpSession session = request.getSession();
+							session.setAttribute("pending_username", username);
+							session.setAttribute("pending_usertype", userType);
 							response.sendRedirect("pending.jsp");
 							
 						}else {

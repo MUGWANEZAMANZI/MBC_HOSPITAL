@@ -188,19 +188,19 @@
 
         <nav class="space-y-1">
             <p class="text-xs uppercase text-blue-300/70 font-semibold px-3 py-2">Main Navigation</p>
-            <a href="dashboard" class="sidebar-link">
+            <a href="reffered" class="sidebar-link">
                 <i class="fas fa-tachometer-alt w-6"></i>
                 <span>Dashboard</span>
             </a>
             
             <p class="text-xs uppercase text-blue-300/70 font-semibold px-3 py-2 mt-4">Staff Management</p>
-            <a href="create-nurse" class="sidebar-link">
-                <i class="fas fa-user-nurse w-6"></i>
-                <span>Register a Nurse</span>
-            </a>
             <a href="view_nurses.jsp" class="sidebar-link">
-                <i class="fas fa-clipboard-list w-6"></i>
+                <i class="fas fa-user-nurse w-6"></i>
                 <span>Registered Nurses</span>
+            </a>
+            <a href="unverified_nurses.jsp" class="sidebar-link">
+                <i class="fas fa-user-check w-6"></i>
+                <span>Verify Nurses</span>
             </a>
             
             <p class="text-xs uppercase text-blue-300/70 font-semibold px-3 py-2 mt-4">Patient Care</p>
@@ -250,7 +250,7 @@
                 </a>
             </div>
             <p class="text-gray-600 text-sm">
-                <a href="dashboard.jsp" class="text-blue-600 hover:underline">Dashboard</a> / 
+                <a href="/reffered" class="text-blue-600 hover:underline">Dashboard</a> / 
                 <a href="referred-diagnoses" class="text-blue-600 hover:underline">Awaiting Diagnosis</a>
                 / Update Diagnosis
             </p>

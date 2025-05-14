@@ -49,7 +49,7 @@
         </table>
     </div>
     <div class="mt-4">
-        <a href="dashboard.jsp" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Back to Dashboard</a>
+        <a href="/reffered" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Back to Dashboard</a>
     </div>
 </div>
 </body>
