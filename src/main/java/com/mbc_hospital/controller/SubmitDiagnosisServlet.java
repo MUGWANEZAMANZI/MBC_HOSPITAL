@@ -2,7 +2,9 @@ package com.mbc_hospital.controller;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 import com.mbc_hospital.model.DBConnection;
 
@@ -11,83 +13,116 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/submitDiagnosis")
 public class SubmitDiagnosisServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        // Read form parameters
-        String patientID = request.getParameter("patientID");
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Extract parameters from request
+        String patientIDStr = request.getParameter("patientID");
+        String nurseIDStr = request.getParameter("nurseID");
         String diagnosisStatus = request.getParameter("diagnosisStatus");
         String result = request.getParameter("result");
-        String nurseIDStr = request.getParameter("nurseID");
-
-        // Print debug statements
-        System.out.println("Received parameters:");
-        System.out.println("patientID: " + patientID);
+        String medicationsPrescribed = request.getParameter("medicationsPrescribed");
+        String nurseAssessment = request.getParameter("nurseAssessment");
+        
+        System.out.println("SubmitDiagnosisServlet - Received parameters:");
+        System.out.println("patientID: " + patientIDStr);
+        System.out.println("nurseID: " + nurseIDStr);
         System.out.println("diagnosisStatus: " + diagnosisStatus);
         System.out.println("result: " + result);
-        System.out.println("nurseID (raw): " + nurseIDStr);
-        int nurseID = 0;
-
-        try {
-            nurseID = Integer.parseInt(nurseIDStr);
-            System.out.println("nurseID (parsed): " + nurseID);
-        } catch (NumberFormatException e) {
-            System.err.println("Invalid nurseID value: " + nurseIDStr);
-            e.printStackTrace();
-        }
-
-        // Assume doctor hasn't been assigned yet
-        Integer doctorID = null;
         
-        // Set result based on diagnosis status as per requirements
-        if ("Referrable".equals(diagnosisStatus)) {
-            // If the diagnosis is referrable, the result should be "Pending" until a doctor reviews it
-            result = "Pending";
-        } else if ("Not Referable".equals(diagnosisStatus)) {
-            // If the diagnosis is not referrable, the result should be "Negative"
-            result = "Negative";
+        // Set response type
+        response.setContentType("text/plain");
+        
+        // Validation
+        if (patientIDStr == null || nurseIDStr == null || diagnosisStatus == null) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write("Missing required parameters");
+            return;
         }
-
-        Connection conn = null;
-        PreparedStatement stmt = null;
-
+        
         try {
-            conn = DBConnection.getConnection(); // Your custom DB connection method
-            String sql = "INSERT INTO Diagnosis (PatientID, NurseID, DoctorID, DiagnoStatus, Result) VALUES (?, ?, ?, ?, ?)";
-            stmt = conn.prepareStatement(sql);
-
-            stmt.setInt(1, Integer.parseInt(patientID));
-            stmt.setInt(2, nurseID); // assumes nurseID is stored in session
-            if (doctorID != null) {
-                stmt.setInt(3, doctorID);
-            } else {
-                stmt.setNull(3, java.sql.Types.INTEGER);
+            int patientID = Integer.parseInt(patientIDStr);
+            int nurseID = Integer.parseInt(nurseIDStr);
+            
+            // Set up database connection
+            try (Connection conn = DBConnection.getConnection()) {
+                // Check if a diagnosis entry already exists for this patient
+                String checkSql = "SELECT DiagnosisID FROM Diagnosis WHERE PatientID = ?";
+                try (PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
+                    checkStmt.setInt(1, patientID);
+                    var rs = checkStmt.executeQuery();
+                    
+                    if (rs.next()) {
+                        // Update existing diagnosis
+                        int diagnosisId = rs.getInt("DiagnosisID");
+                        System.out.println("Updating existing diagnosis ID: " + diagnosisId);
+                        
+                        String updateSql = "UPDATE Diagnosis SET " +
+                                          "NurseID = ?, " +
+                                          "DiagnoStatus = ?, " +
+                                          "Result = ?, " +
+                                          "MedicationsPrescribed = ?, " +
+                                          "NurseAssessment = ?, " +
+                                          "DiagnosisDate = NOW() " +
+                                          "WHERE DiagnosisID = ?";
+                        
+                        try (PreparedStatement updateStmt = conn.prepareStatement(updateSql)) {
+                            updateStmt.setInt(1, nurseID);
+                            updateStmt.setString(2, diagnosisStatus);
+                            updateStmt.setString(3, result);
+                            updateStmt.setString(4, medicationsPrescribed);
+                            updateStmt.setString(5, nurseAssessment);
+                            updateStmt.setInt(6, diagnosisId);
+                            
+                            int rowsUpdated = updateStmt.executeUpdate();
+                            System.out.println("Diagnosis updated, rows affected: " + rowsUpdated);
+                            System.out.println("Updated diagnosis status to: " + diagnosisStatus + " for patient ID: " + patientID);
+                            
+                            response.getWriter().write("Diagnosis updated successfully");
+                        }
+                    } else {
+                        // Insert new diagnosis
+                        System.out.println("Creating new diagnosis record");
+                        
+                        String insertSql = "INSERT INTO Diagnosis " +
+                                          "(PatientID, NurseID, DiagnoStatus, Result, MedicationsPrescribed, NurseAssessment, DiagnosisDate) " +
+                                          "VALUES (?, ?, ?, ?, ?, ?, NOW())";
+                        
+                        try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
+                            insertStmt.setInt(1, patientID);
+                            insertStmt.setInt(2, nurseID);
+                            insertStmt.setString(3, diagnosisStatus);
+                            insertStmt.setString(4, result);
+                            insertStmt.setString(5, medicationsPrescribed);
+                            insertStmt.setString(6, nurseAssessment);
+                            
+                            int rowsInserted = insertStmt.executeUpdate();
+                            System.out.println("New diagnosis created, rows affected: " + rowsInserted);
+                            System.out.println("Created new diagnosis with status: " + diagnosisStatus + " for patient ID: " + patientID);
+                            
+                            response.getWriter().write("Diagnosis created successfully");
+                        }
+                    }
+                }
             }
-            stmt.setString(4, diagnosisStatus);
-            stmt.setString(5, result);
-
-            int rows = stmt.executeUpdate();
-
-            response.setContentType("text/plain");
-            if (rows > 0) {
-                response.getWriter().write("Diagnosis submitted successfully.");
-            } else {
-                response.getWriter().write("Failed to submit diagnosis.");
-            }
-
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
+            System.err.println("Invalid number format: " + e.getMessage());
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write("Invalid ID format");
+        } catch (SQLException e) {
+            System.err.println("SQL error: " + e.getMessage());
             e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("Error: " + e.getMessage());
-        } finally {
-            try { if (stmt != null) stmt.close(); } catch (Exception e) { }
-            try { if (conn != null) conn.close(); } catch (Exception e) { }
+            response.getWriter().write("Database error: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Unexpected error: " + e.getMessage());
+            e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write("Server error: " + e.getMessage());
         }
     }
 }

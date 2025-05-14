@@ -18,6 +18,7 @@ public class Patient {
     private String address;
     private String imageLink;
     private int registeredBy;
+    private String registrationDate;
     
     // Diagnosis-related fields
     private int diagnosisID;
@@ -26,6 +27,8 @@ public class Patient {
     private String medicationsPrescribed;
     private String followUpDate;
     private String nurseAssessment;
+    private String diagnosisDate;
+    private String nurseName;
 
     // Constructors, getters, and setters
     public Patient() {
@@ -95,6 +98,14 @@ public class Patient {
     public void setRegisteredBy(int registeredBy) {
         this.registeredBy = registeredBy;
     }
+    
+    public String getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(String registrationDate) {
+        this.registrationDate = registrationDate;
+    }
 
     // Getters and setters for diagnosis-related fields
     public int getDiagnosisID() {
@@ -143,5 +154,21 @@ public class Patient {
 
     public void setNurseAssessment(String nurseAssessment) {
         this.nurseAssessment = nurseAssessment;
+    }
+    
+    public String getDiagnosisDate() {
+        return diagnosisDate;
+    }
+
+    public void setDiagnosisDate(String diagnosisDate) {
+        this.diagnosisDate = diagnosisDate;
+    }
+    
+    public String getNurseName() {
+        return nurseName;
+    }
+
+    public void setNurseName(String nurseName) {
+        this.nurseName = nurseName;
     }
 }

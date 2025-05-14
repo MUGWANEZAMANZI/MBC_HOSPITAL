@@ -14,6 +14,7 @@ public class Diagnosis {
     private Date followUpDate;
     private Timestamp diagnosisDate;
     private String nurseAssessment;
+    private String doctorDiagnosis;
 
     // Constructor for existing fields (backwards compatibility)
     public Diagnosis(int diagnosisId, int patientId, int nurseId, int doctorId, String status, String result) {
@@ -38,6 +39,23 @@ public class Diagnosis {
         this.followUpDate = followUpDate;
         this.diagnosisDate = diagnosisDate;
         this.nurseAssessment = nurseAssessment;
+    }
+    
+    // Full constructor with doctorDiagnosis
+    public Diagnosis(int diagnosisId, int patientId, int nurseId, int doctorId, String status, String result,
+                    String medicationsPrescribed, Date followUpDate, Timestamp diagnosisDate, 
+                    String nurseAssessment, String doctorDiagnosis) {
+        this.diagnosisId = diagnosisId;
+        this.patientId = patientId;
+        this.nurseId = nurseId;
+        this.doctorId = doctorId;
+        this.status = status;
+        this.result = result;
+        this.medicationsPrescribed = medicationsPrescribed;
+        this.followUpDate = followUpDate;
+        this.diagnosisDate = diagnosisDate;
+        this.nurseAssessment = nurseAssessment;
+        this.doctorDiagnosis = doctorDiagnosis;
     }
 
     public int getDiagnosisId() {
@@ -94,5 +112,13 @@ public class Diagnosis {
     
     public void setNurseAssessment(String nurseAssessment) {
         this.nurseAssessment = nurseAssessment;
+    }
+    
+    public String getDoctorDiagnosis() {
+        return doctorDiagnosis;
+    }
+    
+    public void setDoctorDiagnosis(String doctorDiagnosis) {
+        this.doctorDiagnosis = doctorDiagnosis;
     }
 }

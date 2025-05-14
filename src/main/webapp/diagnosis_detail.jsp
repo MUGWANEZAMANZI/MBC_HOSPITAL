@@ -177,7 +177,7 @@
     <!-- Sidebar -->
     <aside class="sidebar">
         <div class="sidebar-header">
-            <a href="reffered" class="flex items-center">
+            <a href="dashboard" class="flex items-center">
                 <i class="fas fa-hospital text-white text-3xl mr-3"></i>
                 <h1 class="text-2xl font-bold">MBC Hospital</h1>
             </a>
@@ -205,13 +205,13 @@
             </a>
             
             <p class="text-xs uppercase text-blue-300/70 font-semibold px-3 py-2 mt-4">Staff Management</p>
-            <a href="view_nurses.jsp" class="sidebar-link">
+            <a href="create-nurse" class="sidebar-link">
                 <i class="fas fa-user-nurse w-6"></i>
-                <span>Registered Nurses</span>
+                <span>Register a Nurse</span>
             </a>
-            <a href="unverified_nurses.jsp" class="sidebar-link">
-                <i class="fas fa-user-check w-6"></i>
-                <span>Verify Nurses</span>
+            <a href="view_nurses.jsp" class="sidebar-link">
+                <i class="fas fa-clipboard-list w-6"></i>
+                <span>Registered Nurses</span>
             </a>
             
             <p class="text-xs uppercase text-blue-300/70 font-semibold px-3 py-2 mt-4">Patient Care</p>
@@ -261,7 +261,7 @@
                 </c:choose>
             </div>
             <p class="text-gray-600 text-sm">
-                <a href="/reffered" class="text-blue-600 hover:underline">Dashboard</a> / 
+                <a href="dashboard.jsp" class="text-blue-600 hover:underline">Dashboard</a> / 
                 <c:choose>
                     <c:when test="${diagnosis.status eq 'Referrable'}">
                         <a href="referred-diagnoses" class="text-blue-600 hover:underline">Awaiting Diagnosis</a>

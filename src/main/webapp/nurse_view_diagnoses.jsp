@@ -15,8 +15,8 @@
             }
         }
         
-        if (session.getAttribute("userType") != null) {
-            userType = (String) session.getAttribute("userType");
+        if (session.getAttribute("usertype") != null) {
+            userType = (String) session.getAttribute("usertype");
         }
     }
 
@@ -157,12 +157,11 @@
                                 <td class="py-3 px-4"><%= patient.getMedicationsPrescribed() != null ? patient.getMedicationsPrescribed() : "None" %></td>
                                 <td class="py-3 px-4"><%= patient.getFollowUpDate() != null ? patient.getFollowUpDate() : "Not scheduled" %></td>
                                 <td class="py-3 px-4">
-                                    <button 
-                                        @click="showModal = true; selectedPatient = <%= patient.getPatientID() %>" 
+                                    <a href="nurse-view-diagnoses?id=<%= patient.getDiagnosisID() %>" 
                                         class="px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center text-sm"
                                     >
                                         <i class="fas fa-eye mr-1"></i> View Details
-                                    </button>
+                                    </a>
                                 </td>
                             </tr>
                             <%

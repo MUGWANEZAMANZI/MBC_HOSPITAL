@@ -321,7 +321,6 @@
                             <div class="ml-3">
                                 <h3 class="text-sm font-medium text-blue-800">Nurse's Initial Assessment</h3>
                                 <div class="mt-2 text-sm text-blue-700 bg-white p-3 rounded border border-blue-100">
-                                    <p id="nurseAssessment">Loading initial assessment...</p>
                                 </div>
                             </div>
                         </div>
@@ -809,7 +808,130 @@
                 e.preventDefault();
                 submitDiagnosis(this, 'referred-diagnoses');
             });
+            
+            // Add event listeners to all diagnose buttons
+            const diagnoseButtons = document.querySelectorAll('[data-diagnose]');
+            diagnoseButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const patientId = this.getAttribute('data-patient-id');
+                    const patientName = this.getAttribute('data-patient-name');
+                    const targetModal = this.getAttribute('data-target-modal');
+                    
+                    // Set the patient ID in the form
+                    document.getElementById('patientID').value = patientId;
+                    
+                    // Set the patient name in the modal
+                    document.getElementById('patientName').textContent = patientName;
+                    
+                    // Fetch the nurse assessment for this patient
+                    fetchNurseAssessment(patientId);
+                    
+                    // Show the modal
+                    document.getElementById(targetModal).classList.remove('hidden');
+                });
+            });
         });
+        
+        // Function to fetch nurse assessment for a patient
+        function fetchNurseAssessment(patientId) {
+            const nurseAssessmentElement = document.getElementById('nurseAssessment');
+            nurseAssessmentElement.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Loading assessment...';
+            
+            fetch(`getNurseAssessment?patientId=${patientId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    if (data && data.trim() !== '') {
+                        nurseAssessmentElement.textContent = data;
+                    } else {
+                        nurseAssessmentElement.innerHTML = '<i class="fas fa-info-circle text-blue-500 mr-2"></i> No nurse assessment available for this patient.';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching nurse assessment:', error);
+                    nurseAssessmentElement.innerHTML = '<i class="fas fa-exclamation-triangle text-amber-500 mr-2"></i> Unable to load nurse assessment.';
+                });
+        }
+        
+        // Function to close the diagnosis modal
+        function closeDiagnosisModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('hidden');
+                // Reset the form
+                const form = modal.querySelector('form');
+                if (form) form.reset();
+                // Clear patient name and assessment
+                document.getElementById('patientName').textContent = '';
+                document.getElementById('nurseAssessment').textContent = 'Please select a patient to view their assessment';
+            }
+        }
+        
+        // Function to submit diagnosis form
+        function submitDiagnosis(form, redirectPage) {
+            const formData = new FormData(form);
+            const patientID = formData.get('patientID');
+            const diagnoStatus = formData.get('diagnoStatus');
+            const result = formData.get('result');
+            const medicationsPrescribed = formData.get('medicationsPrescribed');
+            const followUpDate = formData.get('followUpDate');
+            
+            // Basic validation
+            if (!diagnoStatus) {
+                alert('Please select a diagnosis status');
+                return false;
+            }
+            
+            if (!result || result.trim() === '') {
+                alert('Please provide diagnosis results');
+                return false;
+            }
+            
+            // Create URL-encoded form data for submission
+            const params = new URLSearchParams();
+            params.append('patientID', patientID);
+            params.append('diagnoStatus', diagnoStatus);
+            params.append('result', result);
+            params.append('medicationsPrescribed', medicationsPrescribed || '');
+            params.append('followUpDate', followUpDate || '');
+            
+            // Submit the form via AJAX
+            fetch('update-diagnosis', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: params.toString()
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(data => {
+                // Close the modal
+                closeDiagnosisModal('diagnosisModal');
+                
+                // Show success message
+                alert('Diagnosis submitted successfully');
+                
+                // Redirect to the specified page
+                if (redirectPage) {
+                    window.location.href = redirectPage;
+                }
+            })
+            .catch(error => {
+                console.error('Error submitting diagnosis:', error);
+                alert('Failed to submit diagnosis. Please try again.');
+            });
+            
+            return false;
+        }
         
         // Mobile sidebar toggle
         document.addEventListener('DOMContentLoaded', function() {

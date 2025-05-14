@@ -196,6 +196,18 @@
                                   placeholder="Enter diagnosis details here..." x-model="result"></textarea>
                     </div>
                     
+                    <div class="mb-6">
+                        <label for="medicationsPrescribed" class="block text-sm font-medium text-gray-700 mb-1">Medications Prescribed</label>
+                        <textarea id="medicationsPrescribed" name="medicationsPrescribed" rows="2" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+                                  placeholder="Enter prescribed medications (e.g., armorphine)"></textarea>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label for="nurseAssessment" class="block text-sm font-medium text-gray-700 mb-1">Nurse Assessment</label>
+                        <textarea id="nurseAssessment" name="nurseAssessment" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+                                  placeholder="Enter your assessment notes"></textarea>
+                    </div>
+                    
                     <div class="flex justify-end space-x-3">
                         <button type="button" @click="showModal = false" 
                                 class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition duration-300">
@@ -224,12 +236,16 @@
             const patientID = document.getElementById('patientID').value;
             const diagnosisStatus = document.querySelector('input[name="diagnosisStatus"]:checked').value; 
             const result = document.getElementById('result').value;
+            const medicationsPrescribed = document.getElementById('medicationsPrescribed').value;
+            const nurseAssessment = document.getElementById('nurseAssessment').value;
 
             // Build URL-encoded form data
             const formData = new URLSearchParams();
             formData.append("patientID", patientID);
             formData.append("diagnosisStatus", diagnosisStatus);
             formData.append("result", result);
+            formData.append("medicationsPrescribed", medicationsPrescribed);
+            formData.append("nurseAssessment", nurseAssessment);
 
             try {
                 const contextPath = '<%= request.getContextPath() %>'; // resolves to /MBC_HOSPITAL
@@ -242,6 +258,8 @@
                         patientID: patientID,
                         diagnosisStatus: diagnosisStatus,
                         result: result,
+                        medicationsPrescribed: medicationsPrescribed,
+                        nurseAssessment: nurseAssessment,
                         nurseID: nurse_id
                     }).toString()
                 });
