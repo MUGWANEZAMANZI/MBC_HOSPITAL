@@ -18,6 +18,9 @@
         response.sendRedirect("patient_login.jsp");
         return;
     }
+    
+    // Get any messages from servlet
+    String message = (String) request.getAttribute("message");
 %>
 
 <!DOCTYPE html>
@@ -127,6 +130,30 @@
             background-color: #f1f5f9;
         }
         
+        .profile-upload-btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: #3b82f6;
+            color: white;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .profile-upload-btn:hover {
+            background-color: #2563eb;
+        }
+        
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #3b82f6;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
         @media print {
             .no-print {
                 display: none !important;
@@ -150,8 +177,12 @@
             </div>
             <div class="flex items-center space-x-4">
                 <div class="flex items-center">
-                    <div class="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center mr-2">
-                        <i class="fas fa-user text-xl"></i>
+                    <div class="h-10 w-10 rounded-full overflow-hidden bg-white/20 flex items-center justify-center mr-2">
+                        <% if (patient.getImageLink() != null && !patient.getImageLink().isEmpty()) { %>
+                            <img src="<%= patient.getImageLink() %>" alt="Profile" class="h-full w-full object-cover">
+                        <% } else { %>
+                            <i class="fas fa-user text-xl"></i>
+                        <% } %>
                     </div>
                     <span class="font-medium"><%= patient.getFirstName() + " " + patient.getLastName() %></span>
                 </div>
@@ -164,10 +195,16 @@
 
     <!-- Main Content -->
     <main class="container mx-auto py-8 px-4">
+        <% if (message != null) { %>
+            <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-700 p-4 mb-6 rounded" role="alert">
+                <p><%= message %></p>
+            </div>
+        <% } %>
+        
         <!-- Patient Information Card -->
         <div class="card mb-8 animate-fade-in">
-            <div class="flex justify-between items-start">
-                <div>
+            <div class="flex flex-col md:flex-row justify-between items-start">
+                <div class="w-full md:w-2/3">
                     <h2 class="text-xl font-bold text-gray-800 mb-2">
                         <i class="fas fa-user-circle text-blue-600 mr-2"></i>
                         Patient Information
@@ -199,10 +236,39 @@
                         </div>
                     </div>
                 </div>
-                <button onclick="window.print()" class="btn no-print bg-blue-100 text-blue-700 px-4 py-2 rounded-lg hover:bg-blue-200 transition flex items-center">
-                    <i class="fas fa-print mr-2"></i>
-                    Print Information
-                </button>
+                
+                <div class="w-full md:w-1/3 flex flex-col items-center justify-center mt-6 md:mt-0 no-print">
+                    <div class="mb-4 text-center">
+                        <% if (patient.getImageLink() != null && !patient.getImageLink().isEmpty()) { %>
+                            <img src="<%= patient.getImageLink() %>" alt="Profile Picture" class="profile-img mx-auto mb-3">
+                            <p class="text-sm text-gray-500 mb-2">Profile Picture</p>
+                        <% } else { %>
+                            <div class="profile-img mx-auto mb-3 bg-gray-200 flex items-center justify-center">
+                                <i class="fas fa-user text-3xl text-gray-400"></i>
+                            </div>
+                            <p class="text-sm text-gray-500 mb-2">No profile picture</p>
+                        <% } %>
+                    </div>
+                    
+                    <form action="upload-profile-image" method="post" enctype="multipart/form-data" class="w-full max-w-xs text-center">
+                        <div class="mb-4">
+                            <label for="profileImage" class="profile-upload-btn">
+                                <i class="fas fa-camera mr-2"></i>
+                                <% if (patient.getImageLink() != null && !patient.getImageLink().isEmpty()) { %>
+                                    Change Photo
+                                <% } else { %>
+                                    Upload Photo
+                                <% } %>
+                            </label>
+                            <input type="file" id="profileImage" name="profileImage" class="hidden" onchange="this.form.submit()">
+                        </div>
+                    </form>
+                    
+                    <button onclick="window.print()" class="btn no-print bg-blue-100 text-blue-700 px-4 py-2 rounded-lg hover:bg-blue-200 transition flex items-center mt-2">
+                        <i class="fas fa-print mr-2"></i>
+                        Print Information
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -253,20 +319,24 @@
                     </table>
                 </div>
             <% } else { %>
-                <div class="flex flex-col items-center justify-center py-8 text-center">
-                    <div class="inline-flex h-20 w-20 rounded-full bg-blue-100 text-blue-600 items-center justify-center mb-4">
-                        <i class="fas fa-clipboard-check text-4xl"></i>
+                <div class="py-10 text-center">
+                    <div class="inline-flex h-24 w-24 items-center justify-center rounded-full bg-blue-100 text-blue-400">
+                        <i class="fas fa-clipboard-list text-4xl"></i>
                     </div>
-                    <h3 class="text-lg font-medium text-gray-900 mb-2">No diagnosis results found</h3>
-                    <p class="text-gray-500">You don't have any diagnosis records in our system yet.</p>
+                    <h3 class="mt-4 text-lg font-medium text-gray-900">No Diagnoses Found</h3>
+                    <p class="mt-1 text-sm text-gray-500">You don't have any diagnoses on record yet.</p>
                 </div>
             <% } %>
         </div>
-
-        <!-- Footer -->
-        <footer class="mt-12 text-center text-gray-500 text-sm">
-            <p>&copy; 2025 MBC Hospital System. All rights reserved.</p>
-        </footer>
     </main>
+    
+    <!-- Footer -->
+    <footer class="bg-white py-6 text-center text-gray-500 text-sm no-print border-t border-gray-200">
+        <div class="flex items-center justify-center mb-2">
+            <i class="fas fa-hospital-alt text-blue-500 mr-2"></i>
+            <span class="font-semibold text-gray-600">MBC Hospital</span>
+        </div>
+        <p>&copy; <%= new java.util.Date().getYear() + 1900 %> MBC Hospital Healthcare. All rights reserved.</p>
+    </footer>
 </body>
 </html> 
