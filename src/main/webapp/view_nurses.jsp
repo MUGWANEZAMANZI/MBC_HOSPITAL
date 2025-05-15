@@ -146,10 +146,6 @@ String userType = (String) session.getAttribute("usertype");
             
             <% if ("Doctor".equalsIgnoreCase(userType)) { %>
             <p class="text-xs uppercase text-blue-300/70 font-semibold px-3 py-2 mt-4">Staff Management</p>
-            <a href="create-nurse" class="sidebar-link">
-                <i class="fas fa-user-nurse w-6"></i>
-                <span>Register a Nurse</span>
-            </a>
             <a href="view_nurses.jsp" class="sidebar-link active">
                 <i class="fas fa-clipboard-list w-6"></i>
                 <span>Registered Nurses</span>

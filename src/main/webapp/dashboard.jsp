@@ -147,24 +147,14 @@
                     <i class="fas fa-tachometer-alt w-6"></i>
                     <span>Dashboard</span>
                 </a>
-                <a href="verified-doctors" class="sidebar-link flex items-center space-x-3 text-white/90 hover:text-white p-3 rounded-lg mb-2">
-                    <i class="fas fa-user-md w-6"></i>
-                    <span>Doctors</span>
-                </a>
-                <a href="view_nurses.jsp" class="sidebar-link flex items-center space-x-3 text-white/90 hover:text-white p-3 rounded-lg mb-2">
-                    <i class="fas fa-user-nurse w-6"></i>
-                    <span>Nurses</span>
-                </a>
                 <a href="users-directory" class="sidebar-link flex items-center space-x-3 text-white/90 hover:text-white p-3 rounded-lg mb-2">
                     <i class="fas fa-users w-6"></i>
                     <span>User directory</span>
                 </a>
-               
-                <a href="new-doctor.jsp" class="sidebar-link flex items-center space-x-3 text-white/90 hover:text-white p-3 rounded-lg mb-2">
-                    <i class="fas fa-user-plus w-6"></i>
-                    <span>Register Doctor</span>
+                <a href="patients" class="sidebar-link flex items-center space-x-3 text-white/90 hover:text-white p-3 rounded-lg mb-2">
+                    <i class="fas fa-clipboard-list w-6"></i>
+                    <span>Patient Results</span>
                 </a>
-               
                 <a href="logout.jsp" class="sidebar-link flex items-center space-x-3 text-white/90 hover:text-white p-3 rounded-lg mt-8 bg-red-500/20 hover:bg-red-500/30">
                     <i class="fas fa-sign-out-alt w-6"></i>
                     <span>Logout</span>
@@ -374,83 +364,19 @@
             
             <!-- Main Dashboard Cards -->
             <h2 class="text-xl font-bold text-gray-800 mb-6 mt-6 animate-fade-in" style="animation-delay: 0.7s">Administrative Functions</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">                
-                <!-- Doctors Card -->
-                <a href="verified-doctors" class="dashboard-card card-1 bg-white rounded-lg shadow-md hover:shadow-lg transition p-6 animate-fade-in" style="animation-delay: 0.8s">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="card-icon p-3 rounded-full bg-blue-100 text-blue-600">
-                            <i class="fas fa-user-md text-xl"></i>
-                        </div>
-                        <span class="text-xs font-medium bg-blue-100 text-blue-600 px-3 py-1 rounded-full">Medical Staff</span>
-                    </div>
-                    <h2 class="text-xl font-semibold text-gray-800">Manage Doctors</h2>
-                    <p class="text-gray-600 mt-2">View, verify and manage doctor accounts.</p>
-                    <div class="mt-4 flex items-center text-blue-600">
-                        <span class="text-sm">View Doctors</span>
-                        <i class="fas fa-arrow-right ml-2"></i>
-                    </div>
-                </a>
-                
-                <!-- Nurses Card -->                
-                <a href="view_nurses.jsp" class="dashboard-card card-3 bg-white rounded-lg shadow-md hover:shadow-lg transition p-6 animate-fade-in" style="animation-delay: 0.9s">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="card-icon p-3 rounded-full bg-purple-100 text-purple-600">
-                            <i class="fas fa-user-nurse text-xl"></i>
-                        </div>
-                        <span class="text-xs font-medium bg-purple-100 text-purple-600 px-3 py-1 rounded-full">Nursing Staff</span>
-                    </div>
-                    <h2 class="text-xl font-semibold text-gray-800">Manage Nurses</h2>
-                    <p class="text-gray-600 mt-2">View and manage nurse accounts and assignments.</p>
-                    <div class="mt-4 flex items-center text-purple-600">
-                        <span class="text-sm">View Nurses</span>
-                        <i class="fas fa-arrow-right ml-2"></i>
-                    </div>
-                </a>
-                
-                <!-- Patients Card -->
-                <a href="all-patients.jsp" class="dashboard-card card-2 bg-white rounded-lg shadow-md hover:shadow-lg transition p-6 animate-fade-in" style="animation-delay: 1.0s">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">                
+                <!-- Patient Results Card -->
+                <a href="patients" class="dashboard-card card-2 bg-white rounded-lg shadow-md hover:shadow-lg transition p-6 animate-fade-in" style="animation-delay: 1.0s">
                     <div class="flex items-center justify-between mb-4">
                         <div class="card-icon p-3 rounded-full bg-green-100 text-green-600">
-                            <i class="fas fa-procedures text-xl"></i>
+                            <i class="fas fa-clipboard-list text-xl"></i>
                         </div>
                         <span class="text-xs font-medium bg-green-100 text-green-600 px-3 py-1 rounded-full">Patients</span>
                     </div>
-                    <h2 class="text-xl font-semibold text-gray-800">Patient Management</h2>
-                    <p class="text-gray-600 mt-2">View patient records and medical history.</p>
+                    <h2 class="text-xl font-semibold text-gray-800">Patient Results</h2>
+                    <p class="text-gray-600 mt-2">View patient records and diagnosis results.</p>
                     <div class="mt-4 flex items-center text-green-600">
-                        <span class="text-sm">View Patients</span>
-                        <i class="fas fa-arrow-right ml-2"></i>
-                    </div>
-                </a>
-                
-                <!-- Doctor Cases Card -->
-                <a href="doctors-dir" class="dashboard-card card-4 bg-white rounded-lg shadow-md hover:shadow-lg transition p-6 animate-fade-in" style="animation-delay: 1.1s">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="card-icon p-3 rounded-full bg-amber-100 text-amber-600">
-                            <i class="fas fa-stethoscope text-xl"></i>
-                        </div>
-                        <span class="text-xs font-medium bg-amber-100 text-amber-600 px-3 py-1 rounded-full">Cases</span>
-                    </div>
-                    <h2 class="text-xl font-semibold text-gray-800">Doctor Cases</h2>
-                    <p class="text-gray-600 mt-2">Track cases handled by doctors in the system.</p>
-                    <div class="mt-4 flex items-center text-amber-600">
-                        <span class="text-sm">View Cases</span>
-                        <i class="fas fa-arrow-right ml-2"></i>
-                    </div>
-                </a>
-                
-                <!-- Nurse Cases Card -->
-                <a href="patients-list" class="dashboard-card card-5 bg-white rounded-lg shadow-md hover:shadow-lg transition p-6 animate-fade-in" style="animation-delay: 1.2s">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="card-icon p-3 rounded-full bg-red-100 text-red-600">
-                            <i class="fas fa-clipboard-list text-xl"></i>
-                        </div>
-                        <span class="text-xs font-medium bg-red-100 text-red-600 px-3 py-1 rounded-full">Cases</span>
-                    </div>
-                    <h2 class="text-xl font-semibold text-gray-800">Nurse Cases</h2>
-                    <p class="text-gray-600 mt-2">Track diagnoses and cases managed by nurses.</p>
-                    <div class="mt-4 flex items-center text-red-600">
-                        <span class="text-sm">View Cases</span>
+                        <span class="text-sm">View Patient Results</span>
                         <i class="fas fa-arrow-right ml-2"></i>
                     </div>
                 </a>
@@ -510,17 +436,13 @@
                         <i class="fas fa-tachometer-alt w-6"></i>
                         <span>Dashboard</span>
                     </a>
-                    <a href="verified-doctors" class="sidebar-link flex items-center space-x-3 text-white/90 hover:text-white p-3 rounded-lg mb-2">
-                        <i class="fas fa-user-md w-6"></i>
-                        <span>Doctors</span>
-                    </a>
-                    <a href="view_nurses.jsp" class="sidebar-link flex items-center space-x-3 text-white/90 hover:text-white p-3 rounded-lg mb-2">
-                        <i class="fas fa-user-nurse w-6"></i>
-                        <span>Nurses</span>
-                    </a>
                     <a href="users-directory" class="sidebar-link flex items-center space-x-3 text-white/90 hover:text-white p-3 rounded-lg mb-2">
                         <i class="fas fa-users w-6"></i>
-                        <span>Users</span>
+                        <span>User directory</span>
+                    </a>
+                    <a href="patients" class="sidebar-link flex items-center space-x-3 text-white/90 hover:text-white p-3 rounded-lg mb-2">
+                        <i class="fas fa-clipboard-list w-6"></i>
+                        <span>Patient Results</span>
                     </a>
                     <a href="logout.jsp" class="sidebar-link flex items-center space-x-3 text-white/90 hover:text-white p-3 rounded-lg mt-8 bg-red-500/20 hover:bg-red-500/30">
                         <i class="fas fa-sign-out-alt w-6"></i>

@@ -137,7 +137,7 @@
         }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen" x-data="{ showModal: false, selectedDiagnosis: null }">
+<body class="bg-gray-50 min-h-screen">
     <!-- Header -->
     <header class="header no-print">
         <div class="container mx-auto flex justify-between items-center">
@@ -223,7 +223,6 @@
                                 <th>Result</th>
                                 <th>Medications</th>
                                 <th>Follow-up Date</th>
-                                <th class="no-print">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -248,12 +247,6 @@
                                 <td class="max-w-xs truncate"><%= diagnosis.getResult() != null ? diagnosis.getResult() : "No result provided" %></td>
                                 <td><%= diagnosis.getMedicationsPrescribed() != null ? diagnosis.getMedicationsPrescribed() : "None" %></td>
                                 <td><%= diagnosis.getFollowUpDate() != null ? diagnosis.getFollowUpDate().toString() : "Not scheduled" %></td>
-                                <td class="no-print">
-                                    <button @click="showModal = true; selectedDiagnosis = <%= diagnosis.getDiagnosisId() %>" 
-                                            class="px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center text-sm">
-                                        <i class="fas fa-eye mr-1"></i> View Details
-                                    </button>
-                                </td>
                             </tr>
                             <% } %>
                         </tbody>
@@ -270,147 +263,10 @@
             <% } %>
         </div>
 
-        <!-- Upcoming Appointments Section -->
-        <h2 class="text-xl font-bold text-gray-800 mb-4 mt-8 flex items-center">
-            <i class="fas fa-calendar-check text-blue-600 mr-2"></i>
-            Upcoming Appointments
-        </h2>
-
-        <div class="card animate-fade-in" style="animation-delay: 0.2s">
-            <div class="flex flex-col items-center justify-center py-8 text-center">
-                <div class="inline-flex h-20 w-20 rounded-full bg-blue-100 text-blue-600 items-center justify-center mb-4">
-                    <i class="fas fa-calendar-plus text-4xl"></i>
-                </div>
-                <h3 class="text-lg font-medium text-gray-900 mb-2">No upcoming appointments</h3>
-                <p class="text-gray-500 mb-4">You don't have any scheduled appointments.</p>
-                <a href="appointment.jsp" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center">
-                    <i class="fas fa-plus mr-2"></i> Schedule an Appointment
-                </a>
-            </div>
-        </div>
-        
         <!-- Footer -->
         <footer class="mt-12 text-center text-gray-500 text-sm">
             <p>&copy; 2025 MBC Hospital System. All rights reserved.</p>
         </footer>
     </main>
-
-    <!-- Diagnosis Detail Modal -->
-    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" 
-         x-show="showModal" 
-         x-transition:enter="transition ease-out duration-300"
-         x-transition:enter-start="opacity-0"
-         x-transition:enter-end="opacity-100"
-         x-transition:leave="transition ease-in duration-200"
-         x-transition:leave-start="opacity-100"
-         x-transition:leave-end="opacity-0"
-         x-cloak>
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden" 
-             @click.away="showModal = false"
-             x-transition:enter="transition ease-out duration-300"
-             x-transition:enter-start="opacity-0 transform scale-95"
-             x-transition:enter-end="opacity-100 transform scale-100"
-             x-transition:leave="transition ease-in duration-200"
-             x-transition:leave-start="opacity-100 transform scale-100"
-             x-transition:leave-end="opacity-0 transform scale-95">
-            
-            <!-- Modal Header -->
-            <div class="bg-gradient-to-r from-blue-600 to-blue-800 py-4 px-6">
-                <div class="flex justify-between items-center">
-                    <h3 class="text-xl font-bold text-white">Diagnosis Details</h3>
-                    <button @click="showModal = false" class="text-white hover:text-blue-200 transition">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                <p class="text-blue-100 text-sm mt-1">Diagnosis ID: <span x-text="selectedDiagnosis"></span></p>
-            </div>
-            
-            <!-- Modal Body - This would be populated with AJAX in a real app -->
-            <div class="p-6">
-                <div id="diagnosisDetails" class="space-y-4">
-                    <p class="text-gray-500">Loading diagnosis details...</p>
-                </div>
-                
-                <div class="flex justify-between mt-6">
-                    <button type="button" @click="showModal = false" 
-                            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
-                        Close
-                    </button>
-                    <button onclick="window.print()" 
-                            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center">
-                        <i class="fas fa-print mr-2"></i> Print Details
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // In a real application, this would be an AJAX request to get the diagnosis details
-            // For now, just a simple mock-up that would show diagnosis details when modal opens
-            Alpine.effect(() => {
-                const showModal = Alpine.store('showModal');
-                const selectedDiagnosis = Alpine.store('selectedDiagnosis');
-                
-                if (showModal && selectedDiagnosis) {
-                    // This would be replaced with an actual AJAX call
-                    console.log("Fetching details for diagnosis ID:", selectedDiagnosis);
-                    
-                    // Mock diagnosis details
-                    document.getElementById('diagnosisDetails').innerHTML = `
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <div>
-                                <h4 class="text-sm font-medium text-gray-500">Diagnosis Date</h4>
-                                <p class="text-gray-900 font-medium">
-                                    <i class="fas fa-calendar-alt text-blue-500 mr-1"></i>
-                                    January 15, 2025
-                                </p>
-                            </div>
-                            <div>
-                                <h4 class="text-sm font-medium text-gray-500">Status</h4>
-                                <p>
-                                    <span class="status-badge bg-green-100 text-green-800">
-                                        <i class="fas fa-check-circle mr-1"></i> Negative
-                                    </span>
-                                </p>
-                            </div>
-                        </div>
-                        
-                        <div class="border-t border-gray-200 pt-4 mt-4">
-                            <h4 class="text-sm font-medium text-gray-500 mb-2">Diagnosis Result</h4>
-                            <p class="text-gray-700 bg-gray-50 p-3 rounded border border-gray-200">
-                                Patient shows no signs of infection. All tests came back negative.
-                            </p>
-                        </div>
-                        
-                        <div class="border-t border-gray-200 pt-4 mt-4">
-                            <h4 class="text-sm font-medium text-gray-500 mb-2">Medications Prescribed</h4>
-                            <p class="text-gray-700 bg-gray-50 p-3 rounded border border-gray-200">
-                                None required at this time.
-                            </p>
-                        </div>
-                        
-                        <div class="border-t border-gray-200 pt-4 mt-4">
-                            <h4 class="text-sm font-medium text-gray-500 mb-2">Follow-up Instructions</h4>
-                            <p class="text-gray-700 bg-gray-50 p-3 rounded border border-gray-200">
-                                No follow-up required. Return if symptoms reappear.
-                            </p>
-                        </div>
-                        
-                        <div class="border-t border-gray-200 pt-4 mt-4">
-                            <h4 class="text-sm font-medium text-gray-500 mb-2">Healthcare Provider</h4>
-                            <div class="flex items-center">
-                                <div class="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center mr-2">
-                                    <i class="fas fa-user-md text-blue-600"></i>
-                                </div>
-                                <p class="text-gray-700">Dr. Sarah Johnson</p>
-                            </div>
-                        </div>
-                    `;
-                }
-            });
-        });
-    </script>
 </body>
 </html> 

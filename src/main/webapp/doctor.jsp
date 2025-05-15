@@ -465,19 +465,9 @@
                 </button>
                 <h1 class="text-2xl font-bold text-gray-800">Doctor Dashboard</h1>
             </div>
-            <div class="flex items-center space-x-4">
-                <div class="relative">
-                    <input type="text" placeholder="Search..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-primary-500 w-64 shadow-sm">
-                    <i class="fas fa-search absolute left-3 top-2.5 text-gray-400"></i>
-                </div>
-                <div class="flex items-center space-x-3">
-                    <button class="relative p-2 text-gray-500 hover:text-gray-700 bg-gray-100 rounded-full hover:bg-gray-200 transition">
-                        <i class="fas fa-bell"></i>
-                        <span class="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center rounded-full bg-red-500 text-white text-xs">2</span>
-                    </button>
-                    <div class="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
-                        <i class="fas fa-user-md"></i>
-                    </div>
+            <div class="flex items-center">
+                <div class="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
+                    <i class="fas fa-user-md"></i>
                 </div>
             </div>
         </header>
@@ -724,61 +714,36 @@
                     <% } %>
                 </div>
                 
-                <!-- Quick Actions and Activity Section -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <!-- Quick Actions Section -->
+                <div class="grid grid-cols-1 gap-6 mb-8">
                     <!-- Quick Actions -->
-                    <div class="bg-white rounded-xl shadow-sm p-6 col-span-1">
+                    <div class="bg-white rounded-xl shadow-sm p-6">
                         <h3 class="font-semibold text-gray-800 mb-4">Quick Actions</h3>
-                        <div class="space-y-3">
-                            <a href="all-patients" class="flex items-center p-3 bg-green-50 rounded-lg hover:bg-green-100 transition">
-                                <div class="w-8 h-8 rounded-full bg-green-200 flex items-center justify-center text-green-700 mr-3">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <a href="all-patients" class="flex items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition">
+                                <div class="w-10 h-10 rounded-full bg-green-200 flex items-center justify-center text-green-700 mr-3">
                                     <i class="fas fa-search"></i>
                                 </div>
-                                <span>Find Patient Records</span>
+                                <span class="font-medium">Find Patient Records</span>
                             </a>
-                            <a href="referred-diagnoses" class="flex items-center p-3 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition">
-                                <div class="w-8 h-8 rounded-full bg-yellow-200 flex items-center justify-center text-yellow-700 mr-3">
+                            <a href="referred-diagnoses" class="flex items-center p-4 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition">
+                                <div class="w-10 h-10 rounded-full bg-yellow-200 flex items-center justify-center text-yellow-700 mr-3">
                                     <i class="fas fa-tasks"></i>
                                 </div>
-                                <span>Review Pending Cases</span>
+                                <span class="font-medium">Review Pending Cases</span>
                             </a>
-                        </div>
-                    </div>
-                    
-                    <!-- Recent Activity -->
-                    <div class="bg-white rounded-xl shadow-sm p-6 col-span-2">
-                        <h3 class="font-semibold text-gray-800 mb-4">Recent Activity</h3>
-                        <div class="space-y-4">
-                            <div class="flex items-start">
-                                <div class="flex-shrink-0 h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-3">
-                                    <i class="fas fa-clipboard-check"></i>
+                            <a href="confirmed-cases" class="flex items-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition">
+                                <div class="w-10 h-10 rounded-full bg-blue-200 flex items-center justify-center text-blue-700 mr-3">
+                                    <i class="fas fa-check-circle"></i>
                                 </div>
-                                <div>
-                                    <p class="text-sm font-medium">You diagnosed <span class="text-blue-600">Maria Johnson</span></p>
-                                    <p class="text-xs text-gray-500">2 hours ago</p>
+                                <span class="font-medium">View Confirmed Cases</span>
+                            </a>
+                            <a href="DiagnosisViewServlet" class="flex items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition">
+                                <div class="w-10 h-10 rounded-full bg-purple-200 flex items-center justify-center text-purple-700 mr-3">
+                                    <i class="fas fa-stethoscope"></i>
                                 </div>
-                            </div>
-                            <div class="flex items-start">
-                                <div class="flex-shrink-0 h-8 w-8 rounded-full bg-green-100 flex items-center justify-center text-green-600 mr-3">
-                                    <i class="fas fa-user-plus"></i>
-                                </div>
-                                <div>
-                                    <p class="text-sm font-medium">Nurse <span class="text-green-600">Sarah Lee</span> registered a new patient</p>
-                                    <p class="text-xs text-gray-500">Yesterday at 3:45 PM</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start">
-                                <div class="flex-shrink-0 h-8 w-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 mr-3">
-                                    <i class="fas fa-exchange-alt"></i>
-                                </div>
-                                <div>
-                                    <p class="text-sm font-medium">A case was transferred to you by <span class="text-purple-600">Dr. Robert Chen</span></p>
-                                    <p class="text-xs text-gray-500">Yesterday at 10:30 AM</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mt-4 pt-3 border-t border-gray-100 text-center">
-                            <a href="#" class="text-sm text-blue-600 hover:text-blue-800">View All Activity</a>
+                                <span class="font-medium">Diagnosis Records</span>
+                            </a>
                         </div>
                     </div>
                 </div>

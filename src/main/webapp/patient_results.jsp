@@ -96,20 +96,12 @@
                     <i class="fas fa-tachometer-alt w-6"></i>
                     <span>Dashboard</span>
                 </a>
-                <a href="verified-doctors" class="sidebar-link flex items-center space-x-3 text-white/90 hover:text-white p-3 rounded-lg mb-2">
-                    <i class="fas fa-user-md w-6"></i>
-                    <span>Doctors</span>
-                </a>
-                <a href="view_nurses.jsp" class="sidebar-link flex items-center space-x-3 text-white/90 hover:text-white p-3 rounded-lg mb-2">
-                    <i class="fas fa-user-nurse w-6"></i>
-                    <span>Nurses</span>
-                </a>
                 <a href="users-directory" class="sidebar-link flex items-center space-x-3 text-white/90 hover:text-white p-3 rounded-lg mb-2">
                     <i class="fas fa-users w-6"></i>
                     <span>User directory</span>
                 </a>
                 <a href="patients" class="sidebar-link active flex items-center space-x-3 text-white/90 hover:text-white p-3 rounded-lg mb-2">
-                    <i class="fas fa-procedures w-6"></i>
+                    <i class="fas fa-clipboard-list w-6"></i>
                     <span>Patient Results</span>
                 </a>
                 <a href="logout.jsp" class="sidebar-link flex items-center space-x-3 text-white/90 hover:text-white p-3 rounded-lg mt-8 bg-red-500/20 hover:bg-red-500/30">
@@ -188,6 +180,16 @@
                             <option value="Action Required">Action Required</option>
                             <option value="Referrable">Referrable</option>
                             <option value="Not Referable">Not Referable</option>
+                        </select>
+                    </div>
+                    
+                    <div class="w-full md:w-auto">
+                        <label for="provider-filter" class="block text-sm font-medium text-gray-700 mb-1">Filter by Provider</label>
+                        <select id="provider-filter" 
+                                class="w-full md:w-48 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="all">All Providers</option>
+                            <option value="doctor">Doctor</option>
+                            <option value="nurse">Nurse</option>
                         </select>
                     </div>
                 </div>
@@ -345,12 +347,12 @@
                         <i class="fas fa-tachometer-alt w-6"></i>
                         <span>Dashboard</span>
                     </a>
-                    <a href="verified-doctors" class="sidebar-link flex items-center space-x-3 text-white/90 hover:text-white p-3 rounded-lg mb-2">
-                        <i class="fas fa-user-md w-6"></i>
-                        <span>Doctors</span>
+                    <a href="users-directory" class="sidebar-link flex items-center space-x-3 text-white/90 hover:text-white p-3 rounded-lg mb-2">
+                        <i class="fas fa-users w-6"></i>
+                        <span>User directory</span>
                     </a>
                     <a href="patients" class="sidebar-link active flex items-center space-x-3 text-white/90 hover:text-white p-3 rounded-lg mb-2">
-                        <i class="fas fa-procedures w-6"></i>
+                        <i class="fas fa-clipboard-list w-6"></i>
                         <span>Patient Results</span>
                     </a>
                     <a href="logout.jsp" class="sidebar-link flex items-center space-x-3 text-white/90 hover:text-white p-3 rounded-lg mt-8 bg-red-500/20 hover:bg-red-500/30">
@@ -384,6 +386,9 @@
             
             // Setup status filter
             setupStatusFilter();
+            
+            // Setup provider filter
+            setupProviderFilter();
         });
         
         // Toggle diagnoses section
@@ -406,17 +411,7 @@
             if (!searchInput) return;
             
             searchInput.addEventListener('input', function() {
-                const query = this.value.toLowerCase();
-                const patientCards = document.querySelectorAll('.patient-card');
-                
-                patientCards.forEach(card => {
-                    const patientInfo = card.textContent.toLowerCase();
-                    if (patientInfo.includes(query)) {
-                        card.style.display = '';
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
+                applyFilters();
             });
         }
         
@@ -426,27 +421,101 @@
             if (!statusFilter) return;
             
             statusFilter.addEventListener('change', function() {
-                const selectedStatus = this.value;
-                const patientCards = document.querySelectorAll('.patient-card');
-                
-                if (selectedStatus === 'all') {
-                    patientCards.forEach(card => {
-                        card.style.display = '';
-                    });
-                    return;
-                }
-                
+                applyFilters();
+            });
+        }
+        
+        // Setup provider filter
+        function setupProviderFilter() {
+            const providerFilter = document.getElementById('provider-filter');
+            if (!providerFilter) return;
+            
+            providerFilter.addEventListener('change', function() {
+                applyFilters();
+            });
+        }
+        
+        // Apply all filters together
+        function applyFilters() {
+            const statusFilter = document.getElementById('status-filter');
+            const providerFilter = document.getElementById('provider-filter');
+            const searchInput = document.getElementById('search');
+            
+            const selectedStatus = statusFilter.value;
+            const selectedProvider = providerFilter.value;
+            const searchQuery = searchInput.value.toLowerCase();
+            
+            const patientCards = document.querySelectorAll('.patient-card');
+            
+            // If all filters are set to default, show all cards and return
+            if (selectedStatus === 'all' && selectedProvider === 'all' && searchQuery === '') {
+                patientCards.forEach(card => {
+                    card.style.display = '';
+                    // Collapse all diagnosis sections
+                    const patientId = card.dataset.patientId;
+                    const diagnosesSection = document.getElementById('diagnoses-' + patientId);
+                    const icon = document.getElementById('icon-' + patientId);
+                    
+                    if (diagnosesSection && !diagnosesSection.classList.contains('hidden')) {
+                        diagnosesSection.classList.add('hidden');
+                        icon.classList.remove('transform', 'rotate-180');
+                    }
+                });
+                return;
+            }
+            
+            // Open all diagnosis sections when filtering for better visibility
+            if (selectedStatus !== 'all' || selectedProvider !== 'all') {
                 patientCards.forEach(card => {
                     const patientId = card.dataset.patientId;
                     const diagnosesSection = document.getElementById('diagnoses-' + patientId);
+                    const icon = document.getElementById('icon-' + patientId);
                     
-                    if (diagnosesSection) {
-                        const hasMatchingStatus = diagnosesSection.textContent.includes(selectedStatus);
-                        card.style.display = hasMatchingStatus ? '' : 'none';
-                    } else {
-                        card.style.display = 'none';
+                    if (diagnosesSection && diagnosesSection.classList.contains('hidden')) {
+                        diagnosesSection.classList.remove('hidden');
+                        icon.classList.add('transform', 'rotate-180');
                     }
                 });
+            }
+            
+            // Apply all filters
+            patientCards.forEach(card => {
+                const patientId = card.dataset.patientId;
+                const diagnosesSection = document.getElementById('diagnoses-' + patientId);
+                const patientInfo = card.textContent.toLowerCase();
+                
+                let shouldShow = true;
+                
+                // Apply search filter
+                if (searchQuery !== '' && !patientInfo.includes(searchQuery)) {
+                    shouldShow = false;
+                }
+                
+                // Apply status filter
+                if (selectedStatus !== 'all' && diagnosesSection) {
+                    const hasMatchingStatus = diagnosesSection.textContent.includes(selectedStatus);
+                    if (!hasMatchingStatus) {
+                        shouldShow = false;
+                    }
+                }
+                
+                // Apply provider filter
+                if (selectedProvider !== 'all' && diagnosesSection) {
+                    let hasMatchingProvider = false;
+                    
+                    // Check for doctor or nurse in diagnoses
+                    if (selectedProvider === 'doctor') {
+                        hasMatchingProvider = diagnosesSection.querySelector('.fa-user-md') !== null;
+                    } else if (selectedProvider === 'nurse') {
+                        hasMatchingProvider = diagnosesSection.querySelector('.fa-user-nurse') !== null;
+                    }
+                    
+                    if (!hasMatchingProvider) {
+                        shouldShow = false;
+                    }
+                }
+                
+                card.style.display = shouldShow ? '' : 'none';
             });
         }
     </script>

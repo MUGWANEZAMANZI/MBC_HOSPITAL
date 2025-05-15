@@ -1,4 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.util.*, java.sql.*, com.mbc_hospital.model.DBConnection" %>
+<%@ page import="com.mbc_hospital.model.Diagnosis" %>
 <% String userType = (String) session.getAttribute("usertype"); %>
 <% String username = (String) session.getAttribute("username"); %>
 <!DOCTYPE html>
@@ -233,11 +235,6 @@
         </a>
         
         <p class="text-xs uppercase text-blue-300/70 font-semibold px-3 py-2 mt-4">Staff Management</p>
-        <a href="register-nurse" class="sidebar-link">
-            <i class="fas fa-user-nurse w-6"></i>
-            <span>Register a Nurse</span>
-        </a>
-        
         <a href="view_nurses.jsp" class="sidebar-link">
             <i class="fas fa-clipboard-list w-6"></i>
             <span>Registered Nurses</span>
@@ -331,22 +328,45 @@
 
     <!-- Statistics Cards -->
     <%
-        java.util.List<com.mbc_hospital.model.Diagnosis> diagnosisList =
-        (java.util.List<com.mbc_hospital.model.Diagnosis>) request.getAttribute("diagnosisList");
-        java.util.Map<Integer, String> patientNames = 
-        (java.util.Map<Integer, String>) request.getAttribute("patientNames");
+        Map<Integer, String> patientNames = (Map<Integer, String>) request.getAttribute("patientNames");
+        List<Diagnosis> diagnosisList = (List<Diagnosis>) request.getAttribute("diagnosisList");
         
         int totalCount = diagnosisList != null ? diagnosisList.size() : 0;
         int pendingCount = 0;
         int completedCount = 0;
         
+        // Get registered nurses count from database
+        int nurseCount = 0;
+        // Get total patients count from database
+        int totalPatients = 0;
+        
+        try (Connection conn = DBConnection.getConnection()) {
+            // Count nurses
+            String nurseQuery = "SELECT COUNT(*) as count FROM Users WHERE UserType = 'nurse'";
+            PreparedStatement nurseStmt = conn.prepareStatement(nurseQuery);
+            ResultSet nurseRs = nurseStmt.executeQuery();
+            if (nurseRs.next()) {
+                nurseCount = nurseRs.getInt("count");
+            }
+            
+            // Count total patients
+            String patientQuery = "SELECT COUNT(*) as count FROM Patients";
+            PreparedStatement patientStmt = conn.prepareStatement(patientQuery);
+            ResultSet patientRs = patientStmt.executeQuery();
+            if (patientRs.next()) {
+                totalPatients = patientRs.getInt("count");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        // Continue with existing calculation for pendingCount and completedCount
         if (diagnosisList != null) {
-            for (com.mbc_hospital.model.Diagnosis d : diagnosisList) {
-                if ("Referrable".equalsIgnoreCase(d.getStatus()) || 
-                    "Action Required".equalsIgnoreCase(d.getStatus()) ||
-                    "Pending".equals(d.getResult())) {
+            for (Diagnosis diagnosis : diagnosisList) {
+                String status = diagnosis.getStatus();
+                if ("Action Required".equalsIgnoreCase(status) || "Referrable".equalsIgnoreCase(status)) {
                     pendingCount++;
-                } else {
+                } else if ("Positive".equalsIgnoreCase(status) || "Negative".equalsIgnoreCase(status)) {
                     completedCount++;
                 }
             }
@@ -362,9 +382,9 @@
                 <div>
                     <p class="text-sm text-gray-500 font-medium">Registered Nurses</p>
                     <div class="flex items-end">
-                        <h3 class="text-2xl font-bold text-gray-800">5</h3>
+                        <h3 class="text-2xl font-bold text-gray-800"><%= nurseCount %></h3>
                         <span class="text-xs text-green-600 font-semibold ml-2 mb-1 flex items-center">
-                            <i class="fas fa-arrow-up mr-1"></i>2%
+                            <i class="fas fa-users mr-1"></i>Active
                         </span>
                     </div>
                 </div>
@@ -394,9 +414,7 @@
                 </div>
             </div>
             <div class="mt-4 pt-3 border-t border-gray-100">
-                <a href="reffered" class="text-sm text-blue-600 hover:text-blue-700 flex items-center">
-                    View Cases <i class="fas fa-arrow-right ml-1"></i>
-                </a>
+                <!-- View Cases button removed -->
             </div>
         </div>
         
@@ -430,7 +448,7 @@
                 <div>
                     <p class="text-sm text-gray-500 font-medium">Total Patients</p>
                     <div class="flex items-end">
-                        <h3 class="text-2xl font-bold text-gray-800">31</h3>
+                        <h3 class="text-2xl font-bold text-gray-800"><%= totalPatients %></h3>
                         <span class="text-xs text-indigo-600 font-semibold ml-2 mb-1 flex items-center">
                             <i class="fas fa-database mr-1"></i>System
                         </span>
