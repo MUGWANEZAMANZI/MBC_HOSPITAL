@@ -293,6 +293,13 @@ int userID = (Integer) session.getAttribute("id");
                                             <i class="fas fa-times-circle mr-1.5"></i>
                                             <span class="relative">Reject</span>
                                         </button>
+                                        <button 
+                                            onclick="showUserDetails('<%= nurse.getUserID() %>', '<%= nurse.getUsername() %>', '<%= nurse.getUserType() %>', '<%= nurse.isVerified() %>', '<%= nurse.getFirstName() != null ? nurse.getFirstName() : "" %>', '<%= nurse.getLastName() != null ? nurse.getLastName() : "" %>', '<%= nurse.getTelephone() != null ? nurse.getTelephone() : "" %>', '<%= nurse.getEmail() != null ? nurse.getEmail() : "" %>', '<%= nurse.getAddress() != null ? nurse.getAddress() : "" %>', '<%= nurse.getHospitalName() != null ? nurse.getHospitalName() : "" %>')" 
+                                            class="group relative inline-flex items-center justify-center px-4 py-2 overflow-hidden rounded-md bg-blue-50 text-blue-600 hover:bg-blue-100 transition-all duration-300">
+                                            <span class="absolute left-0 top-0 h-full w-0 bg-blue-600 opacity-20 transition-all duration-300 group-hover:w-full"></span>
+                                            <i class="fas fa-eye mr-1.5"></i>
+                                            <span class="relative">Details</span>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -533,6 +540,129 @@ int userID = (Integer) session.getAttribute("id");
                 });
             }
         });
+        
+        // User Details Modal Functions
+        function showUserDetails(userId, username, userType, isVerified, firstName, lastName, telephone, email, address, hospitalName) {
+            // Create modal if it doesn't exist
+            if (!document.getElementById('userDetailsModal')) {
+                const modal = document.createElement('div');
+                modal.id = 'userDetailsModal';
+                modal.className = 'fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex items-center justify-center hidden';
+                modal.innerHTML = `
+                    <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 animate-fade-in">
+                        <div class="border-b px-6 py-4 flex justify-between items-center">
+                            <h3 class="text-lg font-semibold text-gray-900">Nurse Details</h3>
+                            <button onclick="hideUserDetails()" class="text-gray-400 hover:text-gray-600">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="p-6">
+                            <div class="mb-6 flex justify-center">
+                                <div class="w-24 h-24 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                                    <i class="fas fa-user-nurse text-4xl"></i>
+                                </div>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-500">User ID</p>
+                                        <p id="modal-userid" class="text-sm text-gray-900"></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-500">Username</p>
+                                        <p id="modal-username" class="text-sm text-gray-900"></p>
+                                    </div>
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-500">First Name</p>
+                                        <p id="modal-firstname" class="text-sm text-gray-900"></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-500">Last Name</p>
+                                        <p id="modal-lastname" class="text-sm text-gray-900"></p>
+                                    </div>
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-500">User Type</p>
+                                        <p id="modal-usertype" class="text-sm text-gray-900"></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-500">Status</p>
+                                        <p id="modal-status" class="text-sm text-gray-900"></p>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500">Email</p>
+                                    <p id="modal-email" class="text-sm text-gray-900"></p>
+                                </div>
+                                
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500">Telephone</p>
+                                    <p id="modal-telephone" class="text-sm text-gray-900"></p>
+                                </div>
+                                
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500">Address</p>
+                                    <p id="modal-address" class="text-sm text-gray-900"></p>
+                                </div>
+                                
+                                <div id="hospital-container">
+                                    <p class="text-sm font-medium text-gray-500">Hospital/Health Center</p>
+                                    <p id="modal-hospital" class="text-sm text-gray-900"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 px-6 py-4 border-t text-right">
+                            <button onclick="hideUserDetails()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-4 py-2 rounded text-sm">
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            }
+            
+            // Helper function to handle potentially null or empty values
+            function displayValue(value) {
+                if (value === null || value === undefined || value === 'null' || value === 'undefined' || value === '') {
+                    return 'N/A';
+                }
+                return value;
+            }
+            
+            // Populate modal with user information
+            document.getElementById('modal-userid').textContent = displayValue(userId);
+            document.getElementById('modal-username').textContent = displayValue(username);
+            document.getElementById('modal-usertype').textContent = displayValue(userType);
+            document.getElementById('modal-status').textContent = isVerified === 'true' ? 'Verified' : 'Pending';
+            document.getElementById('modal-firstname').textContent = displayValue(firstName);
+            document.getElementById('modal-lastname').textContent = displayValue(lastName);
+            document.getElementById('modal-telephone').textContent = displayValue(telephone);
+            document.getElementById('modal-email').textContent = displayValue(email);
+            document.getElementById('modal-address').textContent = displayValue(address);
+            
+            // Show/hide hospital name based on user type
+            const hospitalContainer = document.getElementById('hospital-container');
+            if (userType === 'Doctor' || userType === 'Nurse') {
+                hospitalContainer.style.display = 'block';
+                document.getElementById('modal-hospital').textContent = displayValue(hospitalName);
+            } else {
+                hospitalContainer.style.display = 'none';
+            }
+            
+            // Show the modal
+            document.getElementById('userDetailsModal').classList.remove('hidden');
+        }
+        
+        function hideUserDetails() {
+            // Hide the modal
+            document.getElementById('userDetailsModal').classList.add('hidden');
+        }
     </script>
 </body>
 </html> 

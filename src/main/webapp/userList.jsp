@@ -332,12 +332,20 @@
                                    </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                                    <div class="flex space-x-2">
                                     <button
                                       onclick="updateStatus(<%= user.getUserID() %>, <%= user.isVerified() %>)"
                                       class="<%= user.isVerified() ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600" %> text-white px-3 py-1 rounded text-sm transition duration-150"
                                       >
                                        <%= user.isVerified() ? "Revoke Access" : "Grant Access" %>
                                      </button>
+                                     <button
+                                       onclick="showUserDetails(<%= user.getUserID() %>, '<%= user.getUsername() %>', '<%= user.getUserType() %>', '<%= user.isVerified() %>', '<%= user.getFirstName() != null ? user.getFirstName() : "" %>', '<%= user.getLastName() != null ? user.getLastName() : "" %>', '<%= user.getTelephone() != null ? user.getTelephone() : "" %>', '<%= user.getEmail() != null ? user.getEmail() : "" %>', '<%= user.getAddress() != null ? user.getAddress() : "" %>', '<%= user.getHospitalName() != null ? user.getHospitalName() : "" %>')"
+                                       class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition duration-150"
+                                      >
+                                       View Details
+                                     </button>
+                                     </div>
                                 </td>
                             </tr>
                             <% 
@@ -423,6 +431,84 @@
         </div>
     </div>
 
+    <!-- User Details Modal -->
+    <div id="userDetailsModal" class="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 animate-fade-in">
+            <div class="border-b px-6 py-4 flex justify-between items-center">
+                <h3 class="text-lg font-semibold text-gray-900">User Details</h3>
+                <button onclick="hideUserDetails()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="mb-6 flex justify-center">
+                    <div class="w-24 h-24 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                        <i class="fas fa-user text-4xl"></i>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">User ID</p>
+                            <p id="modal-userid" class="text-sm text-gray-900"></p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Username</p>
+                            <p id="modal-username" class="text-sm text-gray-900"></p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">First Name</p>
+                            <p id="modal-firstname" class="text-sm text-gray-900"></p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Last Name</p>
+                            <p id="modal-lastname" class="text-sm text-gray-900"></p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">User Type</p>
+                            <p id="modal-usertype" class="text-sm text-gray-900"></p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Status</p>
+                            <p id="modal-status" class="text-sm text-gray-900"></p>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Email</p>
+                        <p id="modal-email" class="text-sm text-gray-900"></p>
+                    </div>
+                    
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Telephone</p>
+                        <p id="modal-telephone" class="text-sm text-gray-900"></p>
+                    </div>
+                    
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Address</p>
+                        <p id="modal-address" class="text-sm text-gray-900"></p>
+                    </div>
+                    
+                    <div id="hospital-container">
+                        <p class="text-sm font-medium text-gray-500">Hospital Name</p>
+                        <p id="modal-hospital" class="text-sm text-gray-900"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-50 px-6 py-4 border-t text-right">
+                <button onclick="hideUserDetails()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-4 py-2 rounded text-sm">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Mobile menu toggle
         document.addEventListener('DOMContentLoaded', function() {
@@ -485,6 +571,44 @@
                 alert("Error updating status.");
                 console.error(err);
             });
+        }
+        
+        function showUserDetails(userId, username, userType, isVerified, firstName, lastName, telephone, email, address, hospitalName) {
+            // Helper function to handle potentially null or empty values
+            function displayValue(value) {
+                if (value === null || value === undefined || value === 'null' || value === 'undefined' || value === '') {
+                    return 'N/A';
+                }
+                return value;
+            }
+            
+            // Populate modal with user information
+            document.getElementById('modal-userid').textContent = displayValue(userId);
+            document.getElementById('modal-username').textContent = displayValue(username);
+            document.getElementById('modal-usertype').textContent = displayValue(userType);
+            document.getElementById('modal-status').textContent = isVerified === 'true' ? 'Verified' : 'Pending';
+            document.getElementById('modal-firstname').textContent = displayValue(firstName);
+            document.getElementById('modal-lastname').textContent = displayValue(lastName);
+            document.getElementById('modal-telephone').textContent = displayValue(telephone);
+            document.getElementById('modal-email').textContent = displayValue(email);
+            document.getElementById('modal-address').textContent = displayValue(address);
+            
+            // Show/hide hospital name based on user type
+            const hospitalContainer = document.getElementById('hospital-container');
+            if (userType === 'Doctor' || userType === 'Nurse') {
+                hospitalContainer.style.display = 'block';
+                document.getElementById('modal-hospital').textContent = displayValue(hospitalName);
+            } else {
+                hospitalContainer.style.display = 'none';
+            }
+            
+            // Show the modal
+            document.getElementById('userDetailsModal').classList.remove('hidden');
+        }
+        
+        function hideUserDetails() {
+            // Hide the modal
+            document.getElementById('userDetailsModal').classList.add('hidden');
         }
     </script>
 </body>
