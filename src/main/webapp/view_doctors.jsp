@@ -1,5 +1,5 @@
-<%@ page import="java.net.*, java.io.*" %>
 <%@ page import="java.util.*" %>
+<%@ page import="com.mbc_hospital.model.User" %>
 <%
 //Optional: Ensure only logged-in users can access
 if (session.getAttribute("id") == null) {
@@ -134,53 +134,28 @@ int userID = (Integer) session.getAttribute("id");
         </h2>
         
         <%
-        boolean hasData = false;
-        try {
-            URL url = new URL("http://localhost:8080/MBC_HOSPITAL/doctor-list-data");
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setConnectTimeout(5000);
-            connection.setReadTimeout(5000);
-            
-            int responseCode = connection.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                String line;
-                List<String[]> doctorData = new ArrayList<>();
-                
-                while ((line = reader.readLine()) != null) {
-                    if (line.startsWith("ERROR")) continue; // skip error message
-                    String[] parts = line.split("\\|");
-                    if (parts.length == 5) {
-                        doctorData.add(parts);
-                        hasData = true;
-                    }
-                }
-                reader.close();
-                
-                if (hasData) {
+        List<User> verifiedDoctors = (List<User>) request.getAttribute("verifiedDoctors");
+        if (verifiedDoctors != null && !verifiedDoctors.isEmpty()) {
         %>
                     <table class="doctors-table">
                         <thead>
                             <tr>
                                 <th>ID</th>
                                 <th>Doctor Name</th>
-                                <th>Specialty</th>
-                                <th>Registration Date</th>
+                        <th>User Type</th>
                                 <th>Verification Status</th>
                             </tr>
                         </thead>
                         <tbody>
                         <% 
-                            for (String[] doctor : doctorData) {
-                                boolean isVerified = "true".equalsIgnoreCase(doctor[4]) || "yes".equalsIgnoreCase(doctor[4]) || "1".equals(doctor[4]);
+                    for (User doctor : verifiedDoctors) {
                         %>
                             <tr>
-                                <td><%= doctor[0] %></td>
-                                <td><%= doctor[1] %></td>
-                                <td><%= doctor[2] %></td>
-                                <td><%= doctor[3] %></td>
-                                <td class="verified-cell <%= isVerified ? "verified-true" : "verified-false" %>">
-                                    <%= isVerified ? "Verified" : "Pending" %>
+                        <td><%= doctor.getUserID() %></td>
+                        <td><%= doctor.getUsername() %></td>
+                        <td><%= doctor.getUserType() %></td>
+                        <td class="verified-cell verified-true">
+                            <%= doctor.isVerified() ? "Verified" : "Pending" %>
                                 </td>
                             </tr>
                         <% } %>
@@ -192,17 +167,6 @@ int userID = (Integer) session.getAttribute("id");
                     <div class="empty-state">
                         <h3>No verified doctors found</h3>
                         <p>There are currently no verified doctors in the system.</p>
-                    </div>
-        <%
-                }
-            } else {
-                throw new IOException("HTTP error code: " + responseCode);
-            }
-        } catch (Exception e) {
-        %>
-            <div class="error-container">
-                <strong>Unable to load doctor data:</strong> <%= e.getMessage() %>
-                <p>Please check the server connection and try again later.</p>
             </div>
         <%
         }

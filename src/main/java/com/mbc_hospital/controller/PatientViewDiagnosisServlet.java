@@ -26,16 +26,16 @@ public class PatientViewDiagnosisServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         
         // Check if user is logged in as patient
-        if (session == null || session.getAttribute("usertype") == null || 
-            !session.getAttribute("usertype").equals("patient")) {
+        if (session == null || !"patient".equalsIgnoreCase((String) session.getAttribute("usertype"))) {
             response.sendRedirect("patient_login.jsp");
             return;
         }
         
-        // Get diagnosisId from request
-        String diagnosisIdStr = request.getParameter("diagnosisId");
+        // Get diagnosis ID from request
+        String diagnosisIdStr = request.getParameter("id");
         if (diagnosisIdStr == null || diagnosisIdStr.trim().isEmpty()) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Diagnosis ID is required");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write("Missing diagnosis ID");
             return;
         }
         
@@ -43,11 +43,12 @@ public class PatientViewDiagnosisServlet extends HttpServlet {
         try {
             diagnosisId = Integer.parseInt(diagnosisIdStr);
         } catch (NumberFormatException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid Diagnosis ID");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write("Invalid diagnosis ID format");
             return;
         }
         
-        // Get patientId from session
+        // Get patient ID from session
         Integer patientId = (Integer) session.getAttribute("patientID");
         if (patientId == null) {
             response.sendRedirect("patient_login.jsp");
@@ -61,14 +62,14 @@ public class PatientViewDiagnosisServlet extends HttpServlet {
         try {
             conn = DBConnection.getConnection();
             
-            // Query to get diagnosis details - Use correct table and column names
+            // Get diagnosis details
             String sql = "SELECT d.*, " +
-                         "CONCAT(doc.FirstName, ' ', doc.LastName) as doctor_name, " +
-                         "CONCAT(nur.FirstName, ' ', nur.LastName) as nurse_name " +
-                         "FROM Diagnosis d " +
-                         "LEFT JOIN Users doc ON d.DoctorID = doc.UserID " +
-                         "LEFT JOIN Users nur ON d.NurseID = nur.UserID " +
-                         "WHERE d.DiagnosisID = ? AND d.PatientID = ?";
+                        "CONCAT(n.first_name, ' ', n.last_name) as nurse_name, " +
+                        "CONCAT(doc.first_name, ' ', doc.last_name) as doctor_name " +
+                        "FROM diagnoses d " +
+                        "LEFT JOIN users n ON d.nurse_id = n.user_id " +
+                        "LEFT JOIN users doc ON d.doctor_id = doc.user_id " +
+                        "WHERE d.diagnosis_id = ? AND d.patient_id = ?";
             
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, diagnosisId);
@@ -76,34 +77,36 @@ public class PatientViewDiagnosisServlet extends HttpServlet {
             rs = stmt.executeQuery();
             
             if (rs.next()) {
-                // Create diagnosis object with all fields
-                Diagnosis diagnosis = new Diagnosis(
-                    rs.getInt("DiagnosisID"),
-                    rs.getInt("PatientID"),
-                    rs.getInt("NurseID"),
-                    rs.getInt("DoctorID"),
-                    rs.getString("DiagnoStatus"), // Note: Column name is DiagnoStatus, not Status
-                    rs.getString("Result"),
-                    rs.getString("MedicationsPrescribed"),
-                    rs.getDate("FollowUpDate"),
-                    rs.getTimestamp("DiagnosisDate"),
-                    rs.getString("NurseAssessment")
-                );
+                // Create diagnosis object
+                Diagnosis diagnosis = new Diagnosis();
+                diagnosis.setDiagnosisId(rs.getInt("diagnosis_id"));
+                diagnosis.setPatientId(rs.getInt("patient_id"));
+                diagnosis.setNurseId(rs.getInt("nurse_id"));
+                diagnosis.setDoctorId(rs.getInt("doctor_id"));
+                diagnosis.setStatus(rs.getString("status"));
+                diagnosis.setResult(rs.getString("result"));
+                diagnosis.setMedicationsPrescribed(rs.getString("medications_prescribed"));
+                diagnosis.setFollowUpDate(rs.getDate("follow_up_date"));
+                diagnosis.setDiagnosisDate(rs.getDate("diagnosis_date"));
+                diagnosis.setNurseAssessment(rs.getString("nurse_assessment"));
+                diagnosis.setNurseName(rs.getString("nurse_name"));
+                diagnosis.setDoctorName(rs.getString("doctor_name"));
                 
-                // Create response JSON with diagnosis and additional doctor/nurse names
+                // Convert to JSON and return
                 Gson gson = new Gson();
                 String json = gson.toJson(diagnosis);
                 
-                // Set response type and write JSON
                 response.setContentType("application/json");
                 response.setCharacterEncoding("UTF-8");
                 response.getWriter().write(json);
             } else {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Diagnosis not found or access denied");
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                response.getWriter().write("Diagnosis not found or not authorized to view");
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error");
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write("Database error: " + e.getMessage());
         } finally {
             // Close resources
             try {
@@ -114,10 +117,5 @@ public class PatientViewDiagnosisServlet extends HttpServlet {
                 e.printStackTrace();
             }
         }
-    }
-    
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // For future implementation if needed
-        response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
     }
 } 

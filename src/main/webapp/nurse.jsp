@@ -316,34 +316,34 @@ if (session != null) {
             <div class="flex items-center space-x-3">
                 <div class="h-12 w-12 rounded-full bg-white/20 flex items-center justify-center">
                     <i class="fas fa-user-nurse text-2xl"></i>
-                </div>
-                <div>
+                    </div>
+                    <div>
                     <p class="text-sm text-blue-200">Logged in as</p>
-                    <p class="font-semibold"><%= session.getAttribute("username") %></p>
+                        <p class="font-semibold"><%= session.getAttribute("username") %></p>
                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-200 text-blue-800 mt-1">
                         Nurse
                     </span>
                 </div>
+                </div>
             </div>
-        </div>
-        
+            
         <nav class="space-y-1">
             <a href="nurse.jsp" class="sidebar-link active">
                 <i class="fas fa-tachometer-alt w-5 h-5 mr-3"></i>
-                <span>Dashboard</span>
-            </a>
+                    <span>Dashboard</span>
+                </a>
             <a href="create_patient.jsp" class="sidebar-link">
                 <i class="fas fa-user-plus w-5 h-5 mr-3"></i>
                 <span>Register Patient</span>
             </a>
             <a href="nurse-action-cases" class="sidebar-link">
                 <i class="fas fa-clipboard-list w-5 h-5 mr-3"></i>
-                <span>Cases Requiring Action</span>
-            </a>
+                    <span>Cases Requiring Action</span>
+                </a>
             <a href="nurse-referred-cases" class="sidebar-link">
                 <i class="fas fa-share w-5 h-5 mr-3"></i>
-                <span>Referred Cases</span>
-            </a>
+                    <span>Referred Cases</span>
+                </a>
             <a href="nurse-completed-cases" class="sidebar-link">
                 <i class="fas fa-check-circle w-5 h-5 mr-3"></i>
                 <span>Nurse-Completed Cases</span>
@@ -358,7 +358,7 @@ if (session != null) {
                     <span>Logout</span>
                 </a>
             </div>
-        </nav>
+            </nav>
     </aside>
 
     <!-- Main Content -->
@@ -373,39 +373,39 @@ if (session != null) {
                 <button id="refreshDataBtn" class="btn btn-outline">
                     <i class="fas fa-sync-alt mr-2"></i>
                     Refresh Data
-                </button>
+                    </button>
+                </div>
             </div>
-        </div>
-        
+
         <!-- Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
             <%
-                java.net.URL url2 = new java.net.URL("http://localhost:8080/MBC_HOSPITAL/patient-count");
-                java.io.BufferedReader in1 = new java.io.BufferedReader(new java.io.InputStreamReader(url2.openStream()));
-                String patientCount = in1.readLine();
-                in1.close();
-            %>
-            
-            <%
-                String referrableCaseCount = "N/A";
-                try {
-                    java.net.URL url3 = new java.net.URL("http://localhost:8080/MBC_HOSPITAL/referrable-case-count");
-                    java.io.BufferedReader in3 = new java.io.BufferedReader(new java.io.InputStreamReader(url3.openStream()));
-                    referrableCaseCount = in3.readLine();
-                    in3.close();
-                } catch (Exception e) {
-                    referrableCaseCount = "Error: " + e.getMessage();
+                   java.net.URL url2 = new java.net.URL("http://localhost:8080/MBC_HOSPITAL/patient-count");
+                   java.io.BufferedReader in1 = new java.io.BufferedReader(new java.io.InputStreamReader(url2.openStream()));
+                   String patientCount = in1.readLine();
+                   in1.close();
+                 %>
+               
+             <%
+    String referrableCaseCount = "N/A";
+    try {
+        java.net.URL url3 = new java.net.URL("http://localhost:8080/MBC_HOSPITAL/referrable-case-count");
+        java.io.BufferedReader in3 = new java.io.BufferedReader(new java.io.InputStreamReader(url3.openStream()));
+        referrableCaseCount = in3.readLine();
+        in3.close();
+    } catch (Exception e) {
+        referrableCaseCount = "Error: " + e.getMessage();
                     e.printStackTrace();
-                }
-            %>
+    }
+%>
             
-            <%
+<%
                 java.net.URL url4 = new java.net.URL("http://localhost:8080/MBC_HOSPITAL/action-required-case-count");
-                java.io.BufferedReader in4 = new java.io.BufferedReader(new java.io.InputStreamReader(url4.openStream()));
+    java.io.BufferedReader in4 = new java.io.BufferedReader(new java.io.InputStreamReader(url4.openStream()));
                 String actionRequiredCaseCount = in4.readLine();
-                in4.close();
-            %>
-            
+    in4.close();
+%>
+
             <!-- Total Cases -->
             <div class="stats-card animate-fade-in" style="animation-delay: 0.1s">
                 <div class="flex justify-between">
@@ -437,7 +437,7 @@ if (session != null) {
                     <div class="h-12 w-12 rounded-full bg-amber-100 flex items-center justify-center text-amber-600">
                         <i class="fas fa-share text-xl"></i>
                     </div>
-                </div>
+                </div>                
                 <div class="mt-4">
                     <div class="flex items-center">
                         <span class="text-gray-500 text-sm">Cases referred to doctors</span>
@@ -467,48 +467,48 @@ if (session != null) {
                     </div>
                     <div class="w-full h-1 bg-gray-200 rounded-full mt-2">
                         <div class="h-1 bg-red-500 rounded-full" style="width: 100%"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
+      </div>
+    </div>
+      </div>
+    </div>
+    
         <!-- Chart & Recent Activity -->
         <div class="mb-6">
             <div class="stats-card animate-fade-in" style="animation-delay: 0.4s">
                 <h2 class="text-lg font-semibold text-gray-700 mb-4">Monthly Cases Overview</h2>
                 <div class="h-64">
                     <canvas id="casesChart"></canvas>
-                </div>
-            </div>
-        </div>
-        
+    </div>
+  </div>
+</div>
+            
         <!-- Quick Access Cards -->
         <h2 class="text-lg font-semibold text-gray-800 mb-4 mt-4">Quick Access</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <a href="create_patient.jsp" class="stats-card flex items-center animate-fade-in" style="animation-delay: 0.6s">
                 <div class="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-4">
                     <i class="fas fa-user-plus text-xl"></i>
-                </div>
+                        </div>
                 <div>
                     <h3 class="font-semibold text-gray-800">Register Patient</h3>
                     <p class="text-gray-500 text-sm">Add new patients to the system</p>
-                </div>
-            </a>
-            
+                    </div>
+                </a>
+                
             <a href="nurse-action-cases" class="stats-card flex items-center animate-fade-in" style="animation-delay: 0.7s">
                 <div class="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center text-green-600 mr-4">
-                    <i class="fas fa-clipboard-list text-xl"></i>
-                </div>
+                            <i class="fas fa-clipboard-list text-xl"></i>
+                        </div>
                 <div>
                     <h3 class="font-semibold text-gray-800">Cases Requiring Action</h3>
                     <p class="text-gray-500 text-sm">Review and diagnose new cases</p>
-                </div>
-            </a>
-            
+                    </div>
+                </a>
+                
             <a href="nurse-referred-cases" class="stats-card flex items-center animate-fade-in" style="animation-delay: 0.8s">
                 <div class="h-12 w-12 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 mr-4">
-                    <i class="fas fa-share text-xl"></i>
-                </div>
+                            <i class="fas fa-share text-xl"></i>
+                        </div>
                 <div>
                     <h3 class="font-semibold text-gray-800">Referred Cases</h3>
                     <p class="text-gray-500 text-sm">Track referred patient cases</p>
@@ -518,15 +518,15 @@ if (session != null) {
             <a href="nurse-completed-cases" class="stats-card flex items-center animate-fade-in" style="animation-delay: 0.9s">
                 <div class="h-12 w-12 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 mr-4">
                     <i class="fas fa-check-circle text-xl"></i>
-                </div>
+                    </div>
                 <div>
                     <h3 class="font-semibold text-gray-800">Completed Cases</h3>
                     <p class="text-gray-500 text-sm">View nurse-completed diagnoses</p>
-                </div>
-            </a>
-        </div>
-        
-        <!-- Footer -->
+                    </div>
+                </a>
+            </div>
+            
+            <!-- Footer -->
         <footer class="mt-12 text-center text-gray-500 text-sm">
             <p>&copy; 2025 MBC Hospital System. All rights reserved.</p>
         </footer>

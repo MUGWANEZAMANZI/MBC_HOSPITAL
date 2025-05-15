@@ -10,7 +10,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.WebServlet;
 
-@WebServlet("/patients")
+@WebServlet("/patients-list")
 public class PatientController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ArrayList<Patient> patients = new ArrayList<>();

@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +56,7 @@ public class PatientLoginServlet extends HttpServlet {
         try {
             conn = DBConnection.getConnection();
             
-            // Verify patient credentials - Use correct table and column names
+            // Verify patient credentials
             String sql = "SELECT * FROM Patients WHERE PatientID = ? AND Telephone = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, patientID);
@@ -110,10 +112,8 @@ public class PatientLoginServlet extends HttpServlet {
         ResultSet rs = null;
         
         try {
-            // Use correct table and column names
-            String sql = "SELECT d.*, CONCAT(u.FirstName, ' ', u.LastName) as doctor_name " +
+            String sql = "SELECT d.* " +
                          "FROM Diagnosis d " +
-                         "LEFT JOIN Users u ON d.DoctorID = u.UserID " +
                          "WHERE d.PatientID = ? " +
                          "ORDER BY d.DiagnosisDate DESC";
             
@@ -122,22 +122,17 @@ public class PatientLoginServlet extends HttpServlet {
             rs = stmt.executeQuery();
             
             while (rs.next()) {
-                // Create Diagnosis object using constructor
-                Diagnosis diagnosis = new Diagnosis(
-                    rs.getInt("DiagnosisID"),
-                    rs.getInt("PatientID"),
-                    rs.getInt("NurseID"),
-                    rs.getInt("DoctorID"),
-                    rs.getString("DiagnoStatus"), // Note: Column name is DiagnoStatus, not Status
-                    rs.getString("Result"),
-                    rs.getString("MedicationsPrescribed"),
-                    rs.getDate("FollowUpDate"),
-                    rs.getTimestamp("DiagnosisDate"),
-                    rs.getString("NurseAssessment")
-                );
-                
-                // Add doctor name as a temporary attribute
-                // Since there's no setter for doctorName, we'll handle it in the JSP
+                Diagnosis diagnosis = new Diagnosis();
+                diagnosis.setDiagnosisId(rs.getInt("DiagnosisID"));
+                diagnosis.setPatientId(rs.getInt("PatientID"));
+                diagnosis.setNurseId(rs.getInt("NurseID"));
+                diagnosis.setDoctorId(rs.getInt("DoctorID"));
+                diagnosis.setStatus(rs.getString("DiagnoStatus"));
+                diagnosis.setResult(rs.getString("Result"));
+                diagnosis.setMedicationsPrescribed(rs.getString("MedicationsPrescribed"));
+                diagnosis.setFollowUpDate(rs.getDate("FollowUpDate"));
+                diagnosis.setDiagnosisDate(rs.getTimestamp("DiagnosisDate"));
+                diagnosis.setNurseAssessment(rs.getString("NurseAssessment"));
                 
                 diagnoses.add(diagnosis);
             }

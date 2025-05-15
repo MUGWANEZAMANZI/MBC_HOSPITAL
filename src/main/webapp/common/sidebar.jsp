@@ -44,7 +44,7 @@
                     <i class="fas fa-users w-6"></i>
                     <span>User Directory</span>
                 </a>
-                <a href="view_doctors.jsp" class="sidebar-link <%= "doctors".equals(currentPage) ? "active" : "" %>">
+                <a href="verified-doctors" class="sidebar-link <%= "doctors".equals(currentPage) ? "active" : "" %>">
                     <i class="fas fa-user-md w-6"></i>
                     <span>Doctors</span>
                 </a>

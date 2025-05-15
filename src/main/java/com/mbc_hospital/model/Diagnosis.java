@@ -15,6 +15,11 @@ public class Diagnosis {
     private Timestamp diagnosisDate;
     private String nurseAssessment;
     private String doctorDiagnosis;
+    private String doctorName;
+
+    // Default constructor
+    public Diagnosis() {
+    }
 
     // Constructor for existing fields (backwards compatibility)
     public Diagnosis(int diagnosisId, int patientId, int nurseId, int doctorId, String status, String result) {
@@ -61,25 +66,49 @@ public class Diagnosis {
     public int getDiagnosisId() {
         return diagnosisId;
     }
+    
+    public void setDiagnosisId(int diagnosisId) {
+        this.diagnosisId = diagnosisId;
+    }
 
     public int getPatientId() {
         return patientId;
+    }
+    
+    public void setPatientId(int patientId) {
+        this.patientId = patientId;
     }
 
     public int getNurseId() {
         return nurseId;
     }
+    
+    public void setNurseId(int nurseId) {
+        this.nurseId = nurseId;
+    }
 
     public int getDoctorId() {
         return doctorId;
+    }
+    
+    public void setDoctorId(int doctorId) {
+        this.doctorId = doctorId;
     }
 
     public String getStatus() {
         return status;
     }
+    
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public String getResult() {
         return result;
+    }
+    
+    public void setResult(String result) {
+        this.result = result;
     }
     
     public String getMedicationsPrescribed() {
@@ -120,5 +149,13 @@ public class Diagnosis {
     
     public void setDoctorDiagnosis(String doctorDiagnosis) {
         this.doctorDiagnosis = doctorDiagnosis;
+    }
+    
+    public String getDoctorName() {
+        return doctorName;
+    }
+    
+    public void setDoctorName(String doctorName) {
+        this.doctorName = doctorName;
     }
 }

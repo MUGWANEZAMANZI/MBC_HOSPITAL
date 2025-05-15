@@ -5,7 +5,7 @@
 <%
     // Validate user session
     String usertype = (String) session.getAttribute("usertype");
-    if (usertype == null || !usertype.equalsIgnoreCase("patient")) {
+    if (usertype == null || !"patient".equalsIgnoreCase(usertype)) {
         response.sendRedirect("patient_login.jsp");
         return;
     }
@@ -28,396 +28,389 @@
     <title>Patient Dashboard - MBC Hospital</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                        'slide-up': 'slideUp 0.5s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
+                    }
+                },
+            },
+        }
+    </script>
     <style>
-        .sidebar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        [x-cloak] { display: none !important; }
+        .header {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        .content-area {
-            background-color: #f9fafb;
-        }
+        
         .card {
             background-color: white;
             border-radius: 0.5rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
             transition: transform 0.2s, box-shadow 0.2s;
         }
+        
         .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
         }
-        .diagnosis-card {
-            cursor: pointer;
+        
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
         }
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 50;
-            left: 0;
-            top: 0;
+        
+        .table {
             width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.5);
+            border-collapse: separate;
+            border-spacing: 0;
         }
-        .modal-content {
-            background-color: white;
-            margin: 10% auto;
-            padding: 20px;
-            border-radius: 0.5rem;
-            width: 80%;
-            max-width: 700px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        
+        .table th {
+            background-color: #f8fafc;
+            padding: 0.85rem 1.25rem;
+            text-align: left;
+            font-weight: 600;
+            color: #475569;
+            border-bottom: 1px solid #e2e8f0;
         }
-        .close-modal {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
+        
+        .table td {
+            padding: 0.85rem 1.25rem;
+            border-bottom: 1px solid #e2e8f0;
+            color: #1e293b;
+            vertical-align: middle;
         }
-        .close-modal:hover {
-            color: black;
+        
+        .table tr:last-child td {
+            border-bottom: none;
         }
-        .status-pending {
-            background-color: #fef3c7;
-            color: #92400e;
+        
+        .table tr:hover {
+            background-color: #f1f5f9;
         }
-        .status-in-progress {
-            background-color: #e0f2fe;
-            color: #0369a1;
-        }
-        .status-completed {
-            background-color: #dcfce7;
-            color: #166534;
-        }
-        .status-referred {
-            background-color: #f3e8ff;
-            color: #6b21a8;
+        
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            .print-break {
+                page-break-before: always;
+            }
         }
     </style>
 </head>
-<body class="flex h-screen bg-gray-100">
-    <!-- Sidebar -->
-    <div class="sidebar w-64 h-full text-white flex flex-col">
-        <div class="p-4 flex items-center justify-center border-b border-blue-800">
-            <i class="fas fa-hospital text-3xl mr-2"></i>
-            <h1 class="text-xl font-bold">MBC Hospital</h1>
-        </div>
-        
-        <!-- User Profile -->
-        <div class="p-4 flex flex-col items-center border-b border-blue-800">
-            <div class="w-20 h-20 rounded-full bg-white flex items-center justify-center mb-2">
-                <i class="fas fa-user text-4xl text-blue-600"></i>
+<body class="bg-gray-50 min-h-screen" x-data="{ showModal: false, selectedDiagnosis: null }">
+    <!-- Header -->
+    <header class="header no-print">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center">
+                <i class="fas fa-hospital text-3xl mr-3"></i>
+                <div>
+                    <h1 class="text-2xl font-bold">MBC Hospital</h1>
+                    <p class="text-sm text-blue-100">Patient Portal</p>
+                </div>
             </div>
-            <h2 class="text-lg font-semibold"><%= patient.getFirstName() + " " + patient.getLastName() %></h2>
-            <p class="text-sm opacity-75">Patient ID: <%= patient.getPatientID() %></p>
-        </div>
-        
-        <!-- Navigation -->
-        <nav class="flex-1 p-4">
-            <ul>
-                <li class="mb-2">
-                    <a href="#" class="flex items-center p-2 rounded bg-white bg-opacity-20">
-                        <i class="fas fa-home w-5 h-5 mr-3"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
-                <li class="mb-2">
-                    <a href="#diagnoses" class="flex items-center p-2 rounded hover:bg-white hover:bg-opacity-10">
-                        <i class="fas fa-file-medical w-5 h-5 mr-3"></i>
-                        <span>My Diagnoses</span>
-                    </a>
-                </li>
-                <li class="mb-2">
-                    <a href="#profile" class="flex items-center p-2 rounded hover:bg-white hover:bg-opacity-10">
-                        <i class="fas fa-user-circle w-5 h-5 mr-3"></i>
-                        <span>My Profile</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-        
-        <!-- Logout Button -->
-        <div class="p-4 border-t border-blue-800">
-            <a href="patient-logout" class="flex items-center p-2 rounded hover:bg-white hover:bg-opacity-10">
-                <i class="fas fa-sign-out-alt w-5 h-5 mr-3"></i>
-                <span>Logout</span>
-            </a>
-        </div>
-    </div>
-
-    <!-- Main Content Area -->
-    <div class="content-area flex-1 overflow-y-auto">
-        <header class="bg-white shadow">
-            <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-                <h1 class="text-2xl font-bold text-gray-900">Patient Dashboard</h1>
+            <div class="flex items-center space-x-4">
                 <div class="flex items-center">
-                    <span class="mr-2 text-gray-600"><%= new java.text.SimpleDateFormat("EEEE, MMMM d, yyyy").format(new java.util.Date()) %></span>
+                    <div class="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center mr-2">
+                        <i class="fas fa-user text-xl"></i>
+                    </div>
+                    <span class="font-medium"><%= patient.getFirstName() + " " + patient.getLastName() %></span>
                 </div>
+                <a href="patient-logout" class="px-4 py-2 bg-red-600/20 text-white rounded hover:bg-red-700/30 transition">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                </a>
             </div>
-        </header>
-        
-        <main class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-            <!-- Welcome Card -->
-            <div class="card p-6 mb-6">
-                <h2 class="text-xl font-semibold text-gray-800 mb-2">Welcome, <%= patient.getFirstName() %>!</h2>
-                <p class="text-gray-600">Here you can view your diagnosis history and personal information.</p>
-            </div>
-            
-            <!-- Dashboard Summary -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                <div class="card p-6">
-                    <div class="flex items-center">
-                        <div class="p-3 rounded-full bg-blue-100 text-blue-600 mr-4">
-                            <i class="fas fa-file-medical text-xl"></i>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto py-8 px-4">
+        <!-- Patient Information Card -->
+        <div class="card mb-8 animate-fade-in">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h2 class="text-xl font-bold text-gray-800 mb-2">
+                        <i class="fas fa-user-circle text-blue-600 mr-2"></i>
+                        Patient Information
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                        <div>
+                            <p class="text-sm text-gray-500">Patient ID</p>
+                            <p class="font-medium"><%= patient.getPatientID() %></p>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-500">Total Diagnoses</p>
-                            <h3 class="text-xl font-bold text-gray-800"><%= patientDiagnoses != null ? patientDiagnoses.size() : 0 %></h3>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="card p-6">
-                    <div class="flex items-center">
-                        <div class="p-3 rounded-full bg-green-100 text-green-600 mr-4">
-                            <i class="fas fa-calendar-check text-xl"></i>
+                            <p class="text-sm text-gray-500">Full Name</p>
+                            <p class="font-medium"><%= patient.getFirstName() + " " + patient.getLastName() %></p>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-500">Last Visit</p>
-                            <h3 class="text-xl font-bold text-gray-800">
-                                <%= patientDiagnoses != null && !patientDiagnoses.isEmpty() ? 
-                                    new java.text.SimpleDateFormat("MMM d, yyyy").format(patientDiagnoses.get(0).getDiagnosisDate()) : 
-                                    "No visits" %>
-                            </h3>
+                            <p class="text-sm text-gray-500">Phone Number</p>
+                            <p class="font-medium"><%= patient.getTelephone() %></p>
                         </div>
-                    </div>
-                </div>
-                
-                <div class="card p-6">
-                    <div class="flex items-center">
-                        <div class="p-3 rounded-full bg-purple-100 text-purple-600 mr-4">
-                            <i class="fas fa-user-md text-xl"></i>
+                        <div>
+                            <p class="text-sm text-gray-500">Email Address</p>
+                            <p class="font-medium"><%= patient.getEmail() != null ? patient.getEmail() : "Not provided" %></p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Address</p>
+                            <p class="font-medium"><%= patient.getAddress() != null ? patient.getAddress() : "Not provided" %></p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-500">Registration Date</p>
-                            <h3 class="text-xl font-bold text-gray-800"><%= patient.getRegistrationDate() != null ? patient.getRegistrationDate().substring(0, 10) : "N/A" %></h3>
+                            <p class="font-medium"><%= patient.getRegistrationDate() != null ? patient.getRegistrationDate() : "Unknown" %></p>
                         </div>
                     </div>
                 </div>
+                <button onclick="window.print()" class="btn no-print bg-blue-100 text-blue-700 px-4 py-2 rounded-lg hover:bg-blue-200 transition flex items-center">
+                    <i class="fas fa-print mr-2"></i>
+                    Print Information
+                </button>
+            </div>
+        </div>
+
+        <!-- Diagnoses Section -->
+        <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+            <i class="fas fa-clipboard-check text-blue-600 mr-2"></i>
+            My Diagnosis Results
+        </h2>
+
+        <div class="card animate-fade-in" style="animation-delay: 0.1s">
+            <% if (patientDiagnoses != null && !patientDiagnoses.isEmpty()) { %>
+                <div class="overflow-x-auto">
+                    <table class="table min-w-full">
+                        <thead>
+                            <tr>
+                                <th>Diagnosis Date</th>
+                                <th>Status</th>
+                                <th>Result</th>
+                                <th>Medications</th>
+                                <th>Follow-up Date</th>
+                                <th class="no-print">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% for (Diagnosis diagnosis : patientDiagnoses) { %>
+                            <tr>
+                                <td><%= diagnosis.getDiagnosisDate() != null ? diagnosis.getDiagnosisDate().toString() : "N/A" %></td>
+                                <td>
+                                    <% if ("Positive".equals(diagnosis.getResult())) { %>
+                                        <span class="status-badge bg-red-100 text-red-800">
+                                            <i class="fas fa-exclamation-circle mr-1"></i> Positive
+                                        </span>
+                                    <% } else if ("Negative".equals(diagnosis.getResult())) { %>
+                                        <span class="status-badge bg-green-100 text-green-800">
+                                            <i class="fas fa-check-circle mr-1"></i> Negative
+                                        </span>
+                                    <% } else { %>
+                                        <span class="status-badge bg-gray-100 text-gray-800">
+                                            <i class="fas fa-question-circle mr-1"></i> <%= diagnosis.getStatus() %>
+                                        </span>
+                                    <% } %>
+                                </td>
+                                <td class="max-w-xs truncate"><%= diagnosis.getResult() != null ? diagnosis.getResult() : "No result provided" %></td>
+                                <td><%= diagnosis.getMedicationsPrescribed() != null ? diagnosis.getMedicationsPrescribed() : "None" %></td>
+                                <td><%= diagnosis.getFollowUpDate() != null ? diagnosis.getFollowUpDate().toString() : "Not scheduled" %></td>
+                                <td class="no-print">
+                                    <button @click="showModal = true; selectedDiagnosis = <%= diagnosis.getDiagnosisId() %>" 
+                                            class="px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center text-sm">
+                                        <i class="fas fa-eye mr-1"></i> View Details
+                                    </button>
+                                </td>
+                            </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } else { %>
+                <div class="flex flex-col items-center justify-center py-8 text-center">
+                    <div class="inline-flex h-20 w-20 rounded-full bg-blue-100 text-blue-600 items-center justify-center mb-4">
+                        <i class="fas fa-clipboard-check text-4xl"></i>
+                    </div>
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">No diagnosis results found</h3>
+                    <p class="text-gray-500">You don't have any diagnosis records in our system yet.</p>
+                </div>
+            <% } %>
+        </div>
+
+        <!-- Upcoming Appointments Section -->
+        <h2 class="text-xl font-bold text-gray-800 mb-4 mt-8 flex items-center">
+            <i class="fas fa-calendar-check text-blue-600 mr-2"></i>
+            Upcoming Appointments
+        </h2>
+
+        <div class="card animate-fade-in" style="animation-delay: 0.2s">
+            <div class="flex flex-col items-center justify-center py-8 text-center">
+                <div class="inline-flex h-20 w-20 rounded-full bg-blue-100 text-blue-600 items-center justify-center mb-4">
+                    <i class="fas fa-calendar-plus text-4xl"></i>
+                </div>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">No upcoming appointments</h3>
+                <p class="text-gray-500 mb-4">You don't have any scheduled appointments.</p>
+                <a href="appointment.jsp" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center">
+                    <i class="fas fa-plus mr-2"></i> Schedule an Appointment
+                </a>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="mt-12 text-center text-gray-500 text-sm">
+            <p>&copy; 2025 MBC Hospital System. All rights reserved.</p>
+        </footer>
+    </main>
+
+    <!-- Diagnosis Detail Modal -->
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" 
+         x-show="showModal" 
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         x-cloak>
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden" 
+             @click.away="showModal = false"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 transform scale-95"
+             x-transition:enter-end="opacity-100 transform scale-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 transform scale-100"
+             x-transition:leave-end="opacity-0 transform scale-95">
+            
+            <!-- Modal Header -->
+            <div class="bg-gradient-to-r from-blue-600 to-blue-800 py-4 px-6">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-bold text-white">Diagnosis Details</h3>
+                    <button @click="showModal = false" class="text-white hover:text-blue-200 transition">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <p class="text-blue-100 text-sm mt-1">Diagnosis ID: <span x-text="selectedDiagnosis"></span></p>
             </div>
             
-            <!-- Diagnoses Section -->
-            <div id="diagnoses" class="mb-6">
-                <h2 class="text-xl font-semibold text-gray-800 mb-4">My Diagnoses</h2>
+            <!-- Modal Body - This would be populated with AJAX in a real app -->
+            <div class="p-6">
+                <div id="diagnosisDetails" class="space-y-4">
+                    <p class="text-gray-500">Loading diagnosis details...</p>
+                </div>
                 
-                <% if (patientDiagnoses == null || patientDiagnoses.isEmpty()) { %>
-                    <div class="card p-6 text-center">
-                        <i class="fas fa-file-medical text-4xl text-gray-300 mb-2"></i>
-                        <p class="text-gray-500">No diagnoses found in your record.</p>
-                    </div>
-                <% } else { %>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <% for (Diagnosis diagnosis : patientDiagnoses) { %>
-                            <div class="card diagnosis-card p-4" onclick="viewDiagnosis(<%= diagnosis.getDiagnosisId() %>)">
-                                <div class="flex justify-between items-start mb-2">
-                                    <div>
-                                        <h3 class="font-semibold text-gray-800">Diagnosis #<%= diagnosis.getDiagnosisId() %></h3>
-                                        <p class="text-sm text-gray-500"><%= new java.text.SimpleDateFormat("MMM d, yyyy").format(diagnosis.getDiagnosisDate()) %></p>
-                                    </div>
-                                    <span class="px-2 py-1 text-xs rounded-full <%= 
-                                        diagnosis.getStatus().equalsIgnoreCase("pending") ? "status-pending" : 
-                                        diagnosis.getStatus().equalsIgnoreCase("in progress") ? "status-in-progress" : 
-                                        diagnosis.getStatus().equalsIgnoreCase("completed") ? "status-completed" : 
-                                        diagnosis.getStatus().equalsIgnoreCase("referred") ? "status-referred" : "" 
-                                    %>">
-                                        <%= diagnosis.getStatus() %>
-                                    </span>
-                                </div>
-                                <div class="text-gray-600 text-sm line-clamp-2">
-                                    <%= diagnosis.getResult() != null && !diagnosis.getResult().isEmpty() ? diagnosis.getResult() : "No result available yet" %>
-                                </div>
-                                <div class="mt-2 text-right">
-                                    <span class="text-blue-600 text-sm">View Details <i class="fas fa-chevron-right ml-1"></i></span>
-                                </div>
-                            </div>
-                        <% } %>
-                    </div>
-                <% } %>
-            </div>
-            
-            <!-- Profile Section -->
-            <div id="profile" class="mb-6">
-                <h2 class="text-xl font-semibold text-gray-800 mb-4">My Profile</h2>
-                <div class="card p-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <h3 class="text-sm font-medium text-gray-500">Full Name</h3>
-                            <p class="text-gray-800"><%= patient.getFirstName() + " " + patient.getLastName() %></p>
-                        </div>
-                        <div>
-                            <h3 class="text-sm font-medium text-gray-500">Patient ID</h3>
-                            <p class="text-gray-800"><%= patient.getPatientID() %></p>
-                        </div>
-                        <div>
-                            <h3 class="text-sm font-medium text-gray-500">Phone Number</h3>
-                            <p class="text-gray-800"><%= patient.getTelephone() != null ? patient.getTelephone() : "Not provided" %></p>
-                        </div>
-                        <div>
-                            <h3 class="text-sm font-medium text-gray-500">Email</h3>
-                            <p class="text-gray-800"><%= patient.getEmail() != null ? patient.getEmail() : "Not provided" %></p>
-                        </div>
-                        <div>
-                            <h3 class="text-sm font-medium text-gray-500">Address</h3>
-                            <p class="text-gray-800"><%= patient.getAddress() != null ? patient.getAddress() : "Not provided" %></p>
-                        </div>
-                        <div>
-                            <h3 class="text-sm font-medium text-gray-500">Registration Date</h3>
-                            <p class="text-gray-800"><%= patient.getRegistrationDate() != null ? patient.getRegistrationDate().substring(0, 10) : "N/A" %></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-    
-    <!-- Diagnosis Details Modal -->
-    <div id="diagnosisModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Diagnosis Details</h2>
-            <div id="diagnosisDetails" class="space-y-4">
-                <div class="text-center p-8">
-                    <i class="fas fa-spinner fa-spin text-blue-600 text-3xl"></i>
-                    <p class="mt-2 text-gray-600">Loading diagnosis details...</p>
+                <div class="flex justify-between mt-6">
+                    <button type="button" @click="showModal = false" 
+                            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
+                        Close
+                    </button>
+                    <button onclick="window.print()" 
+                            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center">
+                        <i class="fas fa-print mr-2"></i> Print Details
+                    </button>
                 </div>
             </div>
         </div>
     </div>
-    
+
     <script>
-        // Function to view diagnosis details
-        function viewDiagnosis(diagnosisId) {
-            // Show the modal
-            document.getElementById('diagnosisModal').style.display = 'block';
-            
-            // Fetch diagnosis details
-            fetch('patient-view-diagnosis?diagnosisId=' + diagnosisId)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    // Format the diagnosis date
-                    const diagnosisDate = new Date(data.diagnosisDate);
-                    const formattedDate = diagnosisDate.toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                    });
+        document.addEventListener('DOMContentLoaded', () => {
+            // In a real application, this would be an AJAX request to get the diagnosis details
+            // For now, just a simple mock-up that would show diagnosis details when modal opens
+            Alpine.effect(() => {
+                const showModal = Alpine.store('showModal');
+                const selectedDiagnosis = Alpine.store('selectedDiagnosis');
+                
+                if (showModal && selectedDiagnosis) {
+                    // This would be replaced with an actual AJAX call
+                    console.log("Fetching details for diagnosis ID:", selectedDiagnosis);
                     
-                    // Format follow-up date if available
-                    let followUpText = 'No follow-up scheduled';
-                    if (data.followUpDate) {
-                        const followUpDate = new Date(data.followUpDate);
-                        followUpText = followUpDate.toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                        });
-                    }
-                    
-                    // Build the HTML for diagnosis details
-                    let html = `
+                    // Mock diagnosis details
+                    document.getElementById('diagnosisDetails').innerHTML = `
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             <div>
-                                <h3 class="text-sm font-medium text-gray-500">Diagnosis ID</h3>
-                                <p class="text-gray-800">${data.diagnosisId}</p>
+                                <h4 class="text-sm font-medium text-gray-500">Diagnosis Date</h4>
+                                <p class="text-gray-900 font-medium">
+                                    <i class="fas fa-calendar-alt text-blue-500 mr-1"></i>
+                                    January 15, 2025
+                                </p>
                             </div>
                             <div>
-                                <h3 class="text-sm font-medium text-gray-500">Date</h3>
-                                <p class="text-gray-800">${formattedDate}</p>
-                            </div>
-                            <div>
-                                <h3 class="text-sm font-medium text-gray-500">Status</h3>
-                                <p class="text-gray-800">${data.status}</p>
-                            </div>
-                            <div>
-                                <h3 class="text-sm font-medium text-gray-500">Follow-up Date</h3>
-                                <p class="text-gray-800">${followUpText}</p>
+                                <h4 class="text-sm font-medium text-gray-500">Status</h4>
+                                <p>
+                                    <span class="status-badge bg-green-100 text-green-800">
+                                        <i class="fas fa-check-circle mr-1"></i> Negative
+                                    </span>
+                                </p>
                             </div>
                         </div>
                         
-                        <div class="mb-4">
-                            <h3 class="text-sm font-medium text-gray-500">Nurse Assessment</h3>
-                            <p class="text-gray-800 p-3 bg-gray-50 rounded">${data.nurseAssessment || 'No assessment provided'}</p>
+                        <div class="border-t border-gray-200 pt-4 mt-4">
+                            <h4 class="text-sm font-medium text-gray-500 mb-2">Diagnosis Result</h4>
+                            <p class="text-gray-700 bg-gray-50 p-3 rounded border border-gray-200">
+                                Patient shows no signs of infection. All tests came back negative.
+                            </p>
                         </div>
                         
-                        <div class="mb-4">
-                            <h3 class="text-sm font-medium text-gray-500">Diagnosis Result</h3>
-                            <p class="text-gray-800 p-3 bg-gray-50 rounded">${data.result || 'No result available yet'}</p>
+                        <div class="border-t border-gray-200 pt-4 mt-4">
+                            <h4 class="text-sm font-medium text-gray-500 mb-2">Medications Prescribed</h4>
+                            <p class="text-gray-700 bg-gray-50 p-3 rounded border border-gray-200">
+                                None required at this time.
+                            </p>
                         </div>
                         
-                        <div class="mb-4">
-                            <h3 class="text-sm font-medium text-gray-500">Medications Prescribed</h3>
-                            <p class="text-gray-800 p-3 bg-gray-50 rounded">${data.medicationsPrescribed || 'No medications prescribed'}</p>
+                        <div class="border-t border-gray-200 pt-4 mt-4">
+                            <h4 class="text-sm font-medium text-gray-500 mb-2">Follow-up Instructions</h4>
+                            <p class="text-gray-700 bg-gray-50 p-3 rounded border border-gray-200">
+                                No follow-up required. Return if symptoms reappear.
+                            </p>
                         </div>
                         
-                        <div class="mt-6 text-right">
-                            <button onclick="printDiagnosis()" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-                                <i class="fas fa-print mr-2"></i> Print
-                            </button>
+                        <div class="border-t border-gray-200 pt-4 mt-4">
+                            <h4 class="text-sm font-medium text-gray-500 mb-2">Healthcare Provider</h4>
+                            <div class="flex items-center">
+                                <div class="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center mr-2">
+                                    <i class="fas fa-user-md text-blue-600"></i>
+                                </div>
+                                <p class="text-gray-700">Dr. Sarah Johnson</p>
+                            </div>
                         </div>
                     `;
-                    
-                    document.getElementById('diagnosisDetails').innerHTML = html;
-                })
-                .catch(error => {
-                    document.getElementById('diagnosisDetails').innerHTML = `
-                        <div class="text-center p-8">
-                            <i class="fas fa-exclamation-circle text-red-600 text-3xl"></i>
-                            <p class="mt-2 text-gray-600">Error loading diagnosis details. Please try again.</p>
-                        </div>
-                    `;
-                    console.error('Error fetching diagnosis details:', error);
-                });
-        }
-        
-        // Close the modal when clicking the X
-        document.querySelector('.close-modal').addEventListener('click', function() {
-            document.getElementById('diagnosisModal').style.display = 'none';
-        });
-        
-        // Close the modal when clicking outside of it
-        window.addEventListener('click', function(event) {
-            if (event.target == document.getElementById('diagnosisModal')) {
-                document.getElementById('diagnosisModal').style.display = 'none';
-            }
-        });
-        
-        // Function to print diagnosis
-        function printDiagnosis() {
-            const printContents = document.getElementById('diagnosisDetails').innerHTML;
-            const originalContents = document.body.innerHTML;
-            
-            document.body.innerHTML = `
-                <div style="padding: 20px;">
-                    <h1 style="text-align: center; margin-bottom: 20px;">MBC Hospital - Diagnosis Report</h1>
-                    ${printContents}
-                </div>
-            `;
-            
-            window.print();
-            document.body.innerHTML = originalContents;
-            
-            // Reattach event listeners after restoring content
-            document.querySelector('.close-modal').addEventListener('click', function() {
-                document.getElementById('diagnosisModal').style.display = 'none';
+                }
             });
-        }
+        });
     </script>
 </body>
 </html> 

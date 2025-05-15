@@ -178,6 +178,12 @@
                     Register now <i class="fas fa-arrow-right" style="font-size: 12px; margin-left: 4px;"></i>
                 </a>
             </p>
+            <p style="font-size: 14px; color: #6b7280; margin-top: 8px;">
+                Are you a patient? 
+                <a href="patient_login.jsp" class="register-link">
+                    Patient login <i class="fas fa-user-injured" style="font-size: 12px; margin-left: 4px;"></i>
+                </a>
+            </p>
         </div>
         
         <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
