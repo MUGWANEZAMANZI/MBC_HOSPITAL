@@ -299,7 +299,7 @@
             </a>
             <a href="nurse-view-diagnoses" class="sidebar-link">
                 <i class="fas fa-clipboard-check w-5 h-5 mr-3"></i>
-                <span>View Diagnosed Cases</span>
+                <span>All Diagnosis Results</span>
             </a>
             <div class="pt-4 mt-4 border-t border-blue-800/30">
                 <a href="logout.jsp" class="sidebar-link text-red-100 bg-red-500/20 hover:bg-red-500/30">
