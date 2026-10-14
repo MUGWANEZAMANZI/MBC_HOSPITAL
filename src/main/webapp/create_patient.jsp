@@ -274,7 +274,7 @@ int userID = (Integer) session.getAttribute("id");
                 <p class="text-blue-100 text-sm mt-1">All fields marked with * are required</p>
             </div>
             
-            <form action="CreatePatientServlet" method="post" enctype="multipart/form-data" class="p-6">
+            <form action="CreatePatientServlet" method="post" class="p-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                     <div>
                         <label for="firstName" class="block text-sm font-medium text-gray-700 mb-1">First Name *</label>
@@ -306,26 +306,6 @@ int userID = (Integer) session.getAttribute("id");
                         <i class="fas fa-map-marker-alt mr-1 text-blue-600"></i> Address *
                     </label>
                     <textarea name="address" id="address" rows="2" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" required></textarea>
-                </div>
-
-                <div class="mb-8">
-                    <label for="pImageLink" class="block text-sm font-medium text-gray-700 mb-1">
-                        <i class="fas fa-camera mr-1 text-blue-600"></i> Patient Image
-                    </label>
-                    <div class="flex items-center">
-                        <div class="w-full">
-                            <div class="flex items-center justify-center w-full">
-                                <label class="flex flex-col w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition duration-200">
-                                    <div class="flex flex-col items-center justify-center pt-5">
-                                        <i class="fas fa-cloud-upload-alt text-3xl text-blue-600 mb-2"></i>
-                                        <p class="text-sm text-gray-500">Click to upload image</p>
-                                        <p class="text-xs text-gray-400 mt-1">PNG, JPG, GIF up to 10MB</p>
-                                    </div>
-                                    <input type="file" name="pImageLink" id="pImageLink" class="opacity-0">
-                                </label>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <input type="hidden" name="registeredBy" value="<%= userID %>">
@@ -380,10 +360,6 @@ int userID = (Integer) session.getAttribute("id");
                     <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
                     <span>Verify patient contact information for accuracy</span>
                 </li>
-                <li class="flex items-start">
-                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
-                    <span>Upload a clear photo of the patient for identification</span>
-                </li>
             </ul>
         </div>
         
@@ -414,30 +390,6 @@ int userID = (Integer) session.getAttribute("id");
                 overlay.addEventListener('click', function() {
                     sidebar.classList.remove('active');
                     overlay.classList.add('hidden');
-                });
-            }
-            
-            // Image preview functionality
-            const imageInput = document.getElementById('pImageLink');
-            if (imageInput) {
-                imageInput.addEventListener('change', function(e) {
-                    const parent = this.parentElement;
-                    const preview = parent.querySelector('div');
-                    
-                    if (this.files && this.files[0]) {
-                        const reader = new FileReader();
-                        
-                        reader.onload = function(e) {
-                            preview.innerHTML = `
-                                <div class="flex flex-col items-center justify-center pt-5">
-                                    <img src="${e.target.result}" class="h-20 object-cover mb-2" />
-                                    <p class="text-sm text-gray-500">Image selected</p>
-                                </div>
-                            `;
-                        }
-                        
-                        reader.readAsDataURL(this.files[0]);
-                    }
                 });
             }
         });

@@ -15,13 +15,12 @@ String userType = request.getParameter("userType") != null ? request.getParamete
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center">
-    <div class="max-w-md w-full bg-white shadow-lg rounded-lg overflow-hidden">
+    <div class="max-w-2xl w-full bg-white shadow-lg rounded-lg overflow-hidden">
         <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-8 text-white text-center">
             <div class="mb-4 bg-white/20 h-20 w-20 rounded-full mx-auto flex items-center justify-center">
                 <i class="fas fa-user-clock text-4xl"></i>
             </div>
-            <h1 class="text-2xl font-bold">Account Pending Approval</h1>
-            <p class="text-blue-100 mt-2">
+            <p class="text-blue-100 mt-2 text-xl">
                 <% if (!username.isEmpty()) { %>
                     Hello, <%= username %>! Your account is awaiting verification
                 <% } else { %>

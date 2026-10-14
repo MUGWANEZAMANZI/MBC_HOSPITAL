@@ -277,10 +277,6 @@
                 <p class="text-gray-600 mt-1">Patients with positive or negative diagnosis results</p>
             </div>
             <div class="flex items-center space-x-3">
-                <div class="relative">
-                    <input type="text" placeholder="Search patients..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-primary-500 w-64">
-                    <i class="fas fa-search absolute left-3 top-2.5 text-gray-400"></i>
-                </div>
                 <a href="dashboard" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center">
                     <i class="fas fa-arrow-left mr-2"></i>
                     Back to Dashboard

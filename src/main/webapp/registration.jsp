@@ -23,6 +23,7 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
             width: 450px;
             padding: 40px;
+            margin: 40px 0;
         }
         
         .form-group {
@@ -91,6 +92,25 @@
         .login-link:hover {
             text-decoration: underline;
         }
+        
+        .form-row {
+            display: flex;
+            gap: 16px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .error-message {
+            background-color: #fee2e2;
+            color: #b91c1c;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            font-size: 14px;
+            border-left: 4px solid #ef4444;
+        }
     </style>
 </head>
 <body>
@@ -98,17 +118,98 @@
         <h2 class="text-center" style="font-size: 24px; margin-bottom: 8px;">Create Account</h2>
         <p style="text-align: center; color: #6b7280; margin-bottom: 24px; font-size: 14px;">Join MBC Hospital's digital healthcare platform</p>
         
+        <% 
+        String error = request.getParameter("error");
+        if (error != null) {
+            String errorMessage = "";
+            if (error.equals("first_name_required")) {
+                errorMessage = "First name is required";
+            } else if (error.equals("last_name_required")) {
+                errorMessage = "Last name is required";
+            } else if (error.equals("server")) {
+                errorMessage = "Server error occurred. Please try again.";
+            } else if (error.equals("validation")) {
+                errorMessage = "Username and password should be at least 3 characters long";
+            } else if (error.equals("profile_creation_failed")) {
+                errorMessage = "Failed to create user profile. Please try again.";
+            } else if (error.equals("missing_required_fields")) {
+                errorMessage = "Please fill all required fields";
+            } else if (error.equals("failed")) {
+                errorMessage = "Registration failed. Please try again.";
+            }
+            
+            if (!errorMessage.isEmpty()) {
+        %>
+            <div class="error-message">
+                <%= errorMessage %>
+            </div>
+        <% 
+            }
+        }
+        %>
+        
         <form method="post" action="registration">
             <div class="form-group">
                 <label for="userType" class="form-label">I am a:</label>
                 <div style="position: relative;">
                     <i class="fas fa-user-md" style="position: absolute; left: 12px; top: 12px; color: #6b7280;"></i>
-                    <select id="userType" name="userType" class="form-select" style="padding-left: 36px;">
+                    <select id="userType" name="userType" class="form-select" style="padding-left: 36px;" required>
                         <option value="">Select User Type</option>
                         <option value="Doctor">Doctor</option>
                         <option value="Nurse">Nurse</option>
                         <option value="Patient">Patient</option>
                     </select>
+                </div>
+            </div>
+            
+            <!-- New form row for First and Last name -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="firstName" class="form-label">First Name</label>
+                    <div style="position: relative;">
+                        <i class="fas fa-user" style="position: absolute; left: 12px; top: 12px; color: #6b7280;"></i>
+                        <input type="text" id="firstName" name="firstName" class="form-input" style="padding-left: 36px;" placeholder="First name" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="lastName" class="form-label">Last Name</label>
+                    <div style="position: relative;">
+                        <i class="fas fa-user" style="position: absolute; left: 12px; top: 12px; color: #6b7280;"></i>
+                        <input type="text" id="lastName" name="lastName" class="form-input" style="padding-left: 36px;" placeholder="Last name" required>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="email" class="form-label">Email</label>
+                <div style="position: relative;">
+                    <i class="fas fa-envelope" style="position: absolute; left: 12px; top: 12px; color: #6b7280;"></i>
+                    <input type="email" id="email" name="email" class="form-input" style="padding-left: 36px;" placeholder="your.email@example.com">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="telephone" class="form-label">Telephone</label>
+                <div style="position: relative;">
+                    <i class="fas fa-phone" style="position: absolute; left: 12px; top: 12px; color: #6b7280;"></i>
+                    <input type="tel" id="telephone" name="telephone" class="form-input" style="padding-left: 36px;" placeholder="Phone number">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="address" class="form-label">Address</label>
+                <div style="position: relative;">
+                    <i class="fas fa-home" style="position: absolute; left: 12px; top: 12px; color: #6b7280;"></i>
+                    <input type="text" id="address" name="address" class="form-input" style="padding-left: 36px;" placeholder="Your address">
+                </div>
+            </div>
+            
+            <div id="hospitalNameGroup" class="form-group" style="display: none;">
+                <label for="hospitalName" class="form-label">Hospital Name</label>
+                <div style="position: relative;">
+                    <i class="fas fa-hospital" style="position: absolute; left: 12px; top: 12px; color: #6b7280;"></i>
+                    <input type="text" id="hospitalName" name="hospitalName" class="form-input" style="padding-left: 36px;" placeholder="Hospital name">
                 </div>
             </div>
             
@@ -150,5 +251,24 @@
             </div>
         </form>
     </div>
+    
+    <script>
+        // Toggle hospital name field visibility based on user type
+        document.getElementById('userType').addEventListener('change', function() {
+            const userType = this.value;
+            const hospitalNameGroup = document.getElementById('hospitalNameGroup');
+            
+            if (userType === 'Doctor' || userType === 'Nurse') {
+                hospitalNameGroup.style.display = 'block';
+                if (userType === 'Doctor') {
+                    document.querySelector('label[for="hospitalName"]').textContent = 'Hospital Name';
+                } else {
+                    document.querySelector('label[for="hospitalName"]').textContent = 'Health Center';
+                }
+            } else {
+                hospitalNameGroup.style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html>

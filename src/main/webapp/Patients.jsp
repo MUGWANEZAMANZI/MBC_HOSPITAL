@@ -39,6 +39,28 @@
     <title>Registered Patients</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        .patient-detail-modal {
+            transition: all 0.3s ease;
+            transform: scale(0.95);
+            opacity: 0;
+            visibility: hidden;
+        }
+        .patient-detail-modal.show {
+            transform: scale(1);
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-overlay {
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+        }
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
     <header class="bg-blue-700 text-white py-4 px-6 shadow-lg">
@@ -49,8 +71,12 @@
             </div>
             <div class="flex items-center space-x-3">
                 <a class="flex items-center px-4 py-2 bg-blue-800 hover:bg-blue-900 rounded-md transition" 
-                   href="/reffered">
+                   href="dashboard.jsp">
                     <i class="fas fa-home mr-2"></i>Home
+                </a>
+                <a class="flex items-center px-4 py-2 bg-blue-800 hover:bg-blue-900 rounded-md transition" 
+                   href="patients">
+                    <i class="fas fa-clipboard-list mr-2"></i>Patient Results
                 </a>
                 <div class="flex items-center space-x-2">
                     <i class="fas fa-user-circle"></i>
@@ -89,6 +115,7 @@
                             <th class="border-b border-gray-200 px-4 py-3 text-left text-sm font-medium text-gray-700">Email</th>
                             <th class="border-b border-gray-200 px-4 py-3 text-left text-sm font-medium text-gray-700">Address</th>
                             <th class="border-b border-gray-200 px-4 py-3 text-left text-sm font-medium text-gray-700">Registered By</th>
+                            <th class="border-b border-gray-200 px-4 py-3 text-center text-sm font-medium text-gray-700">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -130,15 +157,25 @@
                                             <%= p.getRegisteredByName() %>
                                         </div>
                                     </td>
+                                    <td class="border-b border-gray-200 px-4 py-3 text-sm text-center">
+                                        <button onclick="viewPatientDetails(<%= p.getPatientID() %>, '<%= p.getFirstName() %>', '<%= p.getLastName() %>', '<%= p.getTelephone() %>', '<%= p.getEmail() %>', '<%= p.getAddress() %>', '<%= p.getRegisteredByName() %>')" 
+                                                class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-md text-xs font-medium transition">
+                                            <i class="fas fa-eye mr-1"></i> View Details
+                                        </button>
+                                        <a href="patients?action=view&id=<%= p.getPatientID() %>" 
+                                           class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-md text-xs font-medium transition ml-1">
+                                            <i class="fas fa-clipboard-list mr-1"></i> View Diagnoses
+                                        </a>
+                                    </td>
                                 </tr>
                         <% } 
                         } else { %>
                             <tr>
-                                <td colspan="6" class="border-b border-gray-200 px-4 py-8 text-sm text-center text-gray-500">
+                                <td colspan="7" class="border-b border-gray-200 px-4 py-8 text-sm text-center text-gray-500">
                                     <div class="flex flex-col items-center justify-center">
                                         <i class="fas fa-folder-open text-gray-300 text-5xl mb-3"></i>
                                         <p>No patients found or failed to load data.</p>
-                                        <a href="/reffered" class="mt-3 text-blue-600 hover:text-blue-800">
+                                        <a href="dashboard.jsp" class="mt-3 text-blue-600 hover:text-blue-800">
                                             <i class="fas fa-arrow-left mr-1"></i> Return to Dashboard
                                         </a>
                                     </div>
@@ -150,7 +187,7 @@
             </div>
             
             <div class="mt-6 flex justify-between items-center">
-                <a href="reffered" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition flex items-center">
+                <a href="dashboard.jsp" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition flex items-center">
                     <i class="fas fa-arrow-left mr-2"></i> Back to Dashboard
                 </a>
                 
@@ -163,6 +200,75 @@
             </div>
         </div>
     </main>
+    
+    <!-- Patient Details Modal -->
+    <div id="modalOverlay" class="modal-overlay fixed inset-0 bg-black bg-opacity-50 z-40 flex items-center justify-center">
+        <div id="patientDetailModal" class="patient-detail-modal bg-white rounded-lg shadow-xl w-full max-w-2xl z-50">
+            <div class="border-b border-gray-200 px-6 py-4 flex justify-between items-center">
+                <h3 class="text-lg font-semibold text-gray-800">Patient Details</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-500 focus:outline-none">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="flex flex-col md:flex-row">
+                    <div class="md:w-1/3 flex flex-col items-center mb-6 md:mb-0">
+                        <div class="h-24 w-24 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mb-4">
+                            <i class="fas fa-user text-4xl"></i>
+                        </div>
+                        <h4 id="modalPatientName" class="text-lg font-semibold text-gray-800 text-center"></h4>
+                        <p id="modalPatientId" class="text-sm text-gray-600 text-center"></p>
+                    </div>
+                    <div class="md:w-2/3 md:pl-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h5 class="text-sm font-medium text-gray-500 mb-2">Contact Information</h5>
+                                <div class="mb-2">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-phone text-gray-400 mr-2"></i>
+                                        <span class="text-sm font-medium text-gray-700">Phone Number</span>
+                                    </div>
+                                    <p id="modalPatientPhone" class="text-sm text-gray-600 ml-6"></p>
+                                </div>
+                                <div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-envelope text-gray-400 mr-2"></i>
+                                        <span class="text-sm font-medium text-gray-700">Email Address</span>
+                                    </div>
+                                    <p id="modalPatientEmail" class="text-sm text-gray-600 ml-6"></p>
+                                </div>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h5 class="text-sm font-medium text-gray-500 mb-2">Address</h5>
+                                <div class="flex items-start">
+                                    <i class="fas fa-map-marker-alt text-gray-400 mr-2 mt-1"></i>
+                                    <p id="modalPatientAddress" class="text-sm text-gray-600"></p>
+                                </div>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-lg md:col-span-2">
+                                <h5 class="text-sm font-medium text-gray-500 mb-2">Registration Information</h5>
+                                <div class="flex items-center">
+                                    <div class="h-6 w-6 bg-green-100 rounded-full flex items-center justify-center mr-2">
+                                        <i class="fas fa-user-nurse text-green-600 text-xs"></i>
+                                    </div>
+                                    <span class="text-sm text-gray-600">Registered by: </span>
+                                    <span id="modalPatientRegisteredBy" class="text-sm font-medium text-gray-700 ml-1"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-6 flex justify-end">
+                            <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition mr-3" onclick="closeModal()">
+                                Close
+                            </button>
+                            <a id="viewDiagnosesLink" href="#" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition flex items-center">
+                                <i class="fas fa-clipboard-list mr-2"></i> View Diagnoses
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     
     <footer class="bg-white py-4 mt-auto border-t">
         <div class="container mx-auto text-center text-gray-500 text-sm">
@@ -219,6 +325,52 @@
                 }, 300);
             }, 3000);
         }
+        
+        // Patient Details Modal Functions
+        function viewPatientDetails(id, firstName, lastName, phone, email, address, registeredBy) {
+            document.getElementById('modalPatientName').textContent = firstName + ' ' + lastName;
+            document.getElementById('modalPatientId').textContent = 'Patient ID: ' + id;
+            document.getElementById('modalPatientPhone').textContent = phone;
+            document.getElementById('modalPatientEmail').textContent = email;
+            document.getElementById('modalPatientAddress').textContent = address;
+            document.getElementById('modalPatientRegisteredBy').textContent = registeredBy;
+            
+            // Set link for View Diagnoses button
+            document.getElementById('viewDiagnosesLink').href = 'patients?action=view&id=' + id;
+            
+            // Show modal with animation
+            const overlay = document.getElementById('modalOverlay');
+            const modal = document.getElementById('patientDetailModal');
+            
+            overlay.classList.add('show');
+            modal.classList.add('show');
+        }
+        
+        function closeModal() {
+            const overlay = document.getElementById('modalOverlay');
+            const modal = document.getElementById('patientDetailModal');
+            
+            overlay.classList.remove('show');
+            modal.classList.remove('show');
+        }
+        
+        // Close modal when clicking outside
+        document.getElementById('modalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+        
+        // Hide modal on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const overlay = document.getElementById('modalOverlay');
+            const modal = document.getElementById('patientDetailModal');
+            
+            if (overlay && modal) {
+                overlay.classList.remove('show');
+                modal.classList.remove('show');
+            }
+        });
     </script>
 </body>
 </html>

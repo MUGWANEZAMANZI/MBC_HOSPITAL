@@ -26,6 +26,12 @@ public class UnverifiedNurseListServlet extends HttpServlet {
                     user.setUsername(rs.getString("Username"));
                     user.setUserType(rs.getString("UserType"));
                     user.setVerified(rs.getBoolean("is_verified"));
+                    user.setFirstName(rs.getString("FirstName"));
+                    user.setLastName(rs.getString("LastName"));
+                    user.setTelephone(rs.getString("Telephone"));
+                    user.setEmail(rs.getString("Email"));
+                    user.setAddress(rs.getString("Address"));
+                    user.setHospitalName(rs.getString("HospitalName"));
                     unverifiedNurses.add(user);
                 }
             }
