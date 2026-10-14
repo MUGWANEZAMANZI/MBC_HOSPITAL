@@ -12,8 +12,8 @@
 1. [Getting Started Guide](#1-getting-started-guide)
 2. [API Reference](#2-api-reference)
 3. [Troubleshooting Guide](#3-troubleshooting-guide)
-4. Prompt History *(Phase 4)*
-5. Reflection *(Phase 4)*
+4. [Prompt History](#4-prompt-history)
+5. [Reflection](#5-reflection)
 
 ---
 
