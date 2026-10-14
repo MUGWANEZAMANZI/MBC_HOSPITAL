@@ -72,24 +72,28 @@ public class RecentActivitiesServlet extends HttpServlet {
                 }
             }
             
-            // Get recent referrals
+            // Get recent referrals — LEFT JOIN because DoctorID is NULL until a doctor accepts the case
             String referralSql = "SELECT p.FirstName, p.LastName, d.DiagnosisDate, u.Username, " +
                                "d2.Username AS DoctorName " +
                                "FROM Diagnosis d " +
                                "JOIN Patients p ON d.PatientID = p.PatientID " +
                                "JOIN Users u ON d.NurseID = u.UserID " +
-                               "JOIN Users d2 ON d.DoctorID = d2.UserID " +
+                               "LEFT JOIN Users d2 ON d.DoctorID = d2.UserID " +
                                "WHERE d.DiagnoStatus = 'Referrable' " +
                                "ORDER BY d.DiagnosisDate DESC LIMIT 3";
-                               
+
             try (PreparedStatement ps = conn.prepareStatement(referralSql);
                  ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Map<String, String> activity = new HashMap<>();
+                    String doctorName = rs.getString("DoctorName");
+                    String patientName = rs.getString("FirstName") + " " + rs.getString("LastName");
                     activity.put("type", "referral");
                     activity.put("icon", "share");
                     activity.put("title", "Case referred");
-                    activity.put("description", rs.getString("FirstName") + " " + rs.getString("LastName") + " was referred to Dr. " + rs.getString("DoctorName"));
+                    activity.put("description", doctorName != null
+                        ? patientName + " was referred to Dr. " + doctorName
+                        : patientName + " was referred — awaiting doctor assignment");
                     activity.put("time", formatTimeAgo(rs.getTimestamp("DiagnosisDate")));
                     activities.add(activity);
                 }
